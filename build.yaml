@@ -1,0 +1,20 @@
+targets:
+  $default:
+    sources:
+      include:
+        - lib/**
+        - build.yaml
+    builders:
+      ferry_generator|graphql_builder:
+        options:
+          schema: nazi_shop|lib/graphql/schema.graphql
+          queries_glob: lib/graphql/**/*.graphql
+          type_overrides:
+            DateTime:
+              name: String
+      ferry_generator|serializer_builder:
+        options:
+          schema: nazi_shop|lib/graphql/schema.graphql
+          type_overrides:
+            DateTime:
+              name: String

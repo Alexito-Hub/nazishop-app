@@ -1,0 +1,55 @@
+# Flutter/Dart
+.dart_tool/
+build/
+/.flutter-plugins
+/.flutter-plugins-dependencies
+/.flutter-versions
+/.packages
+/.pub-cache/
+pubspec.lock
+
+# Android
+/android/.gradle/
+/android/app/google-services.json
+/android/key.properties
+/android/local.properties
+
+# iOS
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+**/Runner.xcworkspace/
+*.xcuserdatad
+*.xcuserstate
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# OS generated
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Firebase / Google services secrets (avoid committing)
+**/google-services.json
+
+# Key files
+*.jks
+*.keystore
+key.properties
+
+# Others
+/build/
+*/build/
+.gradle/
+/.gradle/
+.flutter-plugins
+*.log
+
+# Ignore generated plugin registrant
+/.flutter-plugins-dependencies
+
+# End of .gitignore
