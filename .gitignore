@@ -6,7 +6,7 @@ build/
 /.flutter-versions
 /.packages
 /.pub-cache/
-pubspec.lock
+
 
 # Android
 /android/.gradle/
