@@ -32,7 +32,7 @@ class AppRoutes {
   static const String login = '/auth/login';
   static const String register = '/auth/register';
   static const String forgotPassword = '/auth/forgot-password';
-  static const String onboarding = '/auth/onboarding';
+  static const String onboarding = '/onboarding';
 
   // User routes
   static const String profile = '/user/profile';
