@@ -456,7 +456,7 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
             children: [
               Icon(Icons.account_balance_wallet_rounded,
                   color: FlutterFlowTheme.of(context)
-                      .primaryText
+                      .tertiary
                       .withValues(alpha: 0.8),
                   size: 24),
               Container(
@@ -468,7 +468,7 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
                     borderRadius: BorderRadius.circular(8)),
                 child: Text('USD',
                     style: GoogleFonts.outfit(
-                        color: FlutterFlowTheme.of(context).primaryText,
+                        color: FlutterFlowTheme.of(context).tertiary,
                         fontSize: 10,
                         fontWeight: FontWeight.bold)),
               )
@@ -477,12 +477,11 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
           const SizedBox(height: 16),
           Text('Saldo Actual',
               style: GoogleFonts.outfit(
-                  color: FlutterFlowTheme.of(context).secondaryText,
-                  fontSize: 13)),
+                  color: FlutterFlowTheme.of(context).tertiary, fontSize: 13)),
           Text(
-            '\${_balance.toStringAsFixed(2)}',
+            '\$${_balance.toStringAsFixed(2)} $_currency',
             style: GoogleFonts.outfit(
-                color: FlutterFlowTheme.of(context).primaryText,
+                color: FlutterFlowTheme.of(context).tertiary,
                 fontSize: 32,
                 fontWeight: FontWeight.bold),
           ),
@@ -499,7 +498,9 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
                 elevation: 0,
               ),
               child: Text('Recargar',
-                  style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
+                  style: GoogleFonts.outfit(
+                      color: FlutterFlowTheme.of(context).tertiary,
+                      fontWeight: FontWeight.bold)),
             ),
           )
         ],

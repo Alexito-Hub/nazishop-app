@@ -146,11 +146,11 @@ class AdminCategoriesPageState extends State<AdminCategoriesPage> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16)),
                 icon: Icon(Icons.category,
-                    color: FlutterFlowTheme.of(context).primaryText),
+                    color: FlutterFlowTheme.of(context).tertiary),
                 label: Text(
                   'Nueva Categoría',
                   style: GoogleFonts.outfit(
-                      color: FlutterFlowTheme.of(context).primaryText,
+                      color: FlutterFlowTheme.of(context).tertiary,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1),
                 ),
@@ -276,12 +276,12 @@ class AdminCategoriesPageState extends State<AdminCategoriesPage> {
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                         ),
                         icon: Icon(Icons.add_circle_outline,
-                            color: FlutterFlowTheme.of(context).secondaryText,
+                            color: FlutterFlowTheme.of(context).tertiary,
                             size: 20),
                         label: Text(
                           'Nueva Categoría',
                           style: GoogleFonts.outfit(
-                              color: FlutterFlowTheme.of(context).secondaryText,
+                              color: FlutterFlowTheme.of(context).tertiary,
                               fontWeight: FontWeight.bold),
                         ),
                       ),

@@ -111,7 +111,7 @@ class AdminServicesPageState extends State<AdminServicesPage> {
 
     return Scaffold(
       backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-      body: isDesktop ? _buildDesktopLayout() : _buildMobileLayout(),
+      body: isDesktop ? _buildDesktopLayout(context) : _buildMobileLayout(),
       floatingActionButton: isDesktop
           ? null
           : Container(
@@ -179,15 +179,15 @@ class AdminServicesPageState extends State<AdminServicesPage> {
                   .withValues(alpha: 0.05),
               shape: BoxShape.circle,
             ),
-            child: SmartBackButton(
-                color: FlutterFlowTheme.of(context).primaryText),
+            child:
+                SmartBackButton(color: FlutterFlowTheme.of(context).tertiary),
           ),
           centerTitle: true,
           title: Text(
             'Servicios',
             style: GoogleFonts.outfit(
-              color: FlutterFlowTheme.of(context).primaryText,
-              fontWeight: FontWeight.w900,
+              color: FlutterFlowTheme.of(context).tertiary,
+              fontWeight: FontWeight.bold,
               fontSize: 24,
               letterSpacing: 1.0,
             ),
@@ -207,7 +207,7 @@ class AdminServicesPageState extends State<AdminServicesPage> {
     );
   }
 
-  Widget _buildDesktopLayout() {
+  Widget _buildDesktopLayout(BuildContext context) {
     return Align(
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
@@ -276,12 +276,14 @@ class AdminServicesPageState extends State<AdminServicesPage> {
                               borderRadius: BorderRadius.circular(12)),
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                         ),
-                        icon: const Icon(Icons.add_circle_outline,
-                            color: Colors.white, size: 20),
+                        icon: Icon(Icons.add_circle_outline,
+                            color: FlutterFlowTheme.of(context).tertiary,
+                            size: 20),
                         label: Text(
                           'Nuevo Servicio',
                           style: GoogleFonts.outfit(
-                              color: Colors.white, fontWeight: FontWeight.bold),
+                              color: FlutterFlowTheme.of(context).tertiary,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -357,8 +359,7 @@ class AdminServicesPageState extends State<AdminServicesPage> {
         ),
         boxShadow: [
           BoxShadow(
-            color:
-                FlutterFlowTheme.of(context).primaryText.withValues(alpha: 0.1),
+            color: FlutterFlowTheme.of(context).primary.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),

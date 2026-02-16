@@ -53,24 +53,6 @@ class _AboutWidgetState extends State<AboutWidget> {
       ),
       body: Stack(
         children: [
-          // Background Gradient Blob
-          Positioned(
-            top: -100,
-            right: -100,
-            child: Container(
-              width: 500,
-              height: 500,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: _primaryColor.withValues(alpha: 0.08),
-              ),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
-                child: Container(color: theme.transparent),
-              ),
-            ),
-          ),
-
           Center(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
@@ -86,10 +68,7 @@ class _AboutWidgetState extends State<AboutWidget> {
                       height: 120,
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [
-                            _primaryColor,
-                            _primaryColor.withValues(alpha: 0.7)
-                          ],
+                          colors: [theme.primary, theme.secondary],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),

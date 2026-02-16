@@ -114,27 +114,6 @@ class AdminOffersPageState extends State<AdminOffersPage> {
       backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
       body: Stack(
         children: [
-          // Fondo degradado sutil global
-          Positioned(
-            top: -100,
-            left: -100,
-            child: Container(
-              width: 500,
-              height: 500,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: FlutterFlowTheme.of(context)
-                    .primary
-                    .withValues(alpha: 0.05),
-              ),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
-                child:
-                    Container(color: FlutterFlowTheme.of(context).transparent),
-              ),
-            ),
-          ),
-
           isDesktop ? _buildDesktopLayout() : _buildMobileLayout(),
         ],
       ),
@@ -145,7 +124,7 @@ class AdminOffersPageState extends State<AdminOffersPage> {
                 gradient: LinearGradient(
                   colors: [
                     FlutterFlowTheme.of(context).primary,
-                    FlutterFlowTheme.of(context).tertiary
+                    FlutterFlowTheme.of(context).secondary,
                   ], // Red Gradient
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -172,11 +151,11 @@ class AdminOffersPageState extends State<AdminOffersPage> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16)),
                 icon: Icon(Icons.local_offer,
-                    color: FlutterFlowTheme.of(context).info),
+                    color: FlutterFlowTheme.of(context).tertiary),
                 label: Text(
                   'Nuevo Listing',
                   style: GoogleFonts.outfit(
-                      color: FlutterFlowTheme.of(context).info,
+                      color: FlutterFlowTheme.of(context).tertiary,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1),
                 ),
@@ -270,7 +249,7 @@ class AdminOffersPageState extends State<AdminOffersPage> {
                         gradient: LinearGradient(
                           colors: [
                             FlutterFlowTheme.of(context).primary,
-                            FlutterFlowTheme.of(context).tertiary
+                            FlutterFlowTheme.of(context).secondary,
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
@@ -299,11 +278,12 @@ class AdminOffersPageState extends State<AdminOffersPage> {
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                         ),
                         icon: Icon(Icons.add_circle_outline,
-                            color: FlutterFlowTheme.of(context).info, size: 20),
+                            color: FlutterFlowTheme.of(context).tertiary,
+                            size: 20),
                         label: Text(
                           'Nuevo Listing',
                           style: GoogleFonts.outfit(
-                              color: FlutterFlowTheme.of(context).info,
+                              color: FlutterFlowTheme.of(context).tertiary,
                               fontWeight: FontWeight.bold),
                         ),
                       ),

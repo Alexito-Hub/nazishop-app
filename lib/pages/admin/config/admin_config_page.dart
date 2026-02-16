@@ -157,10 +157,9 @@ class _AdminConfigPageState extends State<AdminConfigPage> {
                       height: 44,
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [
-                            FlutterFlowTheme.of(context).primary,
-                            FlutterFlowTheme.of(context).error
-                          ],
+                          colors: [theme.primary, theme.secondary],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
@@ -482,7 +481,8 @@ class _AdminConfigPageState extends State<AdminConfigPage> {
             style: GoogleFonts.outfit(
                 color: theme.primaryText, fontWeight: FontWeight.w500)),
         activeThumbColor: FlutterFlowTheme.of(context).primary,
-        activeTrackColor: FlutterFlowTheme.of(context).primary.withValues(alpha: 0.3),
+        activeTrackColor:
+            FlutterFlowTheme.of(context).primary.withValues(alpha: 0.3),
         inactiveThumbColor: FlutterFlowTheme.of(context).secondaryText,
         inactiveTrackColor:
             FlutterFlowTheme.of(context).secondaryText.withValues(alpha: 0.3),

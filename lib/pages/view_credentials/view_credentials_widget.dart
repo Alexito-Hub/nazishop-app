@@ -569,7 +569,7 @@ class _ViewCredentialsWidgetState extends State<ViewCredentialsWidget> {
           height: 48,
           color: theme.primary,
           textStyle: GoogleFonts.outfit(
-            color: theme.secondaryText,
+            color: theme.tertiary,
             fontSize: 14,
             fontWeight: FontWeight.bold,
           ),

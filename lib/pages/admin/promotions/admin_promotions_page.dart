@@ -111,11 +111,11 @@ class _AdminPromotionsPageState extends State<AdminPromotionsPage> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
-                icon: Icon(Icons.campaign, color: theme.primaryText),
+                icon: Icon(Icons.campaign, color: theme.tertiary),
                 label: Text(
                   'Nueva Promo',
                   style: GoogleFonts.outfit(
-                      color: theme.primaryText,
+                      color: theme.tertiary,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1),
                 ),
@@ -296,14 +296,13 @@ class _AdminPromotionsPageState extends State<AdminPromotionsPage> {
                             ),
                             icon: Icon(
                               Icons.add_circle_outline,
-                              color: FlutterFlowTheme.of(context).secondaryText,
+                              color: FlutterFlowTheme.of(context).tertiary,
                               size: 20,
                             ),
                             label: Text(
                               'Nueva Promo',
                               style: GoogleFonts.outfit(
-                                color:
-                                    FlutterFlowTheme.of(context).secondaryText,
+                                color: FlutterFlowTheme.of(context).tertiary,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

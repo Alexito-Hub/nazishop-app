@@ -83,13 +83,14 @@ class _AdminCouponsPageState extends State<AdminCouponsPage> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: theme.primary.withValues(alpha: 0.4),
-                    blurRadius: 12,
-                    offset: const Offset(0, 6),
-                  ),
+                      color: FlutterFlowTheme.of(context)
+                          .primary
+                          .withValues(alpha: 0.4),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4))
                 ],
               ),
               child: FloatingActionButton.extended(
@@ -100,11 +101,11 @@ class _AdminCouponsPageState extends State<AdminCouponsPage> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16)),
                 icon: Icon(Icons.confirmation_number_outlined,
-                    color: theme.primaryText),
+                    color: theme.tertiary),
                 label: Text(
                   'Nuevo Cupón',
                   style: GoogleFonts.outfit(
-                      color: theme.primaryText,
+                      color: theme.tertiary,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1),
                 ),
@@ -295,11 +296,11 @@ class _AdminCouponsPageState extends State<AdminCouponsPage> {
                                   const EdgeInsets.symmetric(horizontal: 20),
                             ),
                             icon: Icon(Icons.add_circle_outline,
-                                color: theme.primaryText, size: 20),
+                                color: theme.tertiary, size: 20),
                             label: Text(
                               'Nuevo Cupón',
                               style: GoogleFonts.outfit(
-                                color: theme.primaryText,
+                                color: theme.tertiary,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15,
                               ),
@@ -371,7 +372,7 @@ class _AdminCouponsPageState extends State<AdminCouponsPage> {
         child: Text(
           label,
           style: GoogleFonts.outfit(
-            color: isSelected ? theme.info : theme.secondaryText,
+            color: isSelected ? theme.tertiary : theme.secondaryText,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
           ),
         ),
