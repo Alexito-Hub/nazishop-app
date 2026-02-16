@@ -1,0 +1,13 @@
+.git
+.gitignore
+.dockerignore
+build/
+.dart_tool/
+.idea/
+.vscode/
+android/
+ios/
+test/
+.pub-cache/
+pubspec.lock
+.env
