@@ -74,8 +74,6 @@ class _ViewCredentialsWidgetState extends State<ViewCredentialsWidget> {
         }
       }
     } catch (e) {
-      debugPrint('Error fetching order: $e');
-    } finally {
       if (mounted) setState(() => _isLoading = false);
     }
   }

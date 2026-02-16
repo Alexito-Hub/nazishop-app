@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
-import 'dart:ui';
 import 'package:flutter_animate/flutter_animate.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 

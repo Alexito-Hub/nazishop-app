@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:nazi_shop/backend/api_client.dart';
 
 class OrderService {
@@ -9,16 +8,14 @@ class OrderService {
     String paymentMethod = 'wallet',
   }) async {
     try {
-      debugPrint('[OrderService] Creating order for offer: $offerId');
       final response = await ApiClient.post('/api/orders', body: {
         'action': 'create',
         'offerId': offerId,
         'paymentMethod': paymentMethod,
       });
-      debugPrint('[OrderService] ✅ Order created successfully');
+
       return response;
     } catch (e) {
-      debugPrint('[OrderService] ❌ Create order error: $e');
       rethrow;
     }
   }
@@ -31,7 +28,6 @@ class OrderService {
       });
       return response['data'] ?? [];
     } catch (e) {
-      debugPrint('[OrderService] Get orders error: $e');
       return [];
     }
   }
@@ -45,7 +41,6 @@ class OrderService {
       });
       return response['data'];
     } catch (e) {
-      debugPrint('[OrderService] Get order error: $e');
       return null;
     }
   }
@@ -58,8 +53,6 @@ class OrderService {
     String? notes,
   }) async {
     try {
-      debugPrint(
-          '[OrderService] Submitting domain customer info for order: $orderId');
       final response = await ApiClient.post('/api/domain', body: {
         'action': 'create',
         'orderId': orderId,
@@ -67,10 +60,9 @@ class OrderService {
         'customerPassword': customerPassword,
         if (notes != null && notes.isNotEmpty) 'notes': notes,
       });
-      debugPrint('[OrderService] ✅ Domain info submitted successfully');
+
       return response;
     } catch (e) {
-      debugPrint('[OrderService] ❌ Domain creation error: $e');
       rethrow;
     }
   }
@@ -83,7 +75,6 @@ class OrderService {
       });
       return response['data'] ?? [];
     } catch (e) {
-      debugPrint('[OrderService] Get domains error: $e');
       return [];
     }
   }

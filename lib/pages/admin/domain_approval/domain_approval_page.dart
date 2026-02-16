@@ -38,7 +38,6 @@ class _DomainApprovalPageState extends State<DomainApprovalPage> {
         });
       }
     } catch (e) {
-      debugPrint('Error loading domains: $e');
       if (mounted) setState(() => _isLoading = false);
     }
   }

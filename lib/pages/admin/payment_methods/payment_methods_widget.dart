@@ -217,10 +217,6 @@ class _PaymentMethodsWidgetState extends State<PaymentMethodsWidget> {
                       'PayPal', 'Pagos internacionales', Icons.paypal, true)),
               SizedBox(
                   width: 400,
-                  child: _buildPaymentMethod('Stripe', 'Tarjetas de crédito',
-                      Icons.credit_card, true)),
-              SizedBox(
-                  width: 400,
                   child: _buildPaymentMethod(
                       'MercadoPago', 'Latinoamérica', Icons.store, true)),
               SizedBox(
@@ -240,8 +236,6 @@ class _PaymentMethodsWidgetState extends State<PaymentMethodsWidget> {
         else ...[
           _buildPaymentMethod(
               'PayPal', 'Pagos internacionales', Icons.paypal, true),
-          _buildPaymentMethod(
-              'Stripe', 'Tarjetas de crédito', Icons.credit_card, true),
           _buildPaymentMethod(
               'MercadoPago', 'Latinoamérica', Icons.store, true),
           _buildPaymentMethod('Transferencia Bancaria', 'Bancos locales',

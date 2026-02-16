@@ -1,0 +1,28 @@
+{
+    "name": "Nazi Shop - Premium Digital Services",
+    "short_name": "Nazi Shop",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#1d2428",
+    "theme_color": "#1d2428",
+    "description": "Your one-stop shop for premium digital services, streaming accounts, and social media boosts.",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "categories": [
+        "shopping",
+        "entertainment",
+        "productivity"
+    ],
+    "icons": [
+        {
+            "src": "favicon.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "favicon.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

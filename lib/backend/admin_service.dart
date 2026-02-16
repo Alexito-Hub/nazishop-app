@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:nazi_shop/backend/api_client.dart';
 
 class AdminService {
@@ -11,7 +10,6 @@ class AdminService {
     try {
       return await ApiClient.get('/api/admin/server-status');
     } catch (e) {
-      debugPrint('Error fetching server stats: $e');
       return {};
     }
   }
@@ -184,7 +182,6 @@ class AdminService {
           await ApiClient.adminAction('/api/admin/notification', 'list', {});
       return res['data'] ?? [];
     } catch (e) {
-      debugPrint('Error fetching notifications: $e');
       return [];
     }
   }
@@ -194,7 +191,6 @@ class AdminService {
       await ApiClient.adminAction('/api/admin/notification', 'create', data);
       return true;
     } catch (e) {
-      debugPrint('Error sending notification: $e');
       rethrow;
     }
   }
@@ -211,7 +207,6 @@ class AdminService {
       }
       return [];
     } catch (e) {
-      debugPrint('Error fetching orders: $e');
       return [];
     }
   }
@@ -223,7 +218,6 @@ class AdminService {
       final res = await ApiClient.adminAction('/api/admin/config', 'get', {});
       return res['data'] ?? {};
     } catch (e) {
-      debugPrint('Error fetching global config: $e');
       return {};
     }
   }
@@ -242,7 +236,6 @@ class AdminService {
       });
       return res['data'] ?? [];
     } catch (e) {
-      debugPrint('Error fetching users: $e');
       return [];
     }
   }
@@ -255,7 +248,6 @@ class AdminService {
       });
       return true;
     } catch (e) {
-      debugPrint('Error updating user: $e');
       return false;
     }
   }
@@ -270,7 +262,6 @@ class AdminService {
       });
       return true;
     } catch (e) {
-      debugPrint('Error adding balance: $e');
       return false;
     }
   }
@@ -313,7 +304,6 @@ class AdminService {
       }
       return res['data'] ?? [];
     } catch (e) {
-      debugPrint('Error fetching domains: $e');
       return [];
     }
   }
@@ -331,7 +321,6 @@ class AdminService {
         if (adminNotes != null) 'adminNotes': adminNotes,
       });
     } catch (e) {
-      debugPrint('Error updating domain status: $e');
       rethrow;
     }
   }
@@ -349,7 +338,6 @@ class AdminService {
         if (adminNotes != null) 'adminNotes': adminNotes,
       });
     } catch (e) {
-      debugPrint('Error completing domain: $e');
       rethrow;
     }
   }

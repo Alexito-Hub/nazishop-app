@@ -41,7 +41,6 @@ class MyPurchasesModel extends FlutterFlowModel<MyPurchasesModernWidget> {
         'expired': expired,
       };
     } catch (e) {
-      debugPrint('Error loading purchase stats: $e');
       stats = {
         'total': 0,
         'active': 0,

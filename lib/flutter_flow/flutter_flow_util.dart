@@ -458,14 +458,10 @@ List<String> getCurrentRouteStack(BuildContext context) =>
 /// Obtiene el código de país basado en el locale del dispositivo.
 /// Retorna el countryCode (ej. 'ES', 'US') o null si no se puede determinar.
 String? getDeviceCountryCode() {
-  try {
-    final localeName = Platform.localeName; // ej. 'es_ES'
-    final parts = localeName.split('_');
-    if (parts.length >= 2) {
-      return parts[1]; // 'ES'
-    }
-  } catch (e) {
-    debugPrint('Error obteniendo country code: $e');
+  final localeName = Platform.localeName; // ej. 'es_ES'
+  final parts = localeName.split('_');
+  if (parts.length >= 2) {
+    return parts[1]; // 'ES'
   }
   return null;
 }

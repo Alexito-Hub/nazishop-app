@@ -5,7 +5,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 Future<UserCredential?> googleSignInFunc() async {
   try {
     if (kIsWeb) {
-      return await FirebaseAuth.instance.signInWithPopup(GoogleAuthProvider());
+      await FirebaseAuth.instance.signInWithRedirect(GoogleAuthProvider());
+      return null;
     }
 
     final GoogleSignIn googleSignIn = GoogleSignIn();
@@ -26,7 +27,6 @@ Future<UserCredential?> googleSignInFunc() async {
 
     return await FirebaseAuth.instance.signInWithCredential(credential);
   } catch (e) {
-    debugPrint('Google Sign In Error: $e');
     return null;
   }
 }

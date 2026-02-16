@@ -28,7 +28,6 @@ class CurrencyService {
 
   // Inicializar el servicio de monedas (llamar al inicio de la app)
   static Future<void> initialize() async {
-    debugPrint('💱 Initializing currency service...');
     await fetchCurrencies();
     await _loadSelectedCurrency();
   }
@@ -36,15 +35,12 @@ class CurrencyService {
   // Obtener monedas desde el backend
   static Future<void> fetchCurrencies() async {
     try {
-      debugPrint('🌐 Fetching currencies from backend...');
-
       // Verificar si hay cache válido (menos de 24 horas)
       final prefs = await SharedPreferences.getInstance();
       final lastFetch = prefs.getInt(_lastFetchKey) ?? 0;
       final now = DateTime.now().millisecondsSinceEpoch;
 
       if (now - lastFetch < 86400000 && _currenciesCache.isNotEmpty) {
-        debugPrint('✅ Using cached currencies');
         return;
       }
 
@@ -61,12 +57,8 @@ class CurrencyService {
         // Guardar en cache
         await prefs.setString(_currenciesCacheKey, json.encode(data['data']));
         await prefs.setInt(_lastFetchKey, now);
-
-        debugPrint(
-            '✅ Loaded ${_currenciesCache.length} currencies from backend');
       }
     } catch (e) {
-      debugPrint('⚠️ Error fetching currencies: $e');
       // Intentar cargar desde cache
       await _loadFromCache();
     }
@@ -85,20 +77,15 @@ class CurrencyService {
 
   // Cargar monedas desde cache
   static Future<void> _loadFromCache() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final cached = prefs.getString(_currenciesCacheKey);
-      if (cached != null) {
-        final List<dynamic> data = json.decode(cached);
-        _currenciesCache.clear();
-        for (var currencyData in data) {
-          final currency = Currency.fromJson(currencyData);
-          _currenciesCache[currency.code] = currency;
-        }
-        debugPrint('✅ Loaded ${_currenciesCache.length} currencies from cache');
+    final prefs = await SharedPreferences.getInstance();
+    final cached = prefs.getString(_currenciesCacheKey);
+    if (cached != null) {
+      final List<dynamic> data = json.decode(cached);
+      _currenciesCache.clear();
+      for (var currencyData in data) {
+        final currency = Currency.fromJson(currencyData);
+        _currenciesCache[currency.code] = currency;
       }
-    } catch (e) {
-      debugPrint('⚠️ Error loading from cache: $e');
     }
   }
 
@@ -109,7 +96,7 @@ class CurrencyService {
 
     if (currencyCode != null && _currenciesCache.containsKey(currencyCode)) {
       _selectedCurrency = _currenciesCache[currencyCode];
-      debugPrint('✅ Loaded selected currency: $currencyCode');
+
       return;
     }
 
@@ -136,27 +123,22 @@ class CurrencyService {
   static Future<Currency> detectAndSetCurrencyByCountry() async {
     final prefs = await SharedPreferences.getInstance();
 
-    try {
-      // Intentar detectar país por zona horaria o locale
-      final String? detectedCountry = await _detectCountryCode();
+    // Intentar detectar país por zona horaria o locale
+    final String? detectedCountry = await _detectCountryCode();
 
-      if (detectedCountry != null) {
-        await prefs.setString(_detectedCountryKey, detectedCountry);
+    if (detectedCountry != null) {
+      await prefs.setString(_detectedCountryKey, detectedCountry);
 
-        // Buscar moneda correspondiente
-        if (countryToCurrency.containsKey(detectedCountry)) {
-          final currencyCode = countryToCurrency[detectedCountry]!;
-          if (_currenciesCache.containsKey(currencyCode)) {
-            _selectedCurrency = _currenciesCache[currencyCode];
-            await prefs.setString(_selectedCurrencyKey, currencyCode);
-            debugPrint(
-                '✅ Detected and set currency: $currencyCode for country: $detectedCountry');
-            return _selectedCurrency!;
-          }
+      // Buscar moneda correspondiente
+      if (countryToCurrency.containsKey(detectedCountry)) {
+        final currencyCode = countryToCurrency[detectedCountry]!;
+        if (_currenciesCache.containsKey(currencyCode)) {
+          _selectedCurrency = _currenciesCache[currencyCode];
+          await prefs.setString(_selectedCurrencyKey, currencyCode);
+
+          return _selectedCurrency!;
         }
       }
-    } catch (e) {
-      debugPrint('Error detecting country: $e');
     }
 
     // Por defecto, usar USD
@@ -166,36 +148,28 @@ class CurrencyService {
   }
 
   static Future<String?> _detectCountryCode() async {
-    try {
-      // Opción 1: Usar el locale del sistema
-      // En Flutter web, esto devolverá algo como 'es_CO', 'en_US', etc.
-      final locale = WidgetsBinding.instance.platformDispatcher.locale;
-      final countryCode = locale.countryCode;
+    final locale = WidgetsBinding.instance.platformDispatcher.locale;
+    final countryCode = locale.countryCode;
 
-      if (countryCode != null && countryCode.isNotEmpty) {
-        return countryCode;
-      }
+    if (countryCode != null && countryCode.isNotEmpty) {
+      return countryCode;
+    }
 
-      // Opción 2: Basado en zona horaria (menos preciso pero funciona)
-      final timeZone = DateTime.now().timeZoneName;
-      if (timeZone.contains('COT') || timeZone.contains('America/Bogota')) {
-        return 'CO';
-      }
-      if (timeZone.contains('CST') || timeZone.contains('America/Mexico')) {
-        return 'MX';
-      }
-      if (timeZone.contains('ART') || timeZone.contains('America/Argentina')) {
-        return 'AR';
-      }
-      if (timeZone.contains('EST') || timeZone.contains('America/New_York')) {
-        return 'US';
-      }
-      if (timeZone.contains('PST') ||
-          timeZone.contains('America/Los_Angeles')) {
-        return 'US';
-      }
-    } catch (e) {
-      debugPrint('Error in country detection: $e');
+    final timeZone = DateTime.now().timeZoneName;
+    if (timeZone.contains('COT') || timeZone.contains('America/Bogota')) {
+      return 'CO';
+    }
+    if (timeZone.contains('CST') || timeZone.contains('America/Mexico')) {
+      return 'MX';
+    }
+    if (timeZone.contains('ART') || timeZone.contains('America/Argentina')) {
+      return 'AR';
+    }
+    if (timeZone.contains('EST') || timeZone.contains('America/New_York')) {
+      return 'US';
+    }
+    if (timeZone.contains('PST') || timeZone.contains('America/Los_Angeles')) {
+      return 'US';
     }
 
     return null;
@@ -209,7 +183,6 @@ class CurrencyService {
     _selectedCurrency = _currenciesCache[currencyCode];
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_selectedCurrencyKey, currencyCode);
-    debugPrint('✅ Currency changed to: $currencyCode');
   }
 
   // Obtener todas las monedas disponibles

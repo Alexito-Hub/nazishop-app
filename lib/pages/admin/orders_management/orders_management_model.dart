@@ -48,15 +48,12 @@ class OrdersManagementModel extends FlutterFlowModel<OrdersManagementWidget> {
         } else {
           orders.addAll(newOrders);
         }
-        debugPrint(
-            '[OrdersManagement] Loaded ${newOrders.length} orders, total: $total');
 
         hasMore = orders.length < total;
         errorMessage = null;
       }
     } catch (e) {
       errorMessage = e.toString();
-      debugPrint('Error loading orders: $e');
     } finally {
       isLoadingOrders = false;
       onDataChanged?.call();
@@ -86,7 +83,7 @@ class OrdersManagementModel extends FlutterFlowModel<OrdersManagementWidget> {
       await loadOrders(refresh: true);
     } catch (e) {
       errorMessage = e.toString();
-      debugPrint('Error updating order status: $e');
+
       onDataChanged?.call();
       rethrow;
     }

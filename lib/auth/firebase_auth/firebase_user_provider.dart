@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:flutter/foundation.dart';
 
 import '../base_auth_user_provider.dart';
 
@@ -83,8 +82,7 @@ class NaziShopFirebaseUser extends BaseAuthUser {
         _isActive = data?['isActive'] as bool?;
       }
     } catch (e) {
-      debugPrint('[FIREBASE_USER] Error fetching role from Firestore: $e');
-      _role = 'customer'; // Default fallback
+      _role = 'customer';
       _isActive = true;
     }
   }
@@ -149,16 +147,11 @@ Stream<BaseAuthUser> naziShopFirebaseUserStream() {
           final data = doc.data();
           role = data?['role'] as String?;
           isActive = data?['isActive'] as bool?;
-          debugPrint(
-              '[FIREBASE_USER] ✅ Role loaded: $role (isActive: $isActive)');
         } else {
-          debugPrint(
-              '[FIREBASE_USER] ⚠️ No Firestore document for ${user.uid}');
           role = 'customer';
           isActive = true;
         }
       } catch (e) {
-        debugPrint('[FIREBASE_USER] ❌ Error loading role: $e');
         role = 'customer';
         isActive = true;
       }
@@ -181,28 +174,22 @@ void _startRoleRefreshTimer(String uid) {
   _roleRefreshTimer?.cancel();
   _roleRefreshTimer =
       Timer.periodic(const Duration(seconds: 30), (timer) async {
-    try {
-      final doc =
-          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    final doc =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
 
-      if (doc.exists && currentUser != null) {
-        final data = doc.data();
-        final newRole = data?['role'] as String?;
-        final newIsActive = data?['isActive'] as bool?;
+    if (doc.exists && currentUser != null) {
+      final data = doc.data();
+      final newRole = data?['role'] as String?;
+      final newIsActive = data?['isActive'] as bool?;
 
-        if (newRole != (currentUser as NaziShopFirebaseUser)._role ||
-            newIsActive != (currentUser as NaziShopFirebaseUser)._isActive) {
-          debugPrint(
-              '[FIREBASE_USER] 🔄 Role refreshed: $newRole (isActive: $newIsActive)');
-          (currentUser as NaziShopFirebaseUser)._role = newRole;
-          (currentUser as NaziShopFirebaseUser)._isActive = newIsActive;
+      if (newRole != (currentUser as NaziShopFirebaseUser)._role ||
+          newIsActive != (currentUser as NaziShopFirebaseUser)._isActive) {
+        (currentUser as NaziShopFirebaseUser)._role = newRole;
+        (currentUser as NaziShopFirebaseUser)._isActive = newIsActive;
 
-          // Notify listeners about the change
-          currentUser?.refreshUser();
-        }
+        // Notify listeners about the change
+        currentUser?.refreshUser();
       }
-    } catch (e) {
-      debugPrint('[FIREBASE_USER] ⚠️ Role refresh failed: $e');
     }
   });
 }

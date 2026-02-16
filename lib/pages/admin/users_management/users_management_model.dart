@@ -44,12 +44,10 @@ class UsersManagementModel extends FlutterFlowModel<UsersManagementWidget> {
         users = [];
         totalUsers = 0;
       }
-
-      debugPrint('[UsersManagement] Loaded ${users.length} users');
     } catch (e) {
-      debugPrint('[UsersManagement] Error loading users: $e');
       users = [];
       totalUsers = 0;
+      // Error handling is implicitly managed by empty state in UI
     } finally {
       isLoading = false;
     }
@@ -63,7 +61,6 @@ class UsersManagementModel extends FlutterFlowModel<UsersManagementWidget> {
       );
       return true;
     } catch (e) {
-      debugPrint('Error toggling user status: $e');
       return false;
     }
   }
@@ -76,7 +73,6 @@ class UsersManagementModel extends FlutterFlowModel<UsersManagementWidget> {
       );
       return true;
     } catch (e) {
-      debugPrint('Error changing user role: $e');
       return false;
     }
   }
@@ -90,7 +86,6 @@ class UsersManagementModel extends FlutterFlowModel<UsersManagementWidget> {
       );
       return true;
     } catch (e) {
-      debugPrint('Error adding balance: $e');
       return false;
     }
   }

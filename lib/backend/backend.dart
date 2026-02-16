@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart' show debugPrint;
+
 import 'package:nazi_shop/backend/api_client.dart';
 
 /// Backend service wrapper for the app
@@ -12,11 +12,7 @@ class NaziShopBackend {
   static Future<String?> _getAuthToken() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      try {
-        return await user.getIdToken();
-      } catch (e) {
-        debugPrint('Error getting auth token: $e');
-      }
+      return await user.getIdToken();
     }
     return null;
   }

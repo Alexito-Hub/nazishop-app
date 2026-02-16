@@ -19,7 +19,6 @@ class AdminModel extends FlutterFlowModel<AdminWidget> {
       errorMessage = null;
     } catch (e) {
       errorMessage = e.toString();
-      debugPrint('Error loading dashboard stats: $e');
     } finally {
       isLoadingStats = false;
       onDataChanged?.call();

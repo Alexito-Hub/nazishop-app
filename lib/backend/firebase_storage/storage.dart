@@ -12,7 +12,6 @@ Future<String?> uploadData(String path, Uint8List data) async {
         ? await result.ref.getDownloadURL()
         : null;
   } catch (e) {
-    // print('Error uploading data: $e');
     return null;
   }
 }

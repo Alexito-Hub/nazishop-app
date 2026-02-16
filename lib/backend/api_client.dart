@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
+
 import 'config.dart';
 
 /// Modern API Client for CRUD operations with Firebase Auth
@@ -11,13 +11,9 @@ class ApiClient {
 
   /// Obtiene el token de autenticación de Firebase
   static Future<String?> _getAuthToken() async {
-    try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        return await user.getIdToken();
-      }
-    } catch (e) {
-      debugPrint('❌ Error getting Firebase token: $e');
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      return await user.getIdToken();
     }
     return null;
   }
@@ -40,14 +36,7 @@ class ApiClient {
         .replace(queryParameters: params);
     final headers = await _getHeaders();
 
-    debugPrint('🌐 [API GET] URL: $uri');
-    debugPrint('🔑 [API GET] Headers: $headers');
-
     final response = await http.get(uri, headers: headers);
-
-    debugPrint('📥 [API GET] Status: ${response.statusCode}');
-    debugPrint(
-        '📦 [API GET] Body: ${response.body.substring(0, response.body.length > 200 ? 200 : response.body.length)}...');
 
     return _handleResponse(response);
   }
@@ -57,17 +46,8 @@ class ApiClient {
     final uri = Uri.parse('${BackendConfig.baseUrl}$endpoint');
     final headers = await _getHeaders();
 
-    debugPrint('🌐 [API POST] URL: $uri');
-    debugPrint('🔑 [API POST] Headers: $headers');
-    debugPrint(
-        '📤 [API POST] Body: ${json.encode(body).substring(0, json.encode(body).length > 200 ? 200 : json.encode(body).length)}...');
-
     final response =
         await http.post(uri, headers: headers, body: json.encode(body));
-
-    debugPrint('📥 [API POST] Status: ${response.statusCode}');
-    debugPrint(
-        '📦 [API POST] Response: ${response.body.substring(0, response.body.length > 200 ? 200 : response.body.length)}...');
 
     return _handleResponse(response);
   }
@@ -101,9 +81,6 @@ class ApiClient {
       }
     }
   }
-
-  // Specific Admin Methods using the generic helpers
-  // These are kept for backward compatibility or shortcuts
 
   static Future<Map<String, dynamic>> adminAction(
       String endpoint, String action, Map<String, dynamic> data) async {

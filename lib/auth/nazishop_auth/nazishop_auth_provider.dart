@@ -138,8 +138,6 @@ class NaziShopAuthProvider with ChangeNotifier {
         // Usuario inició sesión (o se restauró sesión)
         // Solo recargar si no tenemos el usuario actual o si cambió el UID
         if (_currentUser?.id != firebaseUser.uid) {
-          debugPrint(
-              '[AUTH_PROVIDER] 🔄 Auth state changed: User logged in, loading data...');
           _isLoading = true;
           notifyListeners();
 
@@ -147,9 +145,6 @@ class NaziShopAuthProvider with ChangeNotifier {
             await _loadUserFromFirestore(
                 firebaseUser.uid, firebaseUser.email ?? '', firebaseUser);
           } catch (e) {
-            debugPrint(
-                '[AUTH_PROVIDER] ❌ Error loading user data on auth change: $e');
-          } finally {
             _isLoading = false;
             notifyListeners();
           }
@@ -183,8 +178,6 @@ class NaziShopAuthProvider with ChangeNotifier {
           photoUrl: data['photoURL'],
           walletBalance: (data['wallet_balance'] ?? 0.0).toDouble(),
         );
-        debugPrint(
-            '[AUTH_PROVIDER] ✅ Session restored for role: ${_currentUser?.role}');
       } else {
         // Fallback if no doc
         _currentUser = NaziShopUser(
@@ -202,7 +195,6 @@ class NaziShopAuthProvider with ChangeNotifier {
         );
       }
     } catch (e) {
-      debugPrint('[AUTH_PROVIDER] ❌ Error loading from Firestore: $e');
       rethrow;
     }
   }
@@ -250,11 +242,9 @@ class NaziShopAuthProvider with ChangeNotifier {
               photoUrl: data['photoURL'],
               walletBalance: (data['wallet_balance'] ?? 0.0).toDouble(),
             );
-            debugPrint(
-                '[AUTH_PROVIDER] ✅ User loaded with role: ${_currentUser?.role}');
           } else {
             // Firestore document doesn't exist - create default user
-            debugPrint('[AUTH_PROVIDER] ⚠️ No Firestore doc, using defaults');
+
             _currentUser = NaziShopUser(
               id: uid,
               email: email,
@@ -270,7 +260,6 @@ class NaziShopAuthProvider with ChangeNotifier {
             );
           }
         } catch (e) {
-          debugPrint('[AUTH_PROVIDER] ❌ Error loading Firestore data: $e');
           // Fallback to basic user
           _currentUser = NaziShopUser(
             id: uid,
@@ -315,7 +304,6 @@ class NaziShopAuthProvider with ChangeNotifier {
           // Explicitly load user to ensure state is ready before returning
           await _loadUserFromFirestore(user.uid, user.email ?? '', user);
         } catch (e) {
-          debugPrint('[AUTH_PROVIDER] Warning: Could not manual load user: $e');
           // Listener should handle it eventually
         }
         return true;
@@ -448,17 +436,13 @@ class NaziShopAuthProvider with ChangeNotifier {
       if (AuthService.isAuthenticated) {
         final user = AuthService.currentUser;
         if (user != null) {
-          debugPrint('[AUTH_PROVIDER] Restoring session for: ${user.email}');
-
           // Load full user data from Firestore
           try {
             await _loadUserFromFirestore(user.uid, user.email ?? '', user);
-            debugPrint('[AUTH_PROVIDER] ✅ Session restored successfully');
+
             notifyListeners();
             return true;
           } catch (e) {
-            debugPrint(
-                '[AUTH_PROVIDER] ⚠️ Error loading Firestore, using basic data: $e');
             // Fallback to basic user info
             _currentUser = NaziShopUser(
               id: user.uid,
@@ -480,7 +464,6 @@ class NaziShopAuthProvider with ChangeNotifier {
       }
       return false;
     } catch (e) {
-      debugPrint('[AUTH_PROVIDER] ❌ Error restoring session: $e');
       return false;
     }
   }

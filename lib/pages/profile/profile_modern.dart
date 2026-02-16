@@ -46,30 +46,20 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
   }
 
   Future<void> _loadStats() async {
-    if (!mounted) return;
-    // Don't set loading true here if we want to avoid full screen flicker,
-    // maybe just update silently or have loaders on specific widgets.
-    // But for now let's keep it simple.
+    final results = await Future.wait([
+      OrderService.getMyOrders(),
+      FavoritesService.getFavorites(),
+      WalletService.getBalance(currentUserUid),
+    ]);
 
-    try {
-      // Run in parallel for speed
-      final results = await Future.wait([
-        OrderService.getMyOrders(),
-        FavoritesService.getFavorites(),
-        WalletService.getBalance(currentUserUid),
-      ]);
-
-      if (mounted) {
-        setState(() {
-          _orderCount = (results[0] as List).length;
-          _favoriteCount = (results[1] as List).length;
-          final walletData = results[2] as Map<String, dynamic>;
-          _balance = (walletData['balance'] as num?)?.toDouble() ?? 0.0;
-          _currency = walletData['currency'] ?? 'USD';
-        });
-      }
-    } catch (e) {
-      debugPrint('Error loading stats: $e');
+    if (mounted) {
+      setState(() {
+        _orderCount = (results[0] as List).length;
+        _favoriteCount = (results[1] as List).length;
+        final walletData = results[2] as Map<String, dynamic>;
+        _balance = (walletData['balance'] as num?)?.toDouble() ?? 0.0;
+        _currency = walletData['currency'] ?? 'USD';
+      });
     }
   }
 

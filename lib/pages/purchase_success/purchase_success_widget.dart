@@ -72,7 +72,6 @@ class _PurchaseSuccessWidgetState extends State<PurchaseSuccessWidget> {
         });
       }
     } catch (e) {
-      debugPrint('Error loading order success: $e');
       if (mounted) setState(() => _isLoading = false);
     }
   }

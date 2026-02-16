@@ -8,81 +8,62 @@ class NotificationService {
 
   /// Inicializar notificaciones (permisos y listener)
   static Future<void> init() async {
-    try {
-      // 1. Request Permission
-      NotificationSettings settings = await _fcm.requestPermission(
-        alert: true,
-        badge: true,
-        sound: true,
-        provisional: false,
-      );
+    // 1. Request Permission
+    NotificationSettings settings = await _fcm.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+      provisional: false,
+    );
 
-      debugPrint(
-          '[NotificationService] User granted permission: ${settings.authorizationStatus}');
-
-      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-        // 2. Get Token
-        String? token = await _fcm.getToken();
-        if (token != null) {
-          await registerToken(token);
-        }
-
-        // 3. Listener (Foreground)
-        FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-          debugPrint(
-              '[NotificationService] Foreground Message: ${message.notification?.title}');
-          // Optional: Show local notification or update provider
-        });
-
-        // 4. Token Refresh Listener
-        _fcm.onTokenRefresh.listen((newToken) {
-          registerToken(newToken);
-        });
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      // 2. Get Token
+      String? token = await _fcm.getToken();
+      if (token != null) {
+        await registerToken(token);
       }
-    } catch (e) {
-      debugPrint('[NotificationService] Error initializing: $e');
+
+      // 3. Listener (Foreground)
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+        // Optional: Show local notification or update provider
+      });
+
+      // 4. Token Refresh Listener
+      _fcm.onTokenRefresh.listen((newToken) {
+        registerToken(newToken);
+      });
     }
   }
 
   /// Registrar Token en Backend
   static Future<void> registerToken(String token) async {
-    try {
-      if (currentUserUid.isEmpty) return; // Only if logged in
+    if (currentUserUid.isEmpty) return; // Only if logged in
 
-      await ApiClient.post('/api/notifications', body: {
-        'action': 'registerToken',
-        'token': token,
-      });
-      debugPrint('[NotificationService] Token registered in backend');
-    } catch (e) {
-      debugPrint('[NotificationService] Error registering token: $e');
-    }
+    await ApiClient.post('/api/notifications', body: {
+      'action': 'registerToken',
+      'token': token,
+    });
   }
 
   /// Obtener notificaciones del usuario (Real API)
   static Future<List<Map<String, dynamic>>> getNotifications() async {
-    try {
-      final response = await ApiClient.post('/api/notifications', body: {
-        'action': 'list',
-        'limit': '50',
-      });
+    final response = await ApiClient.post('/api/notifications', body: {
+      'action': 'list',
+      'limit': '50',
+    });
 
-      if (response['data'] != null) {
-        return List<Map<String, dynamic>>.from(response['data']).map((n) {
-          // Ensure color/icon parsing locally if backend sends string
-          return {
-            ...n,
-            'color': _getColorForType(n['type']),
-            'icon': n['icon'] ?? 'notifications',
-          };
-        }).toList();
-      }
-
-      return [];
-    } catch (e) {
-      debugPrint('[NotificationService] Error fetching notifications: $e');
-      return [];
+    if (response['data'] != null) {
+      return List<Map<String, dynamic>>.from(response['data']).map((n) {
+        // Ensure color/icon parsing locally if backend sends string
+        return {
+          ...n,
+          'color': _getColorForType(n['type']),
+          'icon': n['icon'] ?? 'notifications',
+        };
+      }).toList();
     }
+
+    return [];
   }
 
   /// Marcar notificación como leída
@@ -92,7 +73,6 @@ class NotificationService {
           body: {'action': 'markRead', 'id': notificationId});
       return true;
     } catch (e) {
-      debugPrint('[NotificationService] Error marking as read: $e');
       return false;
     }
   }
@@ -104,7 +84,6 @@ class NotificationService {
           body: {'action': 'delete', 'id': notificationId});
       return true;
     } catch (e) {
-      debugPrint('[NotificationService] Error deleting notification: $e');
       return false;
     }
   }

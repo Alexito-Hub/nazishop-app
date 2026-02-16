@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'backend/firebase/firebase_config.dart';
 import 'backend/currency_service.dart';
@@ -10,7 +11,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import 'flutter_flow/flutter_flow_util.dart';
 import 'flutter_flow/internationalization.dart';
 import 'index.dart';
-import 'backend/stripe_service.dart';
+
 import 'backend/notification_service.dart';
 import 'app_routes.dart';
 
@@ -51,13 +52,9 @@ void main() async {
   usePathUrlStrategy();
   await FlutterFlowTheme.initialize();
 
-  try {
-    await initFirebase();
-    // Initialize currency service after Firebase
-    await CurrencyService.initialize();
-  } catch (e) {
-    debugPrint('Firebase initialization failed: $e');
-  }
+  await initFirebase();
+  // Initialize currency service after Firebase
+  await CurrencyService.initialize();
 
   runApp(
     MultiProvider(
@@ -108,7 +105,6 @@ class MyAppState extends State<MyApp> {
   }
 
   Future<void> _initializeApp() async {
-    debugPrint('[Bootstrap] initialize start');
     if (!mounted) return;
 
     final authProvider = context.read<NaziShopAuthProvider>();
@@ -121,27 +117,15 @@ class MyAppState extends State<MyApp> {
               uid: authProvider.currentUser?.id ?? '', loggedIn: true)
           : SimpleAuthUser(uid: '', loggedIn: false));
     });
-    try {
-      await Future.wait([
-        _restoreSession(),
-        Future.delayed(const Duration(milliseconds: 1000)),
-      ]).timeout(
-        const Duration(seconds: 10),
-        onTimeout: () {
-          debugPrint(
-              '[Bootstrap] Timeout during initialization, continuing anyway');
-          return [];
-        },
-      );
-    } catch (e) {
-      debugPrint('[Bootstrap] Error during initialization: $e');
-    }
-
-    try {
-      await StripeService.init();
-    } catch (e) {
-      // Stripe not available or error - non-critical for startup
-    }
+    await Future.wait([
+      _restoreSession(),
+      Future.delayed(const Duration(milliseconds: 1000)),
+    ]).timeout(
+      const Duration(seconds: 10),
+      onTimeout: () {
+        return [];
+      },
+    );
 
     if (mounted) {
       _appStateNotifier.stopShowingSplashImage();
@@ -154,39 +138,30 @@ class MyAppState extends State<MyApp> {
     }
 
     final authProvider = context.read<NaziShopAuthProvider>();
-    try {
-      debugPrint('[Bootstrap] restoreSession start');
-      await authProvider.restoreSession().timeout(
-        const Duration(seconds: 10),
-        onTimeout: () {
-          debugPrint(
-              '[Bootstrap] restoreSession timeout, continuing without session');
-          return false;
-        },
-      );
-      debugPrint(
-          '[Bootstrap] restoreSession completed. loggedIn=${authProvider.isLoggedIn}');
+    await authProvider.restoreSession().timeout(
+      const Duration(seconds: 10),
+      onTimeout: () {
+        return false;
+      },
+    );
+    setCurrentUser(authProvider.currentUser);
 
-      // Sincronizar estado inicial
-      setCurrentUser(authProvider.currentUser);
-
-      if (authProvider.isLoggedIn) {
-        // Inicializar notificaciones
-        await NotificationService.init();
-      }
-    } catch (e) {
-      debugPrint('Error restoring session: $e');
+    if (authProvider.isLoggedIn) {
+      await NotificationService.init();
     }
 
     if (!mounted) {
       return;
     }
 
-    debugPrint('[Bootstrap] updating AppStateNotifier user');
     _appStateNotifier.update(authProvider.isLoggedIn
         ? SimpleAuthUser(
             uid: authProvider.currentUser?.id ?? '', loggedIn: true)
         : SimpleAuthUser(uid: '', loggedIn: false));
+
+    final prefs = await SharedPreferences.getInstance();
+    _appStateNotifier.onboardingCompleted =
+        prefs.getBool('onboarding_completed') ?? false;
   }
 
   void setLocale(String language) {

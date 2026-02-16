@@ -1,66 +1,263 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
+
 <head>
-  <script src="https://js.stripe.com/v3/"></script>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    Alternatively, build your application passing the --base-href parameter
-    specifying the new root path of your web app.
-
-    Fore more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-  -->
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
-  <meta name="google-signin-client_id" content="547883132585-f8vbg249ma0vulvbh77b06gj7rv9vhe3.apps.googleusercontent.com">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-  <!-- iOS meta tags & icons -->
+  <meta name="description"
+    content="Premium Digital Services. Get the best digital services, streaming accounts, and social media boosts instantly.">
+
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="Nazi Shop">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Digital Shop">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
-  
-
-  <meta name="robots" content="noindex" />
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png" />
-
-  <!-- Open Graph & SEO tags -->
-  <meta property="og:title" content="Nazi Shop" />
-  <meta property="og:description" content="Built with FlutterFlow." />
-  <meta property="og:image" content="https://storage.googleapis.com/flutterflow-prod-hosting/og_splash_gradient.png" /> 
-  <meta name="twitter:title" content="Nazi Shop" />
-  <meta name="twitter:description" content="Built with FlutterFlow." />
-  <meta name="twitter:image" content="https://storage.googleapis.com/flutterflow-prod-hosting/og_splash_gradient.png" />
+  <meta property="og:title" content="Premium Digital Services" />
+  <meta property="og:description"
+    content="Get the best digital services, streaming accounts, and social media boosts instantly." />
+  <meta property="og:image" content="favicon.png" />
   <meta name="twitter:card" content="summary_large_image" />
 
-  <title> Nazi Shop </title>
-  <meta name="description" content="Built with FlutterFlow." />
-    
+  <link rel="icon" type="image/png" href="favicon.png" />
 
-  <!-- Status Bar color in Safari browser (iOS) and PWA -->
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f1f4f8">
-  <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#1d2428">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
+  <title>Premium Digital Services</title>
   <link rel="manifest" href="manifest.json">
-  
+
+  <style>
+    :root {
+      --bg-color: #0a0a0a;
+      --text-color: #f0f0f0;
+      --text-muted: #888888;
+      --spinner-track: rgba(255, 255, 255, 0.1);
+      --spinner-accent: #E50914;
+      --btn-bg: #E50914;
+      --btn-hover: #b2070f;
+      --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg-color: #ffffff;
+        --text-color: #1a1a1a;
+        --text-muted: #666666;
+        --spinner-track: rgba(0, 0, 0, 0.1);
+      }
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: var(--font-family);
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.3s ease;
+    }
+
+    .loading-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      animation: fadeIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .logo-placeholder {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 32px;
+      border-radius: 20px;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.2));
+      animation: pulse 3s infinite ease-in-out;
+    }
+
+    .loader {
+      width: 48px;
+      height: 48px;
+      border: 3px solid var(--spinner-track);
+      border-bottom-color: var(--spinner-accent);
+      border-radius: 50%;
+      display: inline-block;
+      box-sizing: border-box;
+      animation: rotation 1s linear infinite;
+      margin-bottom: 24px;
+    }
+
+    .status-text {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      transition: opacity 0.3s ease;
+      min-height: 20px;
+    }
+
+    .error-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      animation: slideUp 0.4s ease-out;
+    }
+
+    .retry-btn {
+      background-color: var(--btn-bg);
+      color: white;
+      border: none;
+      padding: 12px 32px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 14px;
+      box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3);
+      transition: all 0.2s ease;
+      margin-top: 20px;
+    }
+
+    .retry-btn:hover {
+      background-color: var(--btn-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(229, 9, 20, 0.4);
+    }
+
+    .retry-btn:active {
+      transform: translateY(0);
+    }
+
+    @keyframes rotation {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.02);
+        opacity: 0.9;
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
 </head>
+
 <body>
-  
-  
-  
-  
-  
+
+  <div class="loading-container" id="loading-wrapper">
+    <img src="favicon.png" alt="Logo" class="logo-placeholder">
+
+    <div id="loader-graphic">
+      <span class="loader"></span>
+    </div>
+
+    <p id="loading-text" class="status-text">Iniciando servicios...</p>
+  </div>
+
+  <div class="loading-container error-container" id="error-wrapper">
+    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+      style="margin-bottom: 16px;">
+      <path
+        d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+        stroke="#ff5963" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M12 8V12" stroke="#ff5963" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M12 16H12.01" stroke="#ff5963" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+    <h3 style="margin: 0 0 8px 0; font-size: 20px;">Error de conexión</h3>
+    <p style="color: var(--text-muted); margin: 0; font-size: 14px;">No pudimos cargar la aplicación.</p>
+    <button onclick="window.location.reload()" class="retry-btn">Reintentar</button>
+  </div>
+
+  <script>
+    const loadingWrapper = document.getElementById('loading-wrapper');
+    const loadingText = document.getElementById('loading-text');
+    const loaderGraphic = document.getElementById('loader-graphic');
+    const errorWrapper = document.getElementById('error-wrapper');
+
+    let appLoaded = false;
+
+    const timeouts = [
+      setTimeout(() => {
+        if (!appLoaded) loadingText.textContent = "Conectando con el servidor...";
+      }, 4000),
+      setTimeout(() => {
+        if (!appLoaded) loadingText.textContent = "Preparando recursos...";
+      }, 12000),
+      setTimeout(() => {
+        if (!appLoaded) loadingText.textContent = "Esto está tardando más de lo usual...";
+      }, 25000),
+      setTimeout(() => {
+        if (!appLoaded) {
+          loadingWrapper.style.display = 'none';
+          errorWrapper.style.display = 'flex';
+        }
+      }, 45000)
+    ];
+
+    window.addEventListener('flutter-first-frame', function () {
+      appLoaded = true;
+      timeouts.forEach(clearTimeout);
+    });
+  </script>
+
   <script>
     {{flutter_bootstrap_js}}
   </script>
 </body>
+
 </html>

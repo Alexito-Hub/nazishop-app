@@ -83,7 +83,6 @@ class _CurrencyManagementWidgetState extends State<CurrencyManagementWidget> {
         if (mounted) setState(() {});
       }
     } catch (e) {
-      debugPrint('Error loading rates: $e');
       if (mounted) CustomSnackBar.error(context, 'Error cargando tasas: $e');
     }
   }

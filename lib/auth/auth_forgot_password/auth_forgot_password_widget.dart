@@ -60,7 +60,6 @@ class _AuthForgotPasswordWidgetState extends State<AuthForgotPasswordWidget>
         });
       }
     } catch (e) {
-      debugPrint('Error loading security settings: $e');
       if (mounted) setState(() => _isLoadingSecurity = false);
     }
   }

@@ -34,8 +34,15 @@ class AppStateNotifier extends ChangeNotifier {
   bool get loading => user == null || showSplashImage;
   bool get loggedIn => user?.loggedIn ?? false;
 
+  bool onboardingCompleted = false;
+
   void stopShowingSplashImage() {
     showSplashImage = false;
+    notifyListeners();
+  }
+
+  void completeOnboarding() {
+    onboardingCompleted = true;
     notifyListeners();
   }
 

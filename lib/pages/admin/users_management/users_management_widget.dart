@@ -104,7 +104,6 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
         });
       }
     } catch (e) {
-      debugPrint('Error loading users: $e');
       if (mounted) {
         setState(() {
           _users = [];

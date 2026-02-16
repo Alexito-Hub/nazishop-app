@@ -90,9 +90,9 @@ class AppRoutes {
             state.matchedLocation == register ||
             state.matchedLocation == onboarding;
 
-        // 1. Si NO está logueado y NO es una ruta de auth, redirigir a Login
+        // 1. Si NO está logueado y NO es una ruta de auth, redirigir a Login o Onboarding
         if (!loggedIn && !isAuthRoute) {
-          return login;
+          return appStateNotifier.onboardingCompleted ? login : onboarding;
         }
 
         // 2. Si SÍ está logueado e intenta ver Login/Registro, redirigir a Home
