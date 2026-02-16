@@ -436,8 +436,9 @@ class _OnboardingWidgetState extends State<OnboardingWidget>
                   ),
                 ),
                 const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     Text(
                       '¿Ya tienes cuenta?',
@@ -486,15 +487,15 @@ class _OnboardingWidgetState extends State<OnboardingWidget>
         description:
             'Netflix, Disney+, Spotify y más. Tus plataformas favoritas sin interrupciones.',
         isCustomIcon: true,
-        customContent: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        customContent: Wrap(
+          alignment: WrapAlignment.center,
+          spacing: 20,
+          runSpacing: 10,
           children: [
             _buildBrandIcon(
                 context, FontAwesomeIcons.n, const Color(0xFFE50914)),
-            const SizedBox(width: 20),
             _buildBrandIcon(
                 context, FontAwesomeIcons.spotify, const Color(0xFF1DB954)),
-            const SizedBox(width: 20),
             _buildBrandIcon(
                 context, FontAwesomeIcons.amazon, const Color(0xFF00A8E1)),
           ],
@@ -507,15 +508,15 @@ class _OnboardingWidgetState extends State<OnboardingWidget>
         description:
             'Licencias originales de Windows y Office. Impulsa tus redes sociales con nuestros servicios.',
         isCustomIcon: true,
-        customContent: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        customContent: Wrap(
+          alignment: WrapAlignment.center,
+          spacing: 20,
+          runSpacing: 10,
           children: [
             _buildBrandIcon(
                 context, FontAwesomeIcons.microsoft, const Color(0xFF0078D6)),
-            const SizedBox(width: 20),
             _buildBrandIcon(
                 context, FontAwesomeIcons.instagram, const Color(0xFFC13584)),
-            const SizedBox(width: 20),
             _buildBrandIcon(context, FontAwesomeIcons.key,
                 FlutterFlowTheme.of(context).primaryText),
           ],
