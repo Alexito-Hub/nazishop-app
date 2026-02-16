@@ -21,7 +21,7 @@ class _NotificationsUserWidgetState extends State<NotificationsUserWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   // Colors
-  static const Color kPrimaryColor = Color(0xFFE50914);
+  Color get _primaryColor => FlutterFlowTheme.of(context).primary;
 
   bool get _isDesktop => MediaQuery.of(context).size.width >= 900;
   bool _isLoading = true;
@@ -85,7 +85,6 @@ class _NotificationsUserWidgetState extends State<NotificationsUserWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final theme = FlutterFlowTheme.of(context);
     return Scaffold(
       key: scaffoldKey,
@@ -94,9 +93,8 @@ class _NotificationsUserWidgetState extends State<NotificationsUserWidget> {
         builder: (context, constraints) {
           return RefreshIndicator(
             onRefresh: _handleRefresh,
-            color: kPrimaryColor,
-            backgroundColor:
-                isDark ? const Color(0xFF141414) : theme.secondaryBackground,
+            color: theme.primary,
+            backgroundColor: theme.secondaryBackground,
             child: _isDesktop ? _buildDesktopLayout() : _buildMobileLayout(),
           );
         },
@@ -105,22 +103,18 @@ class _NotificationsUserWidgetState extends State<NotificationsUserWidget> {
   }
 
   Widget _buildEmptyState() {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final theme = FlutterFlowTheme.of(context);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.notifications_off_outlined,
-              size: 64,
-              color: isDark
-                  ? Colors.white.withOpacity(0.2)
-                  : Colors.black.withOpacity(0.2)),
+              size: 64, color: theme.secondaryText),
           const SizedBox(height: 16),
           Text(
             'No tienes notificaciones',
             style: GoogleFonts.outfit(
-              color: isDark ? Colors.white54 : theme.secondaryText,
+              color: theme.secondaryText,
               fontSize: 18,
             ),
           ),
@@ -131,7 +125,6 @@ class _NotificationsUserWidgetState extends State<NotificationsUserWidget> {
 
   // ===================== DESKTOP =====================
   Widget _buildDesktopLayout() {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final theme = FlutterFlowTheme.of(context);
 
     return Align(
@@ -168,15 +161,15 @@ class _NotificationsUserWidgetState extends State<NotificationsUserWidget> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
-                            color: kPrimaryColor.withOpacity(0.1),
+                            color: _primaryColor.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
-                                color: kPrimaryColor.withOpacity(0.3)),
+                                color: _primaryColor.withValues(alpha: 0.3)),
                           ),
                           child: Text(
                             '${_notifications.where((n) => !n['read']).length} nuevas alertas',
                             style: GoogleFonts.outfit(
-                                color: kPrimaryColor,
+                                color: _primaryColor,
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -188,10 +181,10 @@ class _NotificationsUserWidgetState extends State<NotificationsUserWidget> {
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               sliver: _isLoading
-                  ? const SliverFillRemaining(
+                  ? SliverFillRemaining(
                       child: Center(
                           child:
-                              CircularProgressIndicator(color: kPrimaryColor)))
+                              CircularProgressIndicator(color: _primaryColor)))
                   : _notifications.isEmpty
                       ? SliverToBoxAdapter(child: _buildEmptyState())
                       : SliverGrid(
@@ -223,7 +216,6 @@ class _NotificationsUserWidgetState extends State<NotificationsUserWidget> {
 
   // ===================== MOBILE =====================
   Widget _buildMobileLayout() {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final theme = FlutterFlowTheme.of(context);
     return CustomScrollView(
       controller: _scrollController,
@@ -231,8 +223,8 @@ class _NotificationsUserWidgetState extends State<NotificationsUserWidget> {
       slivers: [
         // 1. Header Standard Transparente & Centrado
         SliverAppBar(
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
+          backgroundColor: theme.transparent,
+          surfaceTintColor: theme.transparent,
           pinned: true,
           floating: true,
           elevation: 0,
@@ -240,9 +232,7 @@ class _NotificationsUserWidgetState extends State<NotificationsUserWidget> {
           leading: Container(
             margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: isDark
-                  ? Colors.white.withOpacity(0.05)
-                  : Colors.black.withOpacity(0.05),
+              color: theme.secondaryBackground,
               shape: BoxShape.circle,
             ),
             child: SmartBackButton(
@@ -272,9 +262,9 @@ class _NotificationsUserWidgetState extends State<NotificationsUserWidget> {
 
         // 2. Contenido
         if (_isLoading)
-          const SliverFillRemaining(
+          SliverFillRemaining(
             child:
-                Center(child: CircularProgressIndicator(color: kPrimaryColor)),
+                Center(child: CircularProgressIndicator(color: _primaryColor)),
           )
         else if (_notifications.isEmpty)
           SliverFillRemaining(child: _buildEmptyState())
@@ -301,7 +291,6 @@ class _NotificationsUserWidgetState extends State<NotificationsUserWidget> {
 
   Widget _buildNotificationItem(Map<String, dynamic> notif, int index) {
     bool read = notif['read'];
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final theme = FlutterFlowTheme.of(context);
 
     // Parse time logic simplified for display
@@ -332,7 +321,7 @@ class _NotificationsUserWidgetState extends State<NotificationsUserWidget> {
       direction: DismissDirection.endToStart,
       background: Container(
         decoration: BoxDecoration(
-          color: Colors.red.withOpacity(0.8),
+          color: Colors.red.withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(20),
         ),
         alignment: Alignment.centerRight,
@@ -351,23 +340,17 @@ class _NotificationsUserWidgetState extends State<NotificationsUserWidget> {
         child: Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? const Color(0xFF141414)
-                : FlutterFlowTheme.of(context).secondaryBackground,
+            color: theme.secondaryBackground,
             borderRadius: BorderRadius.circular(20),
             // Subtly highlight unread items with a border
             border: Border.all(
-                color: read
-                    ? (isDark
-                        ? Colors.white.withOpacity(0.05)
-                        : theme.alternate)
-                    : kPrimaryColor.withOpacity(0.3),
+                color: read ? theme.alternate : _primaryColor.withValues(alpha: 0.3),
                 width: 1),
             boxShadow: read
                 ? []
                 : [
                     BoxShadow(
-                      color: kPrimaryColor.withOpacity(0.05),
+                      color: _primaryColor.withValues(alpha: 0.05),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),
@@ -392,7 +375,7 @@ class _NotificationsUserWidgetState extends State<NotificationsUserWidget> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Color(notif['color'] ?? 0xFFE50914).withOpacity(0.1),
+                    color: Color(notif['color'] ?? 0xFFE50914).withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
@@ -416,7 +399,7 @@ class _NotificationsUserWidgetState extends State<NotificationsUserWidget> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 6, vertical: 2),
                             decoration: BoxDecoration(
-                                color: Colors.red.withOpacity(0.2),
+                                color: Colors.red.withValues(alpha: 0.2),
                                 borderRadius: BorderRadius.circular(4)),
                             child: const Text('URGENTE',
                                 style: TextStyle(
@@ -454,13 +437,13 @@ class _NotificationsUserWidgetState extends State<NotificationsUserWidget> {
                             Text(
                               'Ver detalles',
                               style: GoogleFonts.outfit(
-                                color: kPrimaryColor,
+                                color: _primaryColor,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 12,
                               ),
                             ),
-                            const Icon(Icons.arrow_forward,
-                                size: 12, color: kPrimaryColor),
+                            Icon(Icons.arrow_forward,
+                                size: 12, color: _primaryColor),
                           ],
                         ),
                       ),
@@ -474,12 +457,12 @@ class _NotificationsUserWidgetState extends State<NotificationsUserWidget> {
                   child: Container(
                     width: 8,
                     height: 8,
-                    decoration: const BoxDecoration(
-                        color: kPrimaryColor,
+                    decoration: BoxDecoration(
+                        color: _primaryColor,
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: kPrimaryColor,
+                            color: _primaryColor,
                             blurRadius: 6,
                             spreadRadius: 1,
                           )

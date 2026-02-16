@@ -74,7 +74,7 @@ class _ViewCredentialsWidgetState extends State<ViewCredentialsWidget> {
         }
       }
     } catch (e) {
-      print('Error fetching order: $e');
+      debugPrint('Error fetching order: $e');
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -246,7 +246,8 @@ class _ViewCredentialsWidgetState extends State<ViewCredentialsWidget> {
                                 color: theme.alternate.withValues(alpha: 0.3)),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.06),
+                                color:
+                                    theme.primaryText.withValues(alpha: 0.06),
                                 blurRadius: 32,
                                 offset: const Offset(0, 10),
                               ),
@@ -399,7 +400,7 @@ class _ViewCredentialsWidgetState extends State<ViewCredentialsWidget> {
         Text(
           label,
           style: GoogleFonts.outfit(
-              fontSize: 12, color: theme.secondaryText.withOpacity(0.8)),
+              fontSize: 12, color: theme.secondaryText.withValues(alpha: 0.8)),
         ),
         const SizedBox(height: 4),
         Text(

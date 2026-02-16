@@ -39,13 +39,9 @@ class _ServiceCardModernState extends State<ServiceCardModern> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     final Color borderColor = _isHovered
-        ? widget.primaryColor.withOpacity(0.5)
-        : (isDark
-            ? Colors.white.withOpacity(0.08)
-            : FlutterFlowTheme.of(context).alternate.withOpacity(0.15));
+        ? widget.primaryColor.withValues(alpha: 0.5)
+        : FlutterFlowTheme.of(context).alternate.withValues(alpha: 0.3);
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
@@ -58,24 +54,22 @@ class _ServiceCardModernState extends State<ServiceCardModern> {
           duration: const Duration(milliseconds: 250),
           curve: Curves.easeOut,
           transform: Matrix4.identity()
-            ..translate(0.0, _isHovered ? -8.0 : 0.0),
+            ..translateByDouble(0.0, _isHovered ? -8.0 : 0.0, 0.0, 1.0),
           decoration: BoxDecoration(
-            color: isDark
-                ? const Color(0xFF141414)
-                : FlutterFlowTheme.of(context).secondaryBackground,
+            color: FlutterFlowTheme.of(context).secondaryBackground,
             borderRadius: BorderRadius.circular(24),
             border: Border.all(color: borderColor, width: 1.5),
             boxShadow: _isHovered
                 ? [
                     BoxShadow(
-                      color: widget.primaryColor.withOpacity(0.25),
+                      color: widget.primaryColor.withValues(alpha: 0.25),
                       blurRadius: 25,
                       offset: const Offset(0, 10),
                     )
                   ]
                 : [
                     BoxShadow(
-                      color: Colors.black.withOpacity(isDark ? 0.4 : 0.08),
+                      color: Colors.black.withValues(alpha: 0.08),
                       blurRadius: 10,
                       offset: const Offset(0, 5),
                     )
@@ -95,9 +89,7 @@ class _ServiceCardModernState extends State<ServiceCardModern> {
                       Container(
                         width: double.infinity,
                         height: double.infinity,
-                        color: isDark
-                            ? const Color(0xFF0A0A0A)
-                            : FlutterFlowTheme.of(context).secondaryBackground,
+                        color: FlutterFlowTheme.of(context).secondaryBackground,
                         child: (widget.service.branding.logoUrl
                                     ?.startsWith('http') ??
                                 false)
@@ -124,7 +116,7 @@ class _ServiceCardModernState extends State<ServiceCardModern> {
                             gradient: LinearGradient(
                               colors: [
                                 Colors.transparent,
-                                Colors.black.withOpacity(0.6)
+                                Colors.black.withValues(alpha: 0.6)
                               ],
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
@@ -153,8 +145,8 @@ class _ServiceCardModernState extends State<ServiceCardModern> {
                                       horizontal: 8, vertical: 4),
                                   decoration: BoxDecoration(
                                     color: widget.service.isInStock
-                                        ? const Color(0xFF22C55E) // Green 500
-                                        : const Color(0xFFEF4444), // Red 500
+                                        ? FlutterFlowTheme.of(context).success
+                                        : FlutterFlowTheme.of(context).error,
                                     borderRadius: BorderRadius.circular(6),
                                   ),
                                   child: Row(
@@ -167,7 +159,8 @@ class _ServiceCardModernState extends State<ServiceCardModern> {
                                         style: GoogleFonts.outfit(
                                           fontSize: 10,
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.white,
+                                          color: FlutterFlowTheme.of(context)
+                                              .tertiary,
                                           letterSpacing: 0.5,
                                         ),
                                       ),
@@ -184,14 +177,16 @@ class _ServiceCardModernState extends State<ServiceCardModern> {
                                     decoration: BoxDecoration(
                                       gradient: LinearGradient(
                                         colors: [
-                                          Colors.amber.shade400,
-                                          Colors.orange.shade400
+                                          FlutterFlowTheme.of(context).warning,
+                                          FlutterFlowTheme.of(context).warning,
                                         ],
                                       ),
                                       borderRadius: BorderRadius.circular(6),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.amber.withOpacity(0.3),
+                                          color: FlutterFlowTheme.of(context)
+                                              .warning
+                                              .withValues(alpha: 0.3),
                                           blurRadius: 4,
                                           offset: const Offset(0, 2),
                                         ),
@@ -200,13 +195,16 @@ class _ServiceCardModernState extends State<ServiceCardModern> {
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        const Icon(Icons.star_rounded,
-                                            color: Colors.white, size: 10),
+                                        Icon(Icons.star_rounded,
+                                            color: FlutterFlowTheme.of(context)
+                                                .tertiary,
+                                            size: 10),
                                         const SizedBox(width: 4),
                                         Text(
                                           'OFERTA',
                                           style: GoogleFonts.outfit(
-                                            color: Colors.white,
+                                            color: FlutterFlowTheme.of(context)
+                                                .tertiary,
                                             fontSize: 9,
                                             fontWeight: FontWeight.w800,
                                             letterSpacing: 0.5,
@@ -222,7 +220,7 @@ class _ServiceCardModernState extends State<ServiceCardModern> {
                             // Right: Favorite Button
                             Container(
                               decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.3),
+                                color: Colors.black.withValues(alpha: 0.3),
                                 shape: BoxShape.circle,
                               ),
                               child: IconButton(
@@ -231,8 +229,8 @@ class _ServiceCardModernState extends State<ServiceCardModern> {
                                       ? Icons.favorite
                                       : Icons.favorite_border,
                                   color: _isFavorite
-                                      ? const Color(0xFFE50914)
-                                      : Colors.white,
+                                      ? FlutterFlowTheme.of(context).primary
+                                      : FlutterFlowTheme.of(context).tertiary,
                                   size: 18,
                                 ),
                                 onPressed: _toggleFavorite,
@@ -260,9 +258,7 @@ class _ServiceCardModernState extends State<ServiceCardModern> {
                   child: Container(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? const Color(0xFF141414)
-                        : FlutterFlowTheme.of(context).secondaryBackground,
+                    color: FlutterFlowTheme.of(context).secondaryBackground,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -329,19 +325,13 @@ class _ServiceCardModernState extends State<ServiceCardModern> {
                                   colors: _isHovered
                                       ? [
                                           widget.primaryColor,
-                                          widget.primaryColor.withOpacity(0.8)
+                                          widget.primaryColor
+                                              .withValues(alpha: 0.8)
                                         ]
                                       : [
-                                          Theme.of(context).brightness ==
-                                                  Brightness.dark
-                                              ? Colors.white10
-                                              : FlutterFlowTheme.of(context)
-                                                  .alternate,
-                                          Theme.of(context).brightness ==
-                                                  Brightness.dark
-                                              ? Colors.white10
-                                              : FlutterFlowTheme.of(context)
-                                                  .alternate
+                                          FlutterFlowTheme.of(context)
+                                              .alternate,
+                                          FlutterFlowTheme.of(context).alternate
                                         ],
                                 ),
                                 shape: BoxShape.circle,
@@ -349,7 +339,7 @@ class _ServiceCardModernState extends State<ServiceCardModern> {
                               child: Icon(
                                 Icons.arrow_forward_rounded,
                                 color: _isHovered
-                                    ? Colors.white
+                                    ? FlutterFlowTheme.of(context).tertiary
                                     : FlutterFlowTheme.of(context)
                                         .secondaryText,
                                 size: 20,
@@ -382,24 +372,25 @@ class _ServiceCardModernState extends State<ServiceCardModern> {
           children: List.generate(5, (index) {
             if (index < rating.floor()) {
               // Full star
-              return const Icon(
+              return Icon(
                 Icons.star_rounded,
-                color: Color(0xFFFFC107),
+                color: FlutterFlowTheme.of(context).warning,
                 size: 14,
               );
             } else if (index < rating) {
               // Half star
-              return const Icon(
+              return Icon(
                 Icons.star_half_rounded,
-                color: Color(0xFFFFC107),
+                color: FlutterFlowTheme.of(context).warning,
                 size: 14,
               );
             } else {
               // Empty star
               return Icon(
                 Icons.star_outline_rounded,
-                color:
-                    FlutterFlowTheme.of(context).secondaryText.withOpacity(0.3),
+                color: FlutterFlowTheme.of(context)
+                    .secondaryText
+                    .withValues(alpha: 0.3),
                 size: 14,
               );
             }
@@ -421,18 +412,16 @@ class _ServiceCardModernState extends State<ServiceCardModern> {
   Widget _buildPlaceholder() {
     return Container(
       decoration: BoxDecoration(
-          color: Theme.of(context).brightness == Brightness.dark
-              ? const Color(0xFF1E1E1E)
-              : FlutterFlowTheme.of(context).secondaryBackground,
+          color: FlutterFlowTheme.of(context).secondaryBackground,
           image: DecorationImage(
               image: const NetworkImage(
                   "https://www.transparenttextures.com/patterns/cubes.png"),
               colorFilter: ColorFilter.mode(
-                  Colors.black.withOpacity(0.8), BlendMode.dstATop),
+                  Colors.black.withValues(alpha: 0.8), BlendMode.dstATop),
               fit: BoxFit.cover)),
       child: Center(
         child: Icon(Icons.layers_outlined,
-            size: 40, color: widget.primaryColor.withOpacity(0.3)),
+            size: 40, color: widget.primaryColor.withValues(alpha: 0.3)),
       ),
     );
   }

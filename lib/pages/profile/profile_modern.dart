@@ -26,10 +26,9 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
   int _favoriteCount = 0;
   double _balance = 0.0;
   String _currency = 'USD';
-  bool _isLoadingStats = true; // Used?
 
   // --- COLORES ---
-  static const Color kPrimaryColor = Color(0xFFE50914);
+  Color get _primaryColor => FlutterFlowTheme.of(context).primary;
 
   // --- RESPONSIVE ---
   bool get _isDesktop => MediaQuery.of(context).size.width >= 900;
@@ -67,12 +66,10 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
           final walletData = results[2] as Map<String, dynamic>;
           _balance = (walletData['balance'] as num?)?.toDouble() ?? 0.0;
           _currency = walletData['currency'] ?? 'USD';
-          _isLoadingStats = false;
         });
       }
     } catch (e) {
-      print('Error loading stats: $e');
-      if (mounted) setState(() => _isLoadingStats = false);
+      debugPrint('Error loading stats: $e');
     }
   }
 
@@ -97,7 +94,7 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
               onPressed: () => Navigator.pop(dialogContext, true),
               child: Text('Salir',
                   style: GoogleFonts.outfit(
-                      color: kPrimaryColor, fontWeight: FontWeight.bold)),
+                      color: theme.primary, fontWeight: FontWeight.bold)),
             ),
           ],
         );
@@ -105,8 +102,14 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
     );
 
     if (shouldLogout == true) {
-      await getAuthManager(context).signOut();
-      if (mounted) context.goNamed('login');
+      final navigatorContext = context;
+      // ignore: use_build_context_synchronously
+      await getAuthManager(navigatorContext).signOut();
+      if (mounted) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          navigatorContext.goNamed('login');
+        });
+      }
     }
   }
 
@@ -137,9 +140,7 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
         SliverAppBar(
           expandedHeight:
               450, // Increased height to fit all content (Avatar, Text, Stats, Wallet)
-          backgroundColor: Theme.of(context).brightness == Brightness.dark
-              ? const Color(0xFF0A0A0A)
-              : FlutterFlowTheme.of(context).primaryBackground,
+          backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
           pinned: true,
           stretch: true,
           flexibleSpace: FlexibleSpaceBar(
@@ -151,10 +152,8 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        kPrimaryColor.withOpacity(0.3),
-                        Theme.of(context).brightness == Brightness.dark
-                            ? FlutterFlowTheme.of(context).primaryBackground
-                            : FlutterFlowTheme.of(context).primaryBackground,
+                        _primaryColor.withValues(alpha: 0.3),
+                        FlutterFlowTheme.of(context).primaryBackground,
                       ],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
@@ -166,7 +165,10 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
                   right: -50,
                   top: -50,
                   child: Icon(Icons.person,
-                      size: 250, color: Colors.white.withOpacity(0.05)),
+                      size: 250,
+                      color: FlutterFlowTheme.of(context)
+                          .primaryText
+                          .withValues(alpha: 0.05)),
                 ),
                 // Contenido del Perfil
                 Center(
@@ -207,8 +209,9 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
                             child: FilledButton.icon(
                               onPressed: () => context.pushNamed('admin'),
                               style: FilledButton.styleFrom(
-                                backgroundColor: kPrimaryColor,
-                                foregroundColor: Colors.white,
+                                backgroundColor: _primaryColor,
+                                foregroundColor:
+                                    FlutterFlowTheme.of(context).tertiary,
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 24, vertical: 12),
                               ),
@@ -227,28 +230,22 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            _buildMobileStat("Pedidos", _orderCount.toString(),
-                                isDark: Theme.of(context).brightness ==
-                                    Brightness.dark),
+                            _buildMobileStat("Pedidos", _orderCount.toString()),
                             Container(
                                 height: 20,
                                 width: 1,
-                                color: Theme.of(context).dividerColor,
+                                color: FlutterFlowTheme.of(context).alternate,
                                 margin:
                                     const EdgeInsets.symmetric(horizontal: 10)),
                             _buildMobileStat(
-                                "Favoritos", _favoriteCount.toString(),
-                                isDark: Theme.of(context).brightness ==
-                                    Brightness.dark),
+                                "Favoritos", _favoriteCount.toString()),
                             Container(
                                 height: 20,
                                 width: 1,
-                                color: Theme.of(context).dividerColor,
+                                color: FlutterFlowTheme.of(context).alternate,
                                 margin:
                                     const EdgeInsets.symmetric(horizontal: 10)),
-                            _buildMobileStat("Nivel", _userLevel,
-                                isDark: Theme.of(context).brightness ==
-                                    Brightness.dark),
+                            _buildMobileStat("Nivel", _userLevel),
                           ],
                         ),
                         const SizedBox(height: 24),
@@ -259,14 +256,17 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
                           margin: const EdgeInsets.symmetric(horizontal: 24),
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              colors: [kPrimaryColor, const Color(0xFFB00710)],
+                              colors: [
+                                _primaryColor,
+                                _primaryColor.withValues(alpha: 0.7)
+                              ],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             ),
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
-                                color: kPrimaryColor.withOpacity(0.4),
+                                color: _primaryColor.withValues(alpha: 0.4),
                                 blurRadius: 20,
                                 offset: const Offset(0, 10),
                               )
@@ -285,7 +285,8 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
                                   Text(
                                     '\$${_balance.toStringAsFixed(2)} $_currency',
                                     style: GoogleFonts.outfit(
-                                        color: Colors.white,
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
                                         fontSize: 24,
                                         fontWeight: FontWeight.bold),
                                   ),
@@ -294,11 +295,14 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
                               Container(
                                 padding: const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.2),
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryBackground
+                                      .withValues(alpha: 0.2),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                child:
-                                    const Icon(Icons.add, color: Colors.white),
+                                child: Icon(Icons.add,
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryText),
                               ),
                             ],
                           ),
@@ -363,7 +367,7 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
               _buildMenuTile(
                 icon: Icons.logout_rounded,
                 title: "Cerrar Sesión",
-                color: Colors.red,
+                color: FlutterFlowTheme.of(context).error,
                 isDestructive: true,
                 onTap: _handleLogout,
               ),
@@ -430,14 +434,17 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [kPrimaryColor.withOpacity(0.9), const Color(0xFFB00710)],
+            colors: [
+              _primaryColor.withValues(alpha: 0.9),
+              _primaryColor.withValues(alpha: 0.6)
+            ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-                color: kPrimaryColor.withOpacity(0.3),
+                color: _primaryColor.withValues(alpha: 0.3),
                 blurRadius: 20,
                 offset: const Offset(0, 10))
           ]),
@@ -448,15 +455,20 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Icon(Icons.account_balance_wallet_rounded,
-                  color: Colors.white.withOpacity(0.8), size: 24),
+                  color: FlutterFlowTheme.of(context)
+                      .primaryText
+                      .withValues(alpha: 0.8),
+                  size: 24),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                    color: Colors.black26,
+                    color: FlutterFlowTheme.of(context)
+                        .secondaryBackground
+                        .withValues(alpha: 0.26),
                     borderRadius: BorderRadius.circular(8)),
                 child: Text('USD',
                     style: GoogleFonts.outfit(
-                        color: Colors.white,
+                        color: FlutterFlowTheme.of(context).primaryText,
                         fontSize: 10,
                         fontWeight: FontWeight.bold)),
               )
@@ -464,11 +476,15 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
           ),
           const SizedBox(height: 16),
           Text('Saldo Actual',
-              style: GoogleFonts.outfit(color: Colors.white70, fontSize: 13)),
+              style: GoogleFonts.outfit(
+                  color: FlutterFlowTheme.of(context).secondaryText,
+                  fontSize: 13)),
           Text(
-            '\$${_balance.toStringAsFixed(2)}',
+            '\${_balance.toStringAsFixed(2)}',
             style: GoogleFonts.outfit(
-                color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold),
+                color: FlutterFlowTheme.of(context).primaryText,
+                fontSize: 32,
+                fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
           SizedBox(
@@ -476,8 +492,8 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
             child: ElevatedButton(
               onPressed: () {}, // Top up dialog
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: kPrimaryColor,
+                backgroundColor: FlutterFlowTheme.of(context).primary,
+                foregroundColor: FlutterFlowTheme.of(context).secondaryText,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
                 elevation: 0,
@@ -665,10 +681,10 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: theme.secondaryBackground,
-        border: Border.all(color: kPrimaryColor, width: 2),
+        border: Border.all(color: _primaryColor, width: 2),
         boxShadow: [
           BoxShadow(
-            color: kPrimaryColor.withOpacity(0.2),
+            color: _primaryColor.withValues(alpha: 0.2),
             blurRadius: 20,
             spreadRadius: 2,
           ),
@@ -690,31 +706,7 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
     );
   }
 
-  Widget _buildStatItem(String label, String value) {
-    final theme = FlutterFlowTheme.of(context);
-    return Column(
-      children: [
-        Text(
-          value,
-          style: GoogleFonts.outfit(
-            color: theme.primaryText,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Text(
-          label,
-          style: GoogleFonts.outfit(
-            color: theme.secondaryText,
-            fontSize: 12,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildMobileStat(String label, String value, {bool isDark = true}) {
-    // isDark param kept for signature compatibility but ignored
+  Widget _buildMobileStat(String label, String value) {
     return Column(
       children: [
         Text(
@@ -748,12 +740,13 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
         color: isDestructive
-            ? Colors.red.withOpacity(0.1)
+            ? theme.error.withValues(alpha: 0.1)
             : theme.secondaryBackground,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-            color:
-                isDestructive ? Colors.red.withOpacity(0.2) : theme.alternate),
+            color: isDestructive
+                ? theme.error.withValues(alpha: 0.2)
+                : theme.alternate),
       ),
       child: ListTile(
         onTap: onTap,
@@ -761,18 +754,18 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: isDestructive
-                ? Colors.red.withOpacity(0.2)
+                ? theme.error.withValues(alpha: 0.2)
                 : theme.secondaryBackground,
             shape: BoxShape.circle,
             border: Border.all(color: theme.alternate),
           ),
           child: Icon(icon,
-              color: isDestructive ? Colors.red : theme.primaryText, size: 20),
+              color: isDestructive ? theme.error : theme.primaryText, size: 20),
         ),
         title: Text(
           title,
           style: GoogleFonts.outfit(
-            color: isDestructive ? Colors.red : theme.primaryText,
+            color: isDestructive ? theme.error : theme.primaryText,
             fontWeight: FontWeight.w600,
             fontSize: 15,
           ),
@@ -800,12 +793,13 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
             color: isDestructive
-                ? Colors.red.withOpacity(0.05)
+                ? theme.error.withValues(alpha: 0.05)
                 : theme.secondaryBackground,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color:
-                  isDestructive ? Colors.red.withOpacity(0.3) : theme.alternate,
+              color: isDestructive
+                  ? theme.error.withValues(alpha: 0.3)
+                  : theme.alternate,
             ),
           ),
           child: Row(
@@ -814,12 +808,12 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: isDestructive
-                      ? Colors.red.withOpacity(0.1)
-                      : kPrimaryColor.withOpacity(0.1),
+                      ? theme.error.withValues(alpha: 0.1)
+                      : _primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(icon,
-                    color: isDestructive ? Colors.red : kPrimaryColor,
+                    color: isDestructive ? theme.error : _primaryColor,
                     size: 20),
               ),
               const SizedBox(width: 12),
@@ -831,7 +825,7 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
                     Text(
                       title,
                       style: GoogleFonts.outfit(
-                        color: isDestructive ? Colors.red : theme.primaryText,
+                        color: isDestructive ? theme.error : theme.primaryText,
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
                       ),
@@ -867,7 +861,7 @@ class _ProfileModernWidgetState extends State<ProfileModernWidget> {
         ),
         child: Row(
           children: [
-            Icon(icon, color: kPrimaryColor, size: 30),
+            Icon(icon, color: _primaryColor, size: 30),
             const SizedBox(width: 16),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

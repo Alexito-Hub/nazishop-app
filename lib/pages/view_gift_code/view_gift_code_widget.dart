@@ -150,7 +150,7 @@ class _ViewGiftCodeWidgetState extends State<ViewGiftCodeWidget> {
                           BoxShadow(
                             color: FlutterFlowTheme.of(context)
                                 .primary
-                                .withOpacity(0.1),
+                                .withValues(alpha: 0.1),
                             blurRadius: isDesktop ? 20.0 : 10.0,
                             offset: const Offset(0, 4),
                           ),
@@ -194,7 +194,8 @@ class _ViewGiftCodeWidgetState extends State<ViewGiftCodeWidget> {
                                   .titleSmall
                                   .override(
                                     font: GoogleFonts.inter(),
-                                    color: Colors.white,
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryText,
                                     fontWeight: FontWeight.bold,
                                   ),
                               borderRadius: BorderRadius.circular(12.0),
@@ -227,7 +228,7 @@ class _ViewGiftCodeWidgetState extends State<ViewGiftCodeWidget> {
                         decoration: BoxDecoration(
                           color: FlutterFlowTheme.of(context)
                               .accent1
-                              .withOpacity(0.1),
+                              .withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         child: Text(

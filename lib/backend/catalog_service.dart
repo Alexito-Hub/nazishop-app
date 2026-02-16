@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:nazi_shop/backend/api_client.dart';
 import 'package:nazi_shop/models/category_model.dart';
 import 'package:nazi_shop/models/service_model.dart';
@@ -6,21 +7,22 @@ class CatalogService {
   /// Fetches the full hierarchical catalog from the backend.
   static Future<List<Category>> getFullCatalog() async {
     try {
-      print('[CatalogService] Fetching catalog from $ApiClient...');
+      debugPrint('[CatalogService] Fetching catalog from $ApiClient...');
       final response = await ApiClient.get('/api/catalog');
-      print('[CatalogService] Response received: status=${response['status']}');
+      debugPrint(
+          '[CatalogService] Response received: status=${response['status']}');
 
       if (response['status'] == true && response['data'] != null) {
-        final categories = (response['data'] as List).map((json) {
+        final categories = (response['data'] as List).map<Category>((json) {
           return Category.fromJson(json);
         }).toList();
-        print('[CatalogService] ✅ Loaded ${categories.length} categories');
+        debugPrint('[CatalogService] ✅ Loaded ${categories.length} categories');
         return categories;
       }
-      print('[CatalogService] ⚠️ No data in response');
+      debugPrint('[CatalogService] ⚠️ No data in response');
       return [];
     } catch (e) {
-      print('[CatalogService] ❌ Error: $e');
+      debugPrint('[CatalogService] ❌ Error: $e');
       rethrow;
     }
   }
@@ -41,7 +43,7 @@ class CatalogService {
       }
       return [];
     } catch (e) {
-      print('Get Services Error: $e');
+      debugPrint('Get Services Error: $e');
       return [];
     }
   }
@@ -52,7 +54,7 @@ class CatalogService {
       final response = await ApiClient.get('/api/services/$id');
       return Service.fromJson(response);
     } catch (e) {
-      print('Get Service Error: $e');
+      debugPrint('Get Service Error: $e');
       return null;
     }
   }

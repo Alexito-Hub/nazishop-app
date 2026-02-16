@@ -13,10 +13,10 @@ class CreateServicePage extends StatefulWidget {
   const CreateServicePage({super.key, this.service});
 
   @override
-  _CreateServicePageState createState() => _CreateServicePageState();
+  CreateServicePageState createState() => CreateServicePageState();
 }
 
-class _CreateServicePageState extends State<CreateServicePage> {
+class CreateServicePageState extends State<CreateServicePage> {
   final _formKey = GlobalKey<FormState>();
 
   late TextEditingController _nameCtrl;
@@ -147,9 +147,11 @@ class _CreateServicePageState extends State<CreateServicePage> {
 
       if (mounted) Navigator.pop(context);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }
@@ -157,9 +159,9 @@ class _CreateServicePageState extends State<CreateServicePage> {
 
   @override
   Widget build(BuildContext context) {
-    final kBgColor = FlutterFlowTheme.of(context).primaryBackground;
-    final kSurfaceColor = FlutterFlowTheme.of(context).secondaryBackground;
-    final kPrimaryColor = FlutterFlowTheme.of(context).primary;
+    final bgColor = FlutterFlowTheme.of(context).primaryBackground;
+    final surfaceColor = FlutterFlowTheme.of(context).secondaryBackground;
+    final primaryColor = FlutterFlowTheme.of(context).primary;
 
     final isDesktop = MediaQuery.of(context).size.width >= 900;
 
@@ -180,7 +182,7 @@ class _CreateServicePageState extends State<CreateServicePage> {
                       fontWeight: FontWeight.bold),
                 ),
                 const Spacer(),
-                _buildSaveButton(kPrimaryColor),
+                _buildSaveButton(primaryColor),
               ],
             ),
           ),
@@ -189,22 +191,22 @@ class _CreateServicePageState extends State<CreateServicePage> {
             return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(flex: 2, child: _buildMainColumn(kSurfaceColor)),
+                Expanded(flex: 2, child: _buildMainColumn(surfaceColor)),
                 const SizedBox(width: 24),
                 Expanded(
                     flex: 1,
-                    child: _buildSideColumn(kSurfaceColor, kPrimaryColor)),
+                    child: _buildSideColumn(surfaceColor, primaryColor)),
               ],
             );
           } else {
             return Column(
               children: [
-                _buildMainColumn(kSurfaceColor),
+                _buildMainColumn(surfaceColor),
                 const SizedBox(height: 24),
-                _buildSideColumn(kSurfaceColor, kPrimaryColor),
+                _buildSideColumn(surfaceColor, primaryColor),
                 if (!isDesktop) ...[
                   const SizedBox(height: 32),
-                  _buildSaveButton(kPrimaryColor),
+                  _buildSaveButton(primaryColor),
                 ]
               ],
             );
@@ -214,7 +216,7 @@ class _CreateServicePageState extends State<CreateServicePage> {
     );
 
     return Scaffold(
-      backgroundColor: kBgColor,
+      backgroundColor: bgColor,
       // No appbar property, handled in body
       body: Stack(
         children: [
@@ -227,11 +229,12 @@ class _CreateServicePageState extends State<CreateServicePage> {
               height: 500,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: kPrimaryColor.withOpacity(0.05),
+                color: primaryColor.withValues(alpha: 0.05),
               ),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
-                child: Container(color: Colors.transparent),
+                child:
+                    Container(color: FlutterFlowTheme.of(context).transparent),
               ),
             ),
           ),
@@ -251,7 +254,8 @@ class _CreateServicePageState extends State<CreateServicePage> {
                         physics: const BouncingScrollPhysics(),
                         slivers: [
                           SliverAppBar(
-                            backgroundColor: Colors.transparent,
+                            backgroundColor:
+                                FlutterFlowTheme.of(context).transparent,
                             elevation: 0,
                             floating: true,
                             pinned: true,
@@ -286,7 +290,7 @@ class _CreateServicePageState extends State<CreateServicePage> {
     );
   }
 
-  Widget _buildSaveButton(Color kPrimaryColor) {
+  Widget _buildSaveButton(Color color) {
     return SizedBox(
       height: 48,
       child: ElevatedButton.icon(
@@ -299,12 +303,13 @@ class _CreateServicePageState extends State<CreateServicePage> {
                     width: 20,
                     height: 20,
                     child: CircularProgressIndicator(
-                        strokeWidth: 2, color: Colors.white)))
+                        strokeWidth: 2,
+                        color: FlutterFlowTheme.of(context).primaryText)))
             : const Icon(Icons.check),
         label: Text(_isSaving ? 'Guardando...' : 'Guardar Servicio'),
         style: ElevatedButton.styleFrom(
-          backgroundColor: kPrimaryColor,
-          foregroundColor: Colors.white,
+          backgroundColor: color,
+          foregroundColor: FlutterFlowTheme.of(context).primaryText,
           padding: const EdgeInsets.symmetric(horizontal: 24),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -313,7 +318,7 @@ class _CreateServicePageState extends State<CreateServicePage> {
     );
   }
 
-  Widget _buildMainColumn(Color kSurfaceColor) {
+  Widget _buildMainColumn(Color surfaceColor) {
     final borderColor = FlutterFlowTheme.of(context).alternate;
 
     return Column(
@@ -321,7 +326,7 @@ class _CreateServicePageState extends State<CreateServicePage> {
         Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: kSurfaceColor,
+            color: surfaceColor,
             borderRadius: BorderRadius.circular(24),
             border: Border.all(color: borderColor),
           ),
@@ -383,7 +388,7 @@ class _CreateServicePageState extends State<CreateServicePage> {
         Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: kSurfaceColor,
+            color: surfaceColor,
             borderRadius: BorderRadius.circular(24),
             border: Border.all(color: borderColor),
           ),
@@ -420,7 +425,7 @@ class _CreateServicePageState extends State<CreateServicePage> {
     );
   }
 
-  Widget _buildSideColumn(Color kSurfaceColor, Color kPrimaryColor) {
+  Widget _buildSideColumn(Color surfaceColor, Color primaryColor) {
     final borderColor = FlutterFlowTheme.of(context).alternate;
 
     return Column(
@@ -428,7 +433,7 @@ class _CreateServicePageState extends State<CreateServicePage> {
         Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: kSurfaceColor,
+            color: surfaceColor,
             borderRadius: BorderRadius.circular(24),
             border: Border.all(color: borderColor),
           ),
@@ -472,18 +477,18 @@ class _CreateServicePageState extends State<CreateServicePage> {
         Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: kSurfaceColor,
+              color: surfaceColor,
               borderRadius: BorderRadius.circular(24),
               border: Border.all(color: borderColor),
             ),
-            child: colStatus(kPrimaryColor))
+            child: colStatus(primaryColor))
       ],
     );
   }
 
-  Widget colStatus(Color kPrimaryColor) {
+  Widget colStatus(Color activeColor) {
     return SwitchListTile(
-      activeThumbColor: kPrimaryColor,
+      activeThumbColor: activeColor,
       contentPadding: EdgeInsets.zero,
       title: Text('Servicio Activo',
           style: GoogleFonts.outfit(
@@ -497,7 +502,7 @@ class _CreateServicePageState extends State<CreateServicePage> {
   }
 
   Widget _colorBox(String hex) {
-    Color c = Colors.transparent;
+    Color c = FlutterFlowTheme.of(context).transparent;
     hex = hex.toUpperCase().replaceAll("#", "");
     if (hex.length == 6) {
       hex = "FF$hex";
@@ -517,12 +522,12 @@ class _CreateServicePageState extends State<CreateServicePage> {
 
   Widget _buildInput(TextEditingController ctrl, String label, IconData icon,
       {bool isNumber = false}) {
-    Color kBgColor = FlutterFlowTheme.of(context).primaryBackground;
-    Color kPrimaryColor = FlutterFlowTheme.of(context).primary;
+    Color bgColor = FlutterFlowTheme.of(context).primaryBackground;
+    Color primaryColor = FlutterFlowTheme.of(context).primary;
 
     return Container(
       decoration: BoxDecoration(
-        color: kBgColor,
+        color: bgColor,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: FlutterFlowTheme.of(context).alternate),
       ),
@@ -531,7 +536,7 @@ class _CreateServicePageState extends State<CreateServicePage> {
         keyboardType: isNumber ? TextInputType.number : TextInputType.text,
         style:
             GoogleFonts.outfit(color: FlutterFlowTheme.of(context).primaryText),
-        cursorColor: kPrimaryColor,
+        cursorColor: primaryColor,
         decoration: InputDecoration(
           labelText: label,
           labelStyle: GoogleFonts.outfit(

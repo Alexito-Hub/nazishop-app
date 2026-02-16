@@ -12,10 +12,10 @@ class AdminServicesPage extends StatefulWidget {
   static String routeName = 'admin_services';
 
   @override
-  _AdminServicesPageState createState() => _AdminServicesPageState();
+  AdminServicesPageState createState() => AdminServicesPageState();
 }
 
-class _AdminServicesPageState extends State<AdminServicesPage> {
+class AdminServicesPageState extends State<AdminServicesPage> {
   List<Service> _services = [];
   bool _isLoading = true;
 
@@ -92,13 +92,15 @@ class _AdminServicesPageState extends State<AdminServicesPage> {
         throw res['msg'] ?? 'Error desconocido';
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text('Error al eliminar: $e',
-                style: GoogleFonts.outfit(
-                    color: FlutterFlowTheme.of(context).primaryText)),
-            backgroundColor: FlutterFlowTheme.of(context).error),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text('Error al eliminar: $e',
+                  style: GoogleFonts.outfit(
+                      color: FlutterFlowTheme.of(context).primaryText)),
+              backgroundColor: FlutterFlowTheme.of(context).error),
+        );
+      }
     }
   }
 
@@ -117,7 +119,7 @@ class _AdminServicesPageState extends State<AdminServicesPage> {
                 gradient: LinearGradient(
                   colors: [
                     FlutterFlowTheme.of(context).primary,
-                    FlutterFlowTheme.of(context).error
+                    FlutterFlowTheme.of(context).secondary,
                   ], // Red Gradient
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -125,8 +127,9 @@ class _AdminServicesPageState extends State<AdminServicesPage> {
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color:
-                        FlutterFlowTheme.of(context).primary.withOpacity(0.4),
+                    color: FlutterFlowTheme.of(context)
+                        .primary
+                        .withValues(alpha: 0.4),
                     blurRadius: 12,
                     offset: const Offset(0, 6),
                   ),
@@ -137,16 +140,17 @@ class _AdminServicesPageState extends State<AdminServicesPage> {
                   await context.pushNamed('create_service');
                   _loadServices();
                 },
-                backgroundColor: Colors.transparent,
+                backgroundColor: FlutterFlowTheme.of(context).transparent,
                 elevation: 0,
                 highlightElevation: 0,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16)),
-                icon: const Icon(Icons.design_services, color: Colors.white),
+                icon: Icon(Icons.design_services,
+                    color: FlutterFlowTheme.of(context).primaryText),
                 label: Text(
                   'Nuevo Servicio',
                   style: GoogleFonts.outfit(
-                      color: Colors.white,
+                      color: FlutterFlowTheme.of(context).primaryText,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1),
                 ),
@@ -161,8 +165,8 @@ class _AdminServicesPageState extends State<AdminServicesPage> {
       physics: const BouncingScrollPhysics(),
       slivers: [
         SliverAppBar(
-          backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-          surfaceTintColor: Colors.transparent,
+          backgroundColor: FlutterFlowTheme.of(context).transparent,
+          surfaceTintColor: FlutterFlowTheme.of(context).transparent,
           pinned: true,
           floating: true,
           elevation: 0,
@@ -172,7 +176,7 @@ class _AdminServicesPageState extends State<AdminServicesPage> {
             decoration: BoxDecoration(
               color: FlutterFlowTheme.of(context)
                   .secondaryBackground
-                  .withOpacity(0.05),
+                  .withValues(alpha: 0.05),
               shape: BoxShape.circle,
             ),
             child: SmartBackButton(
@@ -254,7 +258,7 @@ class _AdminServicesPageState extends State<AdminServicesPage> {
                           BoxShadow(
                             color: FlutterFlowTheme.of(context)
                                 .primary
-                                .withOpacity(0.4),
+                                .withValues(alpha: 0.4),
                             blurRadius: 8,
                             offset: const Offset(0, 4),
                           ),
@@ -353,7 +357,8 @@ class _AdminServicesPageState extends State<AdminServicesPage> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color:
+                FlutterFlowTheme.of(context).primaryText.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -361,7 +366,7 @@ class _AdminServicesPageState extends State<AdminServicesPage> {
       ),
       clipBehavior: Clip.antiAlias,
       child: Material(
-        color: Colors.transparent,
+        color: FlutterFlowTheme.of(context).transparent,
         child: InkWell(
           onTap: () async {
             await context.pushNamed(
@@ -395,8 +400,10 @@ class _AdminServicesPageState extends State<AdminServicesPage> {
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           colors: [
-                            Colors.transparent,
-                            Colors.black.withOpacity(0.5),
+                            FlutterFlowTheme.of(context).transparent,
+                            FlutterFlowTheme.of(context)
+                                .primaryText
+                                .withValues(alpha: 0.5),
                           ],
                         ),
                       ),
@@ -411,14 +418,16 @@ class _AdminServicesPageState extends State<AdminServicesPage> {
                           color: service.isActive
                               ? FlutterFlowTheme.of(context)
                                   .success
-                                  .withOpacity(0.9)
-                              : Colors.black54,
+                                  .withValues(alpha: 0.9)
+                              : FlutterFlowTheme.of(context)
+                                  .primaryText
+                                  .withValues(alpha: 0.54),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
                           service.isActive ? 'ACTIVO' : 'INACTIVO',
                           style: GoogleFonts.outfit(
-                            color: Colors.white,
+                            color: FlutterFlowTheme.of(context).primaryText,
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 0.5,
@@ -434,7 +443,7 @@ class _AdminServicesPageState extends State<AdminServicesPage> {
                         children: [
                           _buildIconButton(
                             Icons.edit_outlined,
-                            Colors.white,
+                            FlutterFlowTheme.of(context).primaryText,
                             () async {
                               await context.pushNamed(
                                 'create_service',

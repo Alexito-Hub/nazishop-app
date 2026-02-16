@@ -1,6 +1,6 @@
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
+
 import '/flutter_flow/custom_snackbar.dart';
 import '/backend/api_client.dart';
 import 'dart:ui';
@@ -182,21 +182,48 @@ class _CurrencyManagementWidgetState extends State<CurrencyManagementWidget> {
                           ),
                         ],
                       ),
-                      FFButtonWidget(
-                        onPressed: _saveRates,
-                        text: 'Guardar Cambios',
-                        icon: const Icon(Icons.save_rounded, size: 20),
-                        options: FFButtonOptions(
-                          height: 50,
-                          padding: const EdgeInsets.symmetric(horizontal: 24),
-                          color: FlutterFlowTheme.of(context).primary,
-                          textStyle: GoogleFonts.outfit(
-                            color: FlutterFlowTheme.of(context).info,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              FlutterFlowTheme.of(context).primary,
+                              FlutterFlowTheme.of(context).secondary
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
                           ),
                           borderRadius: BorderRadius.circular(12),
-                          elevation: 0,
+                          boxShadow: [
+                            BoxShadow(
+                              color: FlutterFlowTheme.of(context)
+                                  .primary
+                                  .withValues(alpha: 0.4),
+                              blurRadius: 8,
+                              offset: const Offset(0, 4),
+                            )
+                          ],
+                        ),
+                        child: ElevatedButton.icon(
+                          onPressed: _saveRates,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            shadowColor: Colors.transparent,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 24, vertical: 0),
+                            fixedSize: const Size.fromHeight(50),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                          ),
+                          icon: const Icon(Icons.save_rounded,
+                              color: Colors.white, size: 20),
+                          label: Text(
+                            'Guardar Cambios',
+                            style: GoogleFonts.outfit(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -301,11 +328,13 @@ class _CurrencyManagementWidgetState extends State<CurrencyManagementWidget> {
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: FlutterFlowTheme.of(context).primary.withOpacity(0.1),
+                color:
+                    FlutterFlowTheme.of(context).primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                    color:
-                        FlutterFlowTheme.of(context).primary.withOpacity(0.3)),
+                    color: FlutterFlowTheme.of(context)
+                        .primary
+                        .withValues(alpha: 0.3)),
               ),
               child: Row(
                 children: [
@@ -383,21 +412,46 @@ class _CurrencyManagementWidgetState extends State<CurrencyManagementWidget> {
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.all(24.0),
-            child: FFButtonWidget(
-              onPressed: _saveRates,
-              text: 'Guardar Todo',
-              icon: const Icon(Icons.save_rounded),
-              options: FFButtonOptions(
-                width: double.infinity,
-                height: 56,
-                color: FlutterFlowTheme.of(context).primary,
-                textStyle: GoogleFonts.outfit(
-                  color: FlutterFlowTheme.of(context).info,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+            child: Container(
+              height: 56,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    FlutterFlowTheme.of(context).primary,
+                    FlutterFlowTheme.of(context).secondary
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(16),
-                elevation: 4,
+                boxShadow: [
+                  BoxShadow(
+                    color: FlutterFlowTheme.of(context)
+                        .primary
+                        .withValues(alpha: 0.4),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  )
+                ],
+              ),
+              child: ElevatedButton.icon(
+                onPressed: _saveRates,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16)),
+                ),
+                icon: const Icon(Icons.save_rounded, color: Colors.white),
+                label: Text(
+                  'Guardar Todo',
+                  style: GoogleFonts.outfit(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
           ),
@@ -434,7 +488,7 @@ class _CurrencyCard extends StatelessWidget {
         border: Border.all(color: FlutterFlowTheme.of(context).alternate),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withValues(alpha: 0.2),
             blurRadius: 10,
             offset: const Offset(0, 4),
           )
@@ -483,7 +537,7 @@ class _CurrencyCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: FlutterFlowTheme.of(context)
                         .primaryBackground
-                        .withOpacity(0.5),
+                        .withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                         color: FlutterFlowTheme.of(context).alternate),

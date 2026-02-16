@@ -97,7 +97,7 @@ class _AdminPromotionsPageState extends State<AdminPromotionsPage> {
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: theme.primary.withOpacity(0.4),
+                    color: theme.primary.withValues(alpha: 0.4),
                     blurRadius: 12,
                     offset: const Offset(0, 6),
                   ),
@@ -105,17 +105,17 @@ class _AdminPromotionsPageState extends State<AdminPromotionsPage> {
               ),
               child: FloatingActionButton.extended(
                 onPressed: _showCreatePage,
-                backgroundColor: Colors.transparent,
+                backgroundColor: theme.transparent,
                 elevation: 0,
                 highlightElevation: 0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
-                icon: const Icon(Icons.campaign, color: Colors.white),
+                icon: Icon(Icons.campaign, color: theme.primaryText),
                 label: Text(
                   'Nueva Promo',
                   style: GoogleFonts.outfit(
-                      color: Colors.white,
+                      color: theme.primaryText,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1),
                 ),
@@ -141,8 +141,8 @@ class _AdminPromotionsPageState extends State<AdminPromotionsPage> {
       physics: const BouncingScrollPhysics(),
       slivers: [
         SliverAppBar(
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
+          backgroundColor: theme.transparent,
+          surfaceTintColor: theme.transparent,
           pinned: true,
           floating: true,
           elevation: 0,
@@ -150,7 +150,7 @@ class _AdminPromotionsPageState extends State<AdminPromotionsPage> {
           leading: Container(
             margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: theme.primaryBackground.withOpacity(0.5),
+              color: theme.primaryBackground.withValues(alpha: 0.5),
               shape: BoxShape.circle,
             ),
             child: SmartBackButton(color: theme.primaryText),
@@ -274,7 +274,7 @@ class _AdminPromotionsPageState extends State<AdminPromotionsPage> {
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: theme.primary.withOpacity(0.4),
+                                color: theme.primary.withValues(alpha: 0.4),
                                 blurRadius: 8,
                                 offset: const Offset(0, 4),
                               ),
@@ -283,8 +283,10 @@ class _AdminPromotionsPageState extends State<AdminPromotionsPage> {
                           child: ElevatedButton.icon(
                             onPressed: _showCreatePage,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              shadowColor: Colors.transparent,
+                              backgroundColor:
+                                  FlutterFlowTheme.of(context).transparent,
+                              shadowColor:
+                                  FlutterFlowTheme.of(context).transparent,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -292,15 +294,16 @@ class _AdminPromotionsPageState extends State<AdminPromotionsPage> {
                                 horizontal: 20,
                               ),
                             ),
-                            icon: const Icon(
+                            icon: Icon(
                               Icons.add_circle_outline,
-                              color: Colors.white,
+                              color: FlutterFlowTheme.of(context).secondaryText,
                               size: 20,
                             ),
                             label: Text(
                               'Nueva Promo',
                               style: GoogleFonts.outfit(
-                                color: Colors.white,
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -393,7 +396,7 @@ class _AdminPromotionsPageState extends State<AdminPromotionsPage> {
         child: Text(
           label,
           style: GoogleFonts.outfit(
-            color: isSelected ? Colors.white : theme.secondaryText,
+            color: isSelected ? theme.primaryText : theme.secondaryText,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
         ),
@@ -423,7 +426,7 @@ class PromotionRowItem extends StatelessWidget {
     final bool isExpired =
         item.validUntil != null && item.validUntil!.isBefore(DateTime.now());
     final bool isActive = item.isActive && !isExpired;
-    final color = isActive ? Colors.greenAccent : Colors.redAccent;
+    final color = isActive ? theme.success : theme.error;
     final statusText =
         isActive ? 'Activa' : (isExpired ? 'Expirada' : 'Inactiva');
 
@@ -434,7 +437,7 @@ class PromotionRowItem extends StatelessWidget {
         border: Border.all(color: borderColor),
       ),
       child: Material(
-        color: Colors.transparent,
+        color: theme.transparent,
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(16),
@@ -452,9 +455,9 @@ class PromotionRowItem extends StatelessWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: color.withOpacity(0.1),
+                        color: color.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: color.withOpacity(0.2)),
+                        border: Border.all(color: color.withValues(alpha: 0.2)),
                       ),
                       child: Text(
                         statusText,
@@ -466,7 +469,7 @@ class PromotionRowItem extends StatelessWidget {
                       ),
                     ),
                     if (item.isFeatured)
-                      const Icon(Icons.star, color: Colors.amber, size: 16),
+                      Icon(Icons.star, color: theme.warning, size: 16),
                   ],
                 ),
                 const SizedBox(height: 12),
@@ -490,7 +493,7 @@ class PromotionRowItem extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
-                const Divider(color: Colors.white10),
+                Divider(color: theme.alternate),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

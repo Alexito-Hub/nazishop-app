@@ -94,12 +94,19 @@ class AdminActionCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: color.withValues(alpha: 0.1),
+                      gradient: LinearGradient(
+                        colors: [
+                          FlutterFlowTheme.of(context).primary,
+                          FlutterFlowTheme.of(context).secondary,
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
                       Icons.arrow_forward_ios_rounded,
-                      color: color.withValues(alpha: 0.1),
+                      color: Colors.white,
                       size: 14,
                     ),
                   ),

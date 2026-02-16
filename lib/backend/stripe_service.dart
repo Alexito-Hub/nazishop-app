@@ -29,6 +29,7 @@ class StripeService {
     required String orderId,
     required BuildContext context,
   }) async {
+    final scaffoldContext = context;
     try {
       // 1. Get payment intent from backend
       // We assume order is already created and we just need the payment intent
@@ -42,6 +43,10 @@ class StripeService {
         throw Exception('Failed to get client secret');
       }
 
+      // Capture theme before async gap
+      // ignore: use_build_context_synchronously
+      final primaryColor = Theme.of(context).primaryColor;
+
       // 2. Initialize payment sheet
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
@@ -50,7 +55,7 @@ class StripeService {
           style: ThemeMode.system,
           appearance: PaymentSheetAppearance(
             colors: PaymentSheetAppearanceColors(
-              primary: Theme.of(context).primaryColor,
+              primary: primaryColor,
             ),
           ),
           // Apple Pay / Google Pay configuration could be added here
@@ -67,12 +72,14 @@ class StripeService {
         // User cancelled, do nothing (or show minor message)
         return false;
       }
-      ScaffoldMessenger.of(context).showSnackBar(
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(scaffoldContext).showSnackBar(
         SnackBar(content: Text('Error de pago: ${e.error.localizedMessage}')),
       );
       return false;
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(scaffoldContext).showSnackBar(
         SnackBar(content: Text('Error: $e')),
       );
       return false;

@@ -49,7 +49,7 @@ class _UsersActivityWidgetState extends State<UsersActivityWidget> {
                 height: 500,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: FlutterFlowTheme.of(context).primary.withOpacity(0.15),
+                  color: FlutterFlowTheme.of(context).primary.withValues(alpha: 0.15),
                 ),
               ),
             ),
@@ -64,7 +64,7 @@ class _UsersActivityWidgetState extends State<UsersActivityWidget> {
                 height: 400,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: FlutterFlowTheme.of(context).primary.withOpacity(0.1),
+                  color: FlutterFlowTheme.of(context).primary.withValues(alpha: 0.1),
                 ),
               ),
             ),
@@ -254,9 +254,9 @@ class _UsersActivityWidgetState extends State<UsersActivityWidget> {
 
   Widget _buildMobileLayout() {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: FlutterFlowTheme.of(context).transparent,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: FlutterFlowTheme.of(context).transparent,
         elevation: 0,
         leading:
             SmartBackButton(color: FlutterFlowTheme.of(context).primaryText),
@@ -383,7 +383,7 @@ class _UsersActivityWidgetState extends State<UsersActivityWidget> {
         Text(
           'Monitoreo en tiempo real del comportamiento de usuarios',
           style: GoogleFonts.outfit(
-            color: FlutterFlowTheme.of(context).secondaryText.withOpacity(0.7),
+            color: FlutterFlowTheme.of(context).secondaryText.withValues(alpha: 0.7),
             fontSize: 16.0,
           ),
         ),
@@ -421,7 +421,7 @@ class _UsersActivityWidgetState extends State<UsersActivityWidget> {
                     style: GoogleFonts.outfit(
                       color: FlutterFlowTheme.of(context)
                           .secondaryText
-                          .withOpacity(0.5),
+                          .withValues(alpha: 0.5),
                       fontSize: 12.0,
                     ),
                   ),
@@ -444,15 +444,15 @@ class _UsersActivityWidgetState extends State<UsersActivityWidget> {
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
         color:
-            FlutterFlowTheme.of(context).secondaryBackground.withOpacity(0.05),
+            FlutterFlowTheme.of(context).secondaryBackground.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: FlutterFlowTheme.of(context).alternate),
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            FlutterFlowTheme.of(context).secondaryBackground.withOpacity(0.08),
-            FlutterFlowTheme.of(context).secondaryBackground.withOpacity(0.02),
+            FlutterFlowTheme.of(context).secondaryBackground.withValues(alpha: 0.08),
+            FlutterFlowTheme.of(context).secondaryBackground.withValues(alpha: 0.02),
           ],
         ),
       ),
@@ -463,7 +463,7 @@ class _UsersActivityWidgetState extends State<UsersActivityWidget> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.2),
+              color: color.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, color: color, size: 24),
@@ -499,7 +499,7 @@ class _UsersActivityWidgetState extends State<UsersActivityWidget> {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: color, size: 20),
@@ -522,7 +522,7 @@ class _UsersActivityWidgetState extends State<UsersActivityWidget> {
                   style: GoogleFonts.outfit(
                     color: FlutterFlowTheme.of(context)
                         .secondaryText
-                        .withOpacity(0.6),
+                        .withValues(alpha: 0.6),
                     fontSize: 14.0,
                   ),
                 ),
@@ -533,7 +533,7 @@ class _UsersActivityWidgetState extends State<UsersActivityWidget> {
             time,
             style: GoogleFonts.outfit(
               color:
-                  FlutterFlowTheme.of(context).secondaryText.withOpacity(0.4),
+                  FlutterFlowTheme.of(context).secondaryText.withValues(alpha: 0.4),
               fontSize: 12.0,
             ),
           ),
@@ -549,7 +549,7 @@ class _UsersActivityWidgetState extends State<UsersActivityWidget> {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color:
-            FlutterFlowTheme.of(context).secondaryBackground.withOpacity(0.03),
+            FlutterFlowTheme.of(context).secondaryBackground.withValues(alpha: 0.03),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: FlutterFlowTheme.of(context).alternate),
       ),
@@ -559,7 +559,7 @@ class _UsersActivityWidgetState extends State<UsersActivityWidget> {
             width: 30,
             height: 30,
             decoration: BoxDecoration(
-              color: medalColor.withOpacity(0.2),
+              color: medalColor.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
             child: Center(
@@ -618,7 +618,7 @@ class _UsersActivityWidgetState extends State<UsersActivityWidget> {
                 style: GoogleFonts.outfit(
                   color: FlutterFlowTheme.of(context)
                       .secondaryText
-                      .withOpacity(0.7),
+                      .withValues(alpha: 0.7),
                   fontSize: 14,
                 ),
               ),

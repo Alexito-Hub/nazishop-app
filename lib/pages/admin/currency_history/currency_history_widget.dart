@@ -137,7 +137,7 @@ class _CurrencyHistoryWidgetState extends State<CurrencyHistoryWidget> {
             width: 48.0,
             height: 48.0,
             decoration: BoxDecoration(
-              color: const Color(0xFFFF6B35).withOpacity(0.1),
+              color: const Color(0xFFFF6B35).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12.0),
             ),
             child: Center(

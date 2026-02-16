@@ -61,8 +61,9 @@ class _AddBalanceAdminWidgetState extends State<AddBalanceAdminWidget> {
                   height: 500,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color:
-                        FlutterFlowTheme.of(context).primary.withOpacity(0.15),
+                    color: FlutterFlowTheme.of(context)
+                        .primary
+                        .withValues(alpha: 0.15),
                   ),
                 ),
               ),
@@ -95,7 +96,7 @@ class _AddBalanceAdminWidgetState extends State<AddBalanceAdminWidget> {
               decoration: BoxDecoration(
                 color: FlutterFlowTheme.of(context)
                     .primaryBackground
-                    .withOpacity(0.4),
+                    .withValues(alpha: 0.4),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: SmartBackButton(
@@ -104,8 +105,9 @@ class _AddBalanceAdminWidgetState extends State<AddBalanceAdminWidget> {
           ),
           flexibleSpace: FlexibleSpaceBar(
             background: Container(
-              color: FlutterFlowTheme.of(context).primaryBackground.withOpacity(
-                  0.2), // Simple overlay instead of blur if needed or Glass effect
+              color: FlutterFlowTheme.of(context).primaryBackground.withValues(
+                  alpha:
+                      0.2), // Simple overlay instead of blur if needed or Glass effect
             ),
             title: Text(
               'Agregar Saldo',
@@ -196,12 +198,12 @@ class _AddBalanceAdminWidgetState extends State<AddBalanceAdminWidget> {
                           decoration: BoxDecoration(
                             color: FlutterFlowTheme.of(context)
                                 .primaryText
-                                .withOpacity(0.05),
+                                .withValues(alpha: 0.05),
                             borderRadius: BorderRadius.circular(24),
                             border: Border.all(
                                 color: FlutterFlowTheme.of(context)
                                     .primaryText
-                                    .withOpacity(0.1)),
+                                    .withValues(alpha: 0.1)),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -261,10 +263,12 @@ class _AddBalanceAdminWidgetState extends State<AddBalanceAdminWidget> {
     return Container(
       padding: const EdgeInsets.all(24.0),
       decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).primaryText.withOpacity(0.05),
+        color: FlutterFlowTheme.of(context).primaryText.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-            color: FlutterFlowTheme.of(context).primaryText.withOpacity(0.1)),
+            color: FlutterFlowTheme.of(context)
+                .primaryText
+                .withValues(alpha: 0.1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -291,13 +295,13 @@ class _AddBalanceAdminWidgetState extends State<AddBalanceAdminWidget> {
               filled: true,
               fillColor: FlutterFlowTheme.of(context)
                   .primaryBackground
-                  .withOpacity(0.3),
+                  .withValues(alpha: 0.3),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
                     color: FlutterFlowTheme.of(context)
                         .primaryText
-                        .withOpacity(0.1)),
+                        .withValues(alpha: 0.1)),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -319,12 +323,14 @@ class _AddBalanceAdminWidgetState extends State<AddBalanceAdminWidget> {
               child: Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: FlutterFlowTheme.of(context).primary.withOpacity(0.1),
+                  color: FlutterFlowTheme.of(context)
+                      .primary
+                      .withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                       color: FlutterFlowTheme.of(context)
                           .primary
-                          .withOpacity(0.3)),
+                          .withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   children: [
@@ -350,10 +356,12 @@ class _AddBalanceAdminWidgetState extends State<AddBalanceAdminWidget> {
     return Container(
       padding: const EdgeInsets.all(24.0),
       decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).primaryText.withOpacity(0.05),
+        color: FlutterFlowTheme.of(context).primaryText.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-            color: FlutterFlowTheme.of(context).primaryText.withOpacity(0.1)),
+            color: FlutterFlowTheme.of(context)
+                .primaryText
+                .withValues(alpha: 0.1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -381,13 +389,13 @@ class _AddBalanceAdminWidgetState extends State<AddBalanceAdminWidget> {
               filled: true,
               fillColor: FlutterFlowTheme.of(context)
                   .primaryBackground
-                  .withOpacity(0.3),
+                  .withValues(alpha: 0.3),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
                     color: FlutterFlowTheme.of(context)
                         .primaryText
-                        .withOpacity(0.1)),
+                        .withValues(alpha: 0.1)),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -410,13 +418,13 @@ class _AddBalanceAdminWidgetState extends State<AddBalanceAdminWidget> {
               filled: true,
               fillColor: FlutterFlowTheme.of(context)
                   .primaryBackground
-                  .withOpacity(0.3),
+                  .withValues(alpha: 0.3),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
                     color: FlutterFlowTheme.of(context)
                         .primaryText
-                        .withOpacity(0.1)),
+                        .withValues(alpha: 0.1)),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -445,13 +453,15 @@ class _AddBalanceAdminWidgetState extends State<AddBalanceAdminWidget> {
             text: 'Cancelar',
             options: FFButtonOptions(
               height: 50,
-              color: FlutterFlowTheme.of(context).primaryText.withOpacity(0.1),
+              color: FlutterFlowTheme.of(context)
+                  .primaryText
+                  .withValues(alpha: 0.1),
               textStyle: GoogleFonts.outfit(
                   color: FlutterFlowTheme.of(context).primaryText),
               borderSide: BorderSide(
                   color: FlutterFlowTheme.of(context)
                       .primaryText
-                      .withOpacity(0.2)),
+                      .withValues(alpha: 0.2)),
               borderRadius: BorderRadius.circular(12),
             ),
           ),
@@ -504,18 +514,21 @@ class _AddBalanceAdminWidgetState extends State<AddBalanceAdminWidget> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: FlutterFlowTheme.of(context).primaryText.withOpacity(0.05),
+          color:
+              FlutterFlowTheme.of(context).primaryText.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-              color:
-                  FlutterFlowTheme.of(context).primaryText.withOpacity(0.05)),
+              color: FlutterFlowTheme.of(context)
+                  .primaryText
+                  .withValues(alpha: 0.05)),
         ),
         child: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: FlutterFlowTheme.of(context).success.withOpacity(0.1),
+                color:
+                    FlutterFlowTheme.of(context).success.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(Icons.arrow_upward,

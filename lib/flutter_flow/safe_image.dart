@@ -12,13 +12,13 @@ class SafeImage extends StatelessWidget {
 
   const SafeImage(
     this.src, {
-    Key? key,
+    super.key,
     this.width,
     this.height,
     this.fit = BoxFit.cover,
     this.allowRemoteDownload = false,
     this.placeholder,
-  }) : super(key: key);
+  });
 
   Widget _defaultPlaceholder() => Container(
         width: width,

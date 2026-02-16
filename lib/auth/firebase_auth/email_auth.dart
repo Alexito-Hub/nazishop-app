@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 Future<UserCredential?> emailSignInFunc(
   String email,
@@ -12,24 +13,24 @@ Future<UserCredential?> emailCreateAccountFunc(
   String email,
   String password,
 ) async {
-  print('═══════════════════════════════════════════════════');
-  print('[EMAIL_AUTH] 🔵 STARTING REGISTRATION');
-  print('[EMAIL_AUTH] Email: $email');
-  print('═══════════════════════════════════════════════════');
+  debugPrint('═══════════════════════════════════════════════════');
+  debugPrint('[EMAIL_AUTH] 🔵 STARTING REGISTRATION');
+  debugPrint('[EMAIL_AUTH] Email: $email');
+  debugPrint('═══════════════════════════════════════════════════');
 
   try {
-    print('[EMAIL_AUTH] Creating Firebase Auth user...');
+    debugPrint('[EMAIL_AUTH] Creating Firebase Auth user...');
     final userCredential =
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: email.trim(),
       password: password,
     );
 
-    print('[EMAIL_AUTH] ✅ Firebase Auth user created!');
-    print('[EMAIL_AUTH] UID: ${userCredential.user?.uid}');
+    debugPrint('[EMAIL_AUTH] ✅ Firebase Auth user created!');
+    debugPrint('[EMAIL_AUTH] UID: ${userCredential.user?.uid}');
 
     if (userCredential.user != null) {
-      print('[EMAIL_AUTH] Creating Firestore document...');
+      debugPrint('[EMAIL_AUTH] Creating Firestore document...');
 
       try {
         await FirebaseFirestore.instance
@@ -46,7 +47,7 @@ Future<UserCredential?> emailCreateAccountFunc(
           'isActive': true,
         });
 
-        print('[EMAIL_AUTH] ✅ Firestore document created');
+        debugPrint('[EMAIL_AUTH] ✅ Firestore document created');
 
         // Verify
         final doc = await FirebaseFirestore.instance
@@ -55,23 +56,23 @@ Future<UserCredential?> emailCreateAccountFunc(
             .get();
 
         if (doc.exists) {
-          print('[EMAIL_AUTH] ✅✅ VERIFIED: Document exists!');
-          print('[EMAIL_AUTH] Data: ${doc.data()}');
+          debugPrint('[EMAIL_AUTH] ✅✅ VERIFIED: Document exists!');
+          debugPrint('[EMAIL_AUTH] Data: ${doc.data()}');
         } else {
-          print('[EMAIL_AUTH] ❌❌ FAILED: Document NOT saved!');
-          print('[EMAIL_AUTH] Firestore rules blocking writes');
+          debugPrint('[EMAIL_AUTH] ❌❌ FAILED: Document NOT saved!');
+          debugPrint('[EMAIL_AUTH] Firestore rules blocking writes');
         }
       } catch (firestoreError) {
-        print('[EMAIL_AUTH] ❌ Firestore error: $firestoreError');
+        debugPrint('[EMAIL_AUTH] ❌ Firestore error: $firestoreError');
       }
     }
 
-    print('[EMAIL_AUTH] Registration complete!');
-    print('═══════════════════════════════════════════════════');
+    debugPrint('[EMAIL_AUTH] Registration complete!');
+    debugPrint('═══════════════════════════════════════════════════');
     return userCredential;
   } catch (e) {
-    print('[EMAIL_AUTH] ❌❌ ERROR: $e');
-    print('═══════════════════════════════════════════════════');
+    debugPrint('[EMAIL_AUTH] ❌❌ ERROR: $e');
+    debugPrint('═══════════════════════════════════════════════════');
     rethrow;
   }
 }

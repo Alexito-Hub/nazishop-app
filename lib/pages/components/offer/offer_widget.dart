@@ -38,8 +38,8 @@ class _OfferWidgetState extends State<OfferWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        color: Colors.transparent,
+      decoration: BoxDecoration(
+        color: FlutterFlowTheme.of(context).transparent,
       ),
       child: Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 16.0),

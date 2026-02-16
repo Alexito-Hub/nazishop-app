@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:nazi_shop/backend/api_client.dart';
 
 class WalletService {
@@ -10,7 +11,7 @@ class WalletService {
       });
       return response['data'] ?? {'balance': 0.0, 'currency': 'USD'};
     } catch (e) {
-      print('[WalletService] Get balance error: $e');
+      debugPrint('[WalletService] Get balance error: $e');
       return {'balance': 0.0, 'currency': 'USD'};
     }
   }
@@ -30,7 +31,7 @@ class WalletService {
       });
       return response;
     } catch (e) {
-      print('[WalletService] Deposit error: $e');
+      debugPrint('[WalletService] Deposit error: $e');
       rethrow;
     }
   }
@@ -48,7 +49,7 @@ class WalletService {
       });
       return response['data'] ?? [];
     } catch (e) {
-      print('[WalletService] Get transactions error: $e');
+      debugPrint('[WalletService] Get transactions error: $e');
       return [];
     }
   }

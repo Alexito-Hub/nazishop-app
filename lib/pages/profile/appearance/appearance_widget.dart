@@ -20,7 +20,7 @@ class _AppearanceWidgetState extends State<AppearanceWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   // --- PALETA DE COLORES (MODERN) ---
-  static const Color kPrimaryColor = Color(0xFFE50914);
+  // static const Color kPrimaryColor = Color(0xFFE50914); // Reemplazado por FlutterFlowTheme
 
   // --- ESTADO LOCAL ---
   late bool _animationsEnabled;
@@ -96,8 +96,8 @@ class _AppearanceWidgetState extends State<AppearanceWidget> {
       physics: const BouncingScrollPhysics(),
       slivers: [
         SliverAppBar(
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
+          backgroundColor: theme.transparent,
+          surfaceTintColor: theme.transparent,
           pinned: true,
           floating: true,
           elevation: 0,
@@ -105,7 +105,7 @@ class _AppearanceWidgetState extends State<AppearanceWidget> {
           leading: Container(
             margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: theme.primaryBackground.withOpacity(0.5),
+              color: theme.primaryBackground.withValues(alpha: 0.5),
               shape: BoxShape.circle,
             ),
             child: SmartBackButton(color: theme.primaryText),
@@ -301,7 +301,7 @@ class _AppearanceWidgetState extends State<AppearanceWidget> {
     return Text(
       title,
       style: GoogleFonts.outfit(
-        color: kPrimaryColor,
+        color: FlutterFlowTheme.of(context).primary,
         fontSize: 14,
         fontWeight: FontWeight.bold,
         letterSpacing: 1,
@@ -384,7 +384,7 @@ class _AppearanceWidgetState extends State<AppearanceWidget> {
         child: Row(
           children: [
             Icon(icon,
-                color: isSelected ? kPrimaryColor : theme.secondaryText,
+                color: isSelected ? theme.primary : theme.secondaryText,
                 size: 20),
             const SizedBox(width: 16),
             Expanded(
@@ -397,8 +397,7 @@ class _AppearanceWidgetState extends State<AppearanceWidget> {
                 ),
               ),
             ),
-            if (isSelected)
-              const Icon(Icons.check, color: kPrimaryColor, size: 20),
+            if (isSelected) Icon(Icons.check, color: theme.primary, size: 20),
           ],
         ),
       ),
@@ -408,6 +407,7 @@ class _AppearanceWidgetState extends State<AppearanceWidget> {
   Widget _buildThemeOptionDesktop(ThemeMode mode, IconData icon, String label) {
     final isSelected = FlutterFlowTheme.themeMode == mode;
     final theme = FlutterFlowTheme.of(context);
+    final kPrimaryColor = theme.primary;
     return GestureDetector(
       onTap: () async {
         FlutterFlowTheme.saveThemeMode(mode);
@@ -421,8 +421,9 @@ class _AppearanceWidgetState extends State<AppearanceWidget> {
         width: 80,
         height: 100,
         decoration: BoxDecoration(
-          color:
-              isSelected ? kPrimaryColor.withOpacity(0.1) : Colors.transparent,
+          color: isSelected
+              ? kPrimaryColor.withValues(alpha: 0.1)
+              : theme.transparent,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected ? kPrimaryColor : theme.alternate,
@@ -493,9 +494,9 @@ class _AppearanceWidgetState extends State<AppearanceWidget> {
           Switch.adaptive(
             value: value,
             onChanged: onChanged,
-            activeColor: kPrimaryColor,
-            activeTrackColor: kPrimaryColor.withOpacity(0.3),
-            inactiveTrackColor: Colors.black,
+            activeThumbColor: theme.primary,
+            activeTrackColor: theme.primary.withValues(alpha: 0.3),
+            inactiveTrackColor: theme.secondaryText.withValues(alpha: 0.3),
           ),
         ],
       ),
@@ -505,6 +506,7 @@ class _AppearanceWidgetState extends State<AppearanceWidget> {
   Widget _buildSwitchRow(
       String title, String subtitle, bool value, Function(bool) onChanged) {
     final theme = FlutterFlowTheme.of(context);
+    final kPrimaryColor = theme.primary;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -519,7 +521,7 @@ class _AppearanceWidgetState extends State<AppearanceWidget> {
         Switch.adaptive(
           value: value,
           onChanged: onChanged,
-          activeColor: kPrimaryColor,
+          activeThumbColor: kPrimaryColor,
         ),
       ],
     );
@@ -568,13 +570,13 @@ class _AppearanceWidgetState extends State<AppearanceWidget> {
           height: 45,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: isSelected ? kPrimaryColor : theme.alternate,
+            color: isSelected ? theme.primary : theme.alternate,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Text(
             label,
             style: GoogleFonts.outfit(
-              color: isSelected ? Colors.white : theme.primaryText,
+              color: isSelected ? theme.secondaryText : theme.primaryText,
               fontWeight: FontWeight.bold,
               fontSize:
                   valueKey == 'Pequeño' ? 12 : (valueKey == 'Grande' ? 20 : 16),
@@ -607,12 +609,12 @@ class _AppearanceWidgetState extends State<AppearanceWidget> {
         height: 30,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: isSelected ? kPrimaryColor : theme.alternate,
+          color: isSelected ? theme.primary : theme.alternate,
           borderRadius: BorderRadius.circular(6),
         ),
         child: Text(text,
             style: GoogleFonts.outfit(
-                color: isSelected ? Colors.white : theme.primaryText,
+                color: isSelected ? theme.secondaryText : theme.primaryText,
                 fontSize: 12)),
       ),
     );
@@ -622,6 +624,7 @@ class _AppearanceWidgetState extends State<AppearanceWidget> {
 
   Widget _buildLanguageTile() {
     final theme = FlutterFlowTheme.of(context);
+    final kPrimaryColor = theme.primary;
     return Container(
       decoration: BoxDecoration(
         color: theme.secondaryBackground,

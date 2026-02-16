@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:nazi_shop/backend/api_client.dart';
 import '../../components/smart_back_button.dart';
 import 'package:nazi_shop/backend/notification_service.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
 
 class AdminNotificationsWidget extends StatefulWidget {
   const AdminNotificationsWidget({super.key});
@@ -18,9 +19,6 @@ class _AdminNotificationsWidgetState extends State<AdminNotificationsWidget> {
   final _formKey = GlobalKey<FormState>();
 
   // Colors
-  static const Color kBgColor = Color(0xFF050505);
-  static const Color kCardColor = Color(0xFF141414);
-  static const Color kPrimaryColor = Color(0xFFE50914);
 
   // Form Controllers
   final _titleController = TextEditingController();
@@ -107,10 +105,12 @@ class _AdminNotificationsWidgetState extends State<AdminNotificationsWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = FlutterFlowTheme.of(context);
+    final kPrimaryColor = theme.primary;
     return Scaffold(
-      backgroundColor: kBgColor,
+      backgroundColor: theme.primaryBackground,
       appBar: AppBar(
-        backgroundColor: kBgColor,
+        backgroundColor: theme.primaryBackground,
         title: Text('Admin Notificaciones',
             style: GoogleFonts.outfit(color: Colors.white)),
         leading: const SmartBackButton(color: Colors.white),
@@ -124,16 +124,35 @@ class _AdminNotificationsWidgetState extends State<AdminNotificationsWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildHeader(),
+                _buildHeader(theme, kPrimaryColor),
                 const SizedBox(height: 32),
 
                 // Target Selection
                 _buildSectionLabel('Destinatario'),
-                Row(
+                ToggleButtons(
+                  isSelected: [
+                    _selectedTarget == 'ALL',
+                    _selectedTarget == 'SPECIFIC'
+                  ],
+                  onPressed: (index) => setState(
+                      () => _selectedTarget = index == 0 ? 'ALL' : 'SPECIFIC'),
+                  borderRadius: BorderRadius.circular(8),
+                  selectedColor: Colors.white,
+                  fillColor: kPrimaryColor.withValues(alpha: 0.2),
+                  color: Colors.white70,
                   children: [
-                    _buildRadioTarget('Todos (Broadcast)', 'ALL'),
-                    const SizedBox(width: 24),
-                    _buildRadioTarget('Usuario Específico', 'SPECIFIC'),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      child: Text('Todos (Broadcast)',
+                          style: GoogleFonts.outfit()),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      child: Text('Usuario Específico',
+                          style: GoogleFonts.outfit()),
+                    ),
                   ],
                 ),
                 if (_selectedTarget == 'SPECIFIC') ...[
@@ -141,7 +160,8 @@ class _AdminNotificationsWidgetState extends State<AdminNotificationsWidget> {
                   TextFormField(
                     controller: _userIdController,
                     style: GoogleFonts.outfit(color: Colors.white),
-                    decoration: _inputDecoration('User ID (Firebase UID)'),
+                    decoration: _inputDecoration(
+                        'User ID (Firebase UID)', theme, kPrimaryColor),
                     validator: (v) =>
                         v!.isEmpty && _selectedTarget == 'SPECIFIC'
                             ? 'Requerido'
@@ -156,14 +176,14 @@ class _AdminNotificationsWidgetState extends State<AdminNotificationsWidget> {
                 TextFormField(
                   controller: _titleController,
                   style: GoogleFonts.outfit(color: Colors.white),
-                  decoration: _inputDecoration('Título'),
+                  decoration: _inputDecoration('Título', theme, kPrimaryColor),
                   validator: (v) => v!.isEmpty ? 'Requerido' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _messageController,
                   style: GoogleFonts.outfit(color: Colors.white),
-                  decoration: _inputDecoration('Mensaje'),
+                  decoration: _inputDecoration('Mensaje', theme, kPrimaryColor),
                   maxLines: 3,
                   validator: (v) => v!.isEmpty ? 'Requerido' : null,
                 ),
@@ -181,14 +201,14 @@ class _AdminNotificationsWidgetState extends State<AdminNotificationsWidget> {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 12),
                             decoration: BoxDecoration(
-                              color: kCardColor,
+                              color: theme.secondaryBackground,
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(color: Colors.white12),
                             ),
                             child: DropdownButtonHideUnderline(
                               child: DropdownButton<String>(
                                 value: _selectedType,
-                                dropdownColor: kCardColor,
+                                dropdownColor: theme.secondaryBackground,
                                 isExpanded: true,
                                 style: GoogleFonts.outfit(color: Colors.white),
                                 items: _types
@@ -212,14 +232,14 @@ class _AdminNotificationsWidgetState extends State<AdminNotificationsWidget> {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 12),
                             decoration: BoxDecoration(
-                              color: kCardColor,
+                              color: theme.secondaryBackground,
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(color: Colors.white12),
                             ),
                             child: DropdownButtonHideUnderline(
                               child: DropdownButton<String>(
                                 value: _selectedIcon,
-                                dropdownColor: kCardColor,
+                                dropdownColor: theme.secondaryBackground,
                                 isExpanded: true,
                                 style: GoogleFonts.outfit(color: Colors.white),
                                 items: _icons
@@ -276,23 +296,23 @@ class _AdminNotificationsWidgetState extends State<AdminNotificationsWidget> {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(FlutterFlowTheme theme, Color kPrimaryColor) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: kCardColor,
+        color: theme.secondaryBackground,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: kPrimaryColor.withOpacity(0.3)),
+        border: Border.all(color: theme.primary.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: kPrimaryColor.withOpacity(0.1),
+              color: kPrimaryColor.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.admin_panel_settings,
+            child: Icon(Icons.admin_panel_settings,
                 color: kPrimaryColor, size: 32),
           ),
           const SizedBox(width: 20),
@@ -329,29 +349,13 @@ class _AdminNotificationsWidgetState extends State<AdminNotificationsWidget> {
     );
   }
 
-  Widget _buildRadioTarget(String label, String value) {
-    return GestureDetector(
-      onTap: () => setState(() => _selectedTarget = value),
-      child: Row(
-        children: [
-          Radio<String>(
-            value: value,
-            groupValue: _selectedTarget,
-            activeColor: kPrimaryColor,
-            onChanged: (v) => setState(() => _selectedTarget = v!),
-          ),
-          Text(label, style: GoogleFonts.outfit(color: Colors.white)),
-        ],
-      ),
-    );
-  }
-
-  InputDecoration _inputDecoration(String label) {
+  InputDecoration _inputDecoration(
+      String label, FlutterFlowTheme theme, Color kPrimaryColor) {
     return InputDecoration(
       labelText: label,
       labelStyle: TextStyle(color: Colors.white54),
       filled: true,
-      fillColor: kCardColor,
+      fillColor: theme.secondaryBackground,
       border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
       enabledBorder: OutlineInputBorder(
@@ -359,7 +363,7 @@ class _AdminNotificationsWidgetState extends State<AdminNotificationsWidget> {
           borderSide: BorderSide(color: Colors.white12)),
       focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: kPrimaryColor)),
+          borderSide: BorderSide(color: theme.primary)),
     );
   }
 }

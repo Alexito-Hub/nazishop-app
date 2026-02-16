@@ -82,8 +82,8 @@ class _AdminWidgetState extends State<AdminWidget> {
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
           SliverAppBar(
-            backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-            surfaceTintColor: Colors.transparent,
+            backgroundColor: FlutterFlowTheme.of(context).transparent,
+            surfaceTintColor: FlutterFlowTheme.of(context).transparent,
             elevation: 0,
             pinned: true,
             floating: true,

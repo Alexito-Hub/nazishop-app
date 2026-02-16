@@ -13,10 +13,10 @@ class AdminCategoriesPage extends StatefulWidget {
   static String routeName = 'admin_categories';
 
   @override
-  _AdminCategoriesPageState createState() => _AdminCategoriesPageState();
+  AdminCategoriesPageState createState() => AdminCategoriesPageState();
 }
 
-class _AdminCategoriesPageState extends State<AdminCategoriesPage> {
+class AdminCategoriesPageState extends State<AdminCategoriesPage> {
   List<Category> _categories = [];
   bool _isLoading = true;
 
@@ -93,13 +93,15 @@ class _AdminCategoriesPageState extends State<AdminCategoriesPage> {
         throw res['msg'] ?? 'Error desconocido';
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text('Error al eliminar: $e',
-                style: GoogleFonts.outfit(
-                    color: FlutterFlowTheme.of(context).primaryText)),
-            backgroundColor: FlutterFlowTheme.of(context).error),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text('Error al eliminar: $e',
+                  style: GoogleFonts.outfit(
+                      color: FlutterFlowTheme.of(context).primaryText)),
+              backgroundColor: FlutterFlowTheme.of(context).error),
+        );
+      }
     }
   }
 
@@ -117,7 +119,7 @@ class _AdminCategoriesPageState extends State<AdminCategoriesPage> {
                 gradient: LinearGradient(
                   colors: [
                     FlutterFlowTheme.of(context).primary,
-                    FlutterFlowTheme.of(context).error,
+                    FlutterFlowTheme.of(context).secondary,
                   ], // Red Gradient
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -138,17 +140,17 @@ class _AdminCategoriesPageState extends State<AdminCategoriesPage> {
                   await context.pushNamed('create_category');
                   _loadCategories();
                 },
-                backgroundColor: Colors.transparent,
+                backgroundColor: FlutterFlowTheme.of(context).transparent,
                 elevation: 0,
                 highlightElevation: 0,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16)),
                 icon: Icon(Icons.category,
-                    color: FlutterFlowTheme.of(context).info),
+                    color: FlutterFlowTheme.of(context).primaryText),
                 label: Text(
                   'Nueva Categoría',
                   style: GoogleFonts.outfit(
-                      color: FlutterFlowTheme.of(context).info,
+                      color: FlutterFlowTheme.of(context).primaryText,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1),
                 ),
@@ -162,8 +164,8 @@ class _AdminCategoriesPageState extends State<AdminCategoriesPage> {
       physics: const BouncingScrollPhysics(),
       slivers: [
         SliverAppBar(
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
+          backgroundColor: FlutterFlowTheme.of(context).transparent,
+          surfaceTintColor: FlutterFlowTheme.of(context).transparent,
           pinned: true,
           floating: true,
           elevation: 0,
@@ -244,7 +246,7 @@ class _AdminCategoriesPageState extends State<AdminCategoriesPage> {
                         gradient: LinearGradient(
                           colors: [
                             FlutterFlowTheme.of(context).primary,
-                            FlutterFlowTheme.of(context).error
+                            FlutterFlowTheme.of(context).secondary
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
@@ -266,18 +268,20 @@ class _AdminCategoriesPageState extends State<AdminCategoriesPage> {
                           _loadCategories();
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          shadowColor: Colors.transparent,
+                          backgroundColor:
+                              FlutterFlowTheme.of(context).transparent,
+                          shadowColor: FlutterFlowTheme.of(context).transparent,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                         ),
                         icon: Icon(Icons.add_circle_outline,
-                            color: FlutterFlowTheme.of(context).info, size: 20),
+                            color: FlutterFlowTheme.of(context).secondaryText,
+                            size: 20),
                         label: Text(
                           'Nueva Categoría',
                           style: GoogleFonts.outfit(
-                              color: FlutterFlowTheme.of(context).info,
+                              color: FlutterFlowTheme.of(context).secondaryText,
                               fontWeight: FontWeight.bold),
                         ),
                       ),

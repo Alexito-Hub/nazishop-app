@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:ui';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 
 import 'about_model.dart';
@@ -22,7 +21,7 @@ class AboutWidget extends StatefulWidget {
 
 class _AboutWidgetState extends State<AboutWidget> {
   late AboutModel _model;
-  static const Color kPrimaryColor = Color(0xFFE50914);
+  Color get _primaryColor => FlutterFlowTheme.of(context).primary;
 
   @override
   void initState() {
@@ -41,14 +40,14 @@ class _AboutWidgetState extends State<AboutWidget> {
     // Responsive checks
     final width = MediaQuery.of(context).size.width;
     final isDesktop = width > 900;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     final theme = FlutterFlowTheme.of(context);
 
     return Scaffold(
       backgroundColor: theme.primaryBackground,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: theme.transparent,
         elevation: 0,
         leading: SmartBackButton(color: theme.primaryText),
       ),
@@ -63,11 +62,11 @@ class _AboutWidgetState extends State<AboutWidget> {
               height: 500,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: kPrimaryColor.withOpacity(0.08),
+                color: _primaryColor.withValues(alpha: 0.08),
               ),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
-                child: Container(color: Colors.transparent),
+                child: Container(color: theme.transparent),
               ),
             ),
           ),
@@ -86,14 +85,17 @@ class _AboutWidgetState extends State<AboutWidget> {
                       width: 120,
                       height: 120,
                       decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFFE50914), Color(0xFFB81D24)],
+                        gradient: LinearGradient(
+                          colors: [
+                            _primaryColor,
+                            _primaryColor.withValues(alpha: 0.7)
+                          ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: kPrimaryColor.withOpacity(0.4),
+                            color: _primaryColor.withValues(alpha: 0.4),
                             blurRadius: 30,
                             offset: const Offset(0, 10),
                           )
@@ -134,19 +136,14 @@ class _AboutWidgetState extends State<AboutWidget> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
-                        color: isDark
-                            ? Colors.white.withOpacity(0.05)
-                            : theme.accent4,
+                        color: theme.secondaryBackground,
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                            color: isDark
-                                ? Colors.white.withOpacity(0.1)
-                                : theme.alternate),
+                        border: Border.all(color: theme.alternate),
                       ),
                       child: Text(
                         'Versión 2.0.0 (Beta)',
                         style: GoogleFonts.robotoMono(
-                          color: kPrimaryColor,
+                          color: _primaryColor,
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),
@@ -213,26 +210,24 @@ class _AboutWidgetState extends State<AboutWidget> {
     required String desc,
     required int delay,
   }) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final theme = FlutterFlowTheme.of(context);
     return Container(
       width: 240,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF141414) : theme.secondaryBackground,
+        color: theme.secondaryBackground,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-            color: isDark ? Colors.white.withOpacity(0.05) : theme.alternate),
+        border: Border.all(color: theme.alternate),
       ),
       child: Column(
         children: [
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: kPrimaryColor.withOpacity(0.1),
+              color: _primaryColor.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: kPrimaryColor, size: 28),
+            child: Icon(icon, color: _primaryColor, size: 28),
           ),
           const SizedBox(height: 16),
           Text(
@@ -260,27 +255,20 @@ class _AboutWidgetState extends State<AboutWidget> {
   }
 
   Widget _buildLegalSection(bool isDesktop) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final theme = FlutterFlowTheme.of(context);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(1), // Border width
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            Colors.transparent,
-            isDark ? Colors.white.withOpacity(0.2) : theme.alternate,
-            Colors.transparent
-          ],
+          colors: [theme.transparent, theme.alternate, theme.transparent],
         ),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
         decoration: BoxDecoration(
-          color: isDark
-              ? Colors.black.withOpacity(0.5)
-              : theme.secondaryBackground,
+          color: theme.secondaryBackground,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
@@ -325,11 +313,5 @@ class _AboutWidgetState extends State<AboutWidget> {
         ),
       ),
     );
-  }
-
-  Future<void> _launchURL(String url) async {
-    if (!await launchUrl(Uri.parse(url))) {
-      throw Exception('Could not launch $url');
-    }
   }
 }

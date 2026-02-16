@@ -110,9 +110,7 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
   bool get _isDesktop => MediaQuery.of(context).size.width >= 900;
 
   // Paleta de colores consistente con home
-  static const Color kBgColor = Color(0xFF050505);
-  static const Color kSurfaceColor = Color(0xFF121212);
-  static const Color kPrimaryColor = Color(0xFFE50914);
+  Color get _primaryColor => FlutterFlowTheme.of(context).primary;
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +130,7 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
       slivers: [
         SliverAppBar(
           expandedHeight: 160,
-          backgroundColor: theme.primaryBackground.withOpacity(0.95),
+          backgroundColor: theme.primaryBackground.withValues(alpha: 0.95),
           pinned: true,
           stretch: true,
           leading: Container(
@@ -155,12 +153,12 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: kPrimaryColor.withOpacity(0.15),
+                    color: _primaryColor.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
                     Icons.shopping_bag_rounded,
-                    color: kPrimaryColor,
+                    color: _primaryColor,
                     size: 20,
                   ),
                 ),
@@ -203,7 +201,7 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
             mainAxisSize: MainAxisSize.min,
             children: [
               CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(kPrimaryColor),
+                valueColor: AlwaysStoppedAnimation<Color>(_primaryColor),
               ),
               const SizedBox(height: 16),
               Text(
@@ -229,7 +227,7 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.1),
+                    color: Colors.red.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
@@ -251,7 +249,7 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
                 ElevatedButton(
                   onPressed: _loadOrders,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: kPrimaryColor,
+                    backgroundColor: _primaryColor,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 32,
@@ -324,7 +322,7 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
                     style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: kPrimaryColor,
+                    backgroundColor: _primaryColor,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 28,
@@ -392,9 +390,7 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
           onPressed: () => Navigator.pop(context),
           icon: Icon(
             Icons.arrow_back_rounded,
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white54
-                : FlutterFlowTheme.of(context).secondaryText,
+            color: FlutterFlowTheme.of(context).secondaryText,
             size: 28,
           ),
         ),
@@ -404,15 +400,15 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                kPrimaryColor.withOpacity(0.2),
-                kPrimaryColor.withOpacity(0.05)
+                _primaryColor.withValues(alpha: 0.2),
+                _primaryColor.withValues(alpha: 0.05)
               ],
             ),
             borderRadius: BorderRadius.circular(16),
           ),
           child: Icon(
             Icons.shopping_bag_rounded,
-            color: kPrimaryColor,
+            color: _primaryColor,
             size: 32,
           ),
         ),
@@ -451,7 +447,7 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
               style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: kSurfaceColor,
+              backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
               shape: RoundedRectangleBorder(
@@ -471,7 +467,7 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
         child: Column(
           children: [
             CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(kPrimaryColor),
+              valueColor: AlwaysStoppedAnimation<Color>(_primaryColor),
               strokeWidth: 3,
             ),
             const SizedBox(height: 24),
@@ -496,7 +492,7 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
         decoration: BoxDecoration(
           color: theme.secondaryBackground,
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: Colors.red.withOpacity(0.3)),
+          border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -524,7 +520,7 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
                 style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: kPrimaryColor,
+                backgroundColor: _primaryColor,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 32,
@@ -600,7 +596,7 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
                 ),
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: kPrimaryColor,
+                backgroundColor: _primaryColor,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 40,
@@ -640,26 +636,17 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Theme.of(context).brightness == Brightness.dark
-                ? kSurfaceColor
-                : FlutterFlowTheme.of(context).secondaryBackground,
-            Theme.of(context).brightness == Brightness.dark
-                ? kSurfaceColor.withOpacity(0.8)
-                : FlutterFlowTheme.of(context)
-                    .secondaryBackground
-                    .withOpacity(0.8),
+            FlutterFlowTheme.of(context).secondaryBackground,
+            FlutterFlowTheme.of(context).secondaryBackground.withValues(alpha: 0.8),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white.withOpacity(0.08)
-                : FlutterFlowTheme.of(context).alternate),
+        border: Border.all(color: FlutterFlowTheme.of(context).alternate),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
+            color: Colors.black.withValues(alpha: 0.3),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -668,7 +655,7 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: Material(
-          color: Colors.transparent,
+          color: FlutterFlowTheme.of(context).transparent,
           child: InkWell(
             onTap: () {
               // Future: Navigate to order details
@@ -685,7 +672,7 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           color:
-                              _getStatusColor(order.status).withOpacity(0.15),
+                              _getStatusColor(order.status).withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Icon(
@@ -726,11 +713,11 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
                         ),
                         decoration: BoxDecoration(
                           color:
-                              _getStatusColor(order.status).withOpacity(0.15),
+                              _getStatusColor(order.status).withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
                             color:
-                                _getStatusColor(order.status).withOpacity(0.5),
+                                _getStatusColor(order.status).withValues(alpha: 0.5),
                           ),
                         ),
                         child: Text(
@@ -754,12 +741,12 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
                               width: 40,
                               height: 40,
                               decoration: BoxDecoration(
-                                color: kPrimaryColor.withOpacity(0.1),
+                                color: _primaryColor.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Icon(
                                 Icons.receipt_long_rounded,
-                                color: kPrimaryColor,
+                                color: _primaryColor,
                                 size: 20,
                               ),
                             ),
@@ -785,7 +772,8 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
                                       item.offerSnapshot.dataDeliveryType!,
                                       style: GoogleFonts.outfit(
                                         fontSize: 11,
-                                        color: Colors.white38,
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryText,
                                       ),
                                     ),
                                 ],
@@ -796,7 +784,7 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
                               style: GoogleFonts.outfit(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
-                                color: kPrimaryColor,
+                                color: _primaryColor,
                               ),
                             ),
                           ],
@@ -809,7 +797,7 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
                         '+${order.items.length - 2} más',
                         style: GoogleFonts.outfit(
                           fontSize: 12,
-                          color: Colors.white38,
+                          color: FlutterFlowTheme.of(context).secondaryText,
                           fontStyle: FontStyle.italic,
                         ),
                       ),
@@ -820,11 +808,11 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          Colors.transparent,
+                          FlutterFlowTheme.of(context).transparent,
                           Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white.withOpacity(0.1)
+                              ? Colors.white.withValues(alpha: 0.1)
                               : FlutterFlowTheme.of(context).alternate,
-                          Colors.transparent,
+                          FlutterFlowTheme.of(context).transparent,
                         ],
                       ),
                     ),
@@ -878,26 +866,17 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Theme.of(context).brightness == Brightness.dark
-                ? kSurfaceColor
-                : FlutterFlowTheme.of(context).secondaryBackground,
-            Theme.of(context).brightness == Brightness.dark
-                ? kSurfaceColor.withOpacity(0.7)
-                : FlutterFlowTheme.of(context)
-                    .secondaryBackground
-                    .withOpacity(0.7),
+            FlutterFlowTheme.of(context).secondaryBackground,
+            FlutterFlowTheme.of(context).secondaryBackground.withValues(alpha: 0.7),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white.withOpacity(0.1)
-                : FlutterFlowTheme.of(context).alternate),
+        border: Border.all(color: FlutterFlowTheme.of(context).alternate),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.4),
+            color: Colors.black.withValues(alpha: 0.4),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -906,7 +885,7 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(24),
         child: Material(
-          color: Colors.transparent,
+          color: FlutterFlowTheme.of(context).transparent,
           child: InkWell(
             onTap: () {
               // Future: Navigate to order details
@@ -924,8 +903,8 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              _getStatusColor(order.status).withOpacity(0.2),
-                              _getStatusColor(order.status).withOpacity(0.05),
+                              _getStatusColor(order.status).withValues(alpha: 0.2),
+                              _getStatusColor(order.status).withValues(alpha: 0.05),
                             ],
                           ),
                           borderRadius: BorderRadius.circular(14),
@@ -972,10 +951,10 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
                       vertical: 8,
                     ),
                     decoration: BoxDecoration(
-                      color: _getStatusColor(order.status).withOpacity(0.15),
+                      color: _getStatusColor(order.status).withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: _getStatusColor(order.status).withOpacity(0.5),
+                        color: _getStatusColor(order.status).withValues(alpha: 0.5),
                         width: 1.5,
                       ),
                     ),
@@ -1027,11 +1006,9 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          Colors.transparent,
-                          Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white.withOpacity(0.15)
-                              : FlutterFlowTheme.of(context).alternate,
-                          Colors.transparent,
+                          FlutterFlowTheme.of(context).transparent,
+                          FlutterFlowTheme.of(context).alternate,
+                          FlutterFlowTheme.of(context).transparent,
                         ],
                       ),
                     ),

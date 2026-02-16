@@ -77,7 +77,7 @@ class _PaymentMethodsWidgetState extends State<PaymentMethodsWidget> {
     return CustomScrollView(
       slivers: [
         SliverAppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: FlutterFlowTheme.of(context).transparent,
           expandedHeight: 120,
           pinned: true,
           leading: Padding(
@@ -107,7 +107,7 @@ class _PaymentMethodsWidgetState extends State<PaymentMethodsWidget> {
                 gradient: LinearGradient(
                   colors: [
                     FlutterFlowTheme.of(context).primary.withValues(alpha: 0.2),
-                    Colors.transparent,
+                    FlutterFlowTheme.of(context).transparent,
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,

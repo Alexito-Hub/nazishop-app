@@ -31,14 +31,9 @@ class _PurchaseSuccessWidgetState extends State<PurchaseSuccessWidget> {
   late PurchaseSuccessModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  static const Color kSurfaceColor = Color(0xFF141414);
-  static const Color kPrimaryColor = Color(0xFFE50914);
-  static const Color kSuccessColor = Color(0xFF22C55E);
-
   bool get _isDesktop => MediaQuery.of(context).size.width >= 900;
 
   bool _isLoading = true;
-  Map<String, dynamic>? _orderData;
   Map<String, dynamic>? _credentials;
 
   @override
@@ -72,13 +67,12 @@ class _PurchaseSuccessWidgetState extends State<PurchaseSuccessWidget> {
 
       if (mounted) {
         setState(() {
-          _orderData = order;
           _credentials = creds;
           _isLoading = false;
         });
       }
     } catch (e) {
-      print('Error loading order success: $e');
+      debugPrint('Error loading order success: $e');
       if (mounted) setState(() => _isLoading = false);
     }
   }
@@ -99,8 +93,9 @@ class _PurchaseSuccessWidgetState extends State<PurchaseSuccessWidget> {
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         body: _isLoading
-            ? const Center(
-                child: CircularProgressIndicator(color: kPrimaryColor))
+            ? Center(
+                child: CircularProgressIndicator(
+                    color: FlutterFlowTheme.of(context).primary))
             : (_isDesktop ? _buildDesktopLayout() : _buildMobileLayout()),
       ),
     );
@@ -191,20 +186,24 @@ class _PurchaseSuccessWidgetState extends State<PurchaseSuccessWidget> {
         Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: kSuccessColor.withOpacity(0.1),
+            color: FlutterFlowTheme.of(context).success.withValues(alpha: 0.1),
             shape: BoxShape.circle,
-            border: Border.all(color: kSuccessColor.withOpacity(0.2), width: 2),
+            border: Border.all(
+                color:
+                    FlutterFlowTheme.of(context).success.withValues(alpha: 0.2),
+                width: 2),
             boxShadow: [
               BoxShadow(
-                color: kSuccessColor.withOpacity(0.2),
+                color:
+                    FlutterFlowTheme.of(context).success.withValues(alpha: 0.2),
                 blurRadius: 40,
                 spreadRadius: 5,
               ),
             ],
           ),
-          child: const Icon(
+          child: Icon(
             Icons.check_rounded,
-            color: kSuccessColor,
+            color: FlutterFlowTheme.of(context).success,
             size: 64,
           ),
         ).animate().scale(duration: 600.ms, curve: Curves.elasticOut),
@@ -233,14 +232,10 @@ class _PurchaseSuccessWidgetState extends State<PurchaseSuccessWidget> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
             decoration: BoxDecoration(
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.white.withOpacity(0.05)
-                  : FlutterFlowTheme.of(context).accent4,
+              color:
+                  FlutterFlowTheme.of(context).alternate.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white10
-                      : FlutterFlowTheme.of(context).alternate),
+              border: Border.all(color: FlutterFlowTheme.of(context).alternate),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -285,17 +280,13 @@ class _PurchaseSuccessWidgetState extends State<PurchaseSuccessWidget> {
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.dark
-            ? kSurfaceColor
-            : FlutterFlowTheme.of(context).secondaryBackground,
+        color: FlutterFlowTheme.of(context).secondaryBackground,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white10
-                : FlutterFlowTheme.of(context).alternate),
+        border: Border.all(color: FlutterFlowTheme.of(context).alternate),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color:
+                FlutterFlowTheme.of(context).primaryText.withValues(alpha: 0.2),
             blurRadius: 20,
             offset: const Offset(0, 5),
           ),
@@ -306,7 +297,8 @@ class _PurchaseSuccessWidgetState extends State<PurchaseSuccessWidget> {
         children: [
           Row(
             children: [
-              const Icon(Icons.key_rounded, color: kPrimaryColor),
+              Icon(Icons.key_rounded,
+                  color: FlutterFlowTheme.of(context).primary),
               const SizedBox(width: 12),
               Text(
                 'Tus Credenciales',
@@ -320,18 +312,10 @@ class _PurchaseSuccessWidgetState extends State<PurchaseSuccessWidget> {
           ),
           const SizedBox(height: 24),
           _buildCredentialRow('Usuario / Email', email),
-          Divider(
-              height: 32,
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.white10
-                  : FlutterFlowTheme.of(context).alternate),
+          Divider(height: 32, color: FlutterFlowTheme.of(context).alternate),
           _buildCredentialRow('Contraseña', password, obscureText: true),
           if (pin != null && pin.toString().isNotEmpty) ...[
-            Divider(
-                height: 32,
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white10
-                    : FlutterFlowTheme.of(context).alternate),
+            Divider(height: 32, color: FlutterFlowTheme.of(context).alternate),
             _buildCredentialRow('PIN de Perfil', pin.toString()),
           ],
         ],
@@ -376,14 +360,9 @@ class _PurchaseSuccessWidgetState extends State<PurchaseSuccessWidget> {
                   SnackBar(
                     content: Text('Copiado: $label',
                         style: GoogleFonts.outfit(
-                            color: Theme.of(context).brightness ==
-                                    Brightness.dark
-                                ? Colors.white
-                                : FlutterFlowTheme.of(context).primaryText)),
+                            color: FlutterFlowTheme.of(context).primaryText)),
                     backgroundColor:
-                        Theme.of(context).brightness == Brightness.dark
-                            ? kSurfaceColor
-                            : FlutterFlowTheme.of(context).secondaryBackground,
+                        FlutterFlowTheme.of(context).secondaryBackground,
                     duration: const Duration(seconds: 1),
                   ),
                 );
@@ -411,22 +390,17 @@ class _PurchaseSuccessWidgetState extends State<PurchaseSuccessWidget> {
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.dark
-            ? const Color(0xFF1E1E1E)
-            : FlutterFlowTheme.of(context)
-                .secondaryBackground, // Slightly lighter than bg
+        color: FlutterFlowTheme.of(context).secondaryBackground,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white.withOpacity(0.05)
-                : FlutterFlowTheme.of(context).alternate),
+        border: Border.all(color: FlutterFlowTheme.of(context).alternate),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.gavel_rounded, color: Colors.orange, size: 20),
+              Icon(Icons.gavel_rounded,
+                  color: FlutterFlowTheme.of(context).warning, size: 20),
               const SizedBox(width: 12),
               Text(
                 'Reglas de Uso',
@@ -448,9 +422,7 @@ class _PurchaseSuccessWidgetState extends State<PurchaseSuccessWidget> {
                       padding: const EdgeInsets.only(top: 6),
                       child: Icon(Icons.circle,
                           size: 4,
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white38
-                              : FlutterFlowTheme.of(context).secondaryText),
+                          color: FlutterFlowTheme.of(context).secondaryText),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -493,10 +465,9 @@ class _PurchaseSuccessWidgetState extends State<PurchaseSuccessWidget> {
             options: FFButtonOptions(
               width: double.infinity,
               height: 56,
-              color: kPrimaryColor,
+              color: FlutterFlowTheme.of(context).primary,
               textStyle: GoogleFonts.outfit(
-                color: Colors
-                    .white, // Keep white on red button (works in both modes)
+                color: FlutterFlowTheme.of(context).tertiary,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
@@ -516,18 +487,14 @@ class _PurchaseSuccessWidgetState extends State<PurchaseSuccessWidget> {
             options: FFButtonOptions(
               width: double.infinity,
               height: 56,
-              color: Colors.transparent,
+              color: FlutterFlowTheme.of(context).transparent,
               textStyle: GoogleFonts.outfit(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white70
-                    : FlutterFlowTheme.of(context).secondaryText,
+                color: FlutterFlowTheme.of(context).secondaryText,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
               borderSide: BorderSide(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white.withOpacity(0.1)
-                    : FlutterFlowTheme.of(context).alternate,
+                color: FlutterFlowTheme.of(context).alternate,
                 width: 1.5,
               ),
               borderRadius: BorderRadius.circular(14),

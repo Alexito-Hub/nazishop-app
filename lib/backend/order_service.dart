@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:nazi_shop/backend/api_client.dart';
 
 class OrderService {
@@ -8,16 +9,16 @@ class OrderService {
     String paymentMethod = 'wallet',
   }) async {
     try {
-      print('[OrderService] Creating order for offer: $offerId');
+      debugPrint('[OrderService] Creating order for offer: $offerId');
       final response = await ApiClient.post('/api/orders', body: {
         'action': 'create',
         'offerId': offerId,
         'paymentMethod': paymentMethod,
       });
-      print('[OrderService] ✅ Order created successfully');
+      debugPrint('[OrderService] ✅ Order created successfully');
       return response;
     } catch (e) {
-      print('[OrderService] ❌ Create order error: $e');
+      debugPrint('[OrderService] ❌ Create order error: $e');
       rethrow;
     }
   }
@@ -30,7 +31,7 @@ class OrderService {
       });
       return response['data'] ?? [];
     } catch (e) {
-      print('[OrderService] Get orders error: $e');
+      debugPrint('[OrderService] Get orders error: $e');
       return [];
     }
   }
@@ -44,7 +45,7 @@ class OrderService {
       });
       return response['data'];
     } catch (e) {
-      print('[OrderService] Get order error: $e');
+      debugPrint('[OrderService] Get order error: $e');
       return null;
     }
   }
@@ -57,7 +58,7 @@ class OrderService {
     String? notes,
   }) async {
     try {
-      print(
+      debugPrint(
           '[OrderService] Submitting domain customer info for order: $orderId');
       final response = await ApiClient.post('/api/domain', body: {
         'action': 'create',
@@ -66,10 +67,10 @@ class OrderService {
         'customerPassword': customerPassword,
         if (notes != null && notes.isNotEmpty) 'notes': notes,
       });
-      print('[OrderService] ✅ Domain info submitted successfully');
+      debugPrint('[OrderService] ✅ Domain info submitted successfully');
       return response;
     } catch (e) {
-      print('[OrderService] ❌ Domain creation error: $e');
+      debugPrint('[OrderService] ❌ Domain creation error: $e');
       rethrow;
     }
   }
@@ -82,7 +83,7 @@ class OrderService {
       });
       return response['data'] ?? [];
     } catch (e) {
-      print('[OrderService] Get domains error: $e');
+      debugPrint('[OrderService] Get domains error: $e');
       return [];
     }
   }

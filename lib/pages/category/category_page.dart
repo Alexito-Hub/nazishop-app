@@ -56,7 +56,7 @@ class _CategoryPageState extends State<CategoryPage> {
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
             SliverAppBar(
-              backgroundColor: Colors.transparent,
+              backgroundColor: FlutterFlowTheme.of(context).transparent,
               expandedHeight: 180,
               pinned: true,
               stretch: true,
@@ -64,10 +64,10 @@ class _CategoryPageState extends State<CategoryPage> {
               leading: Container(
                 margin: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
+                  color: FlutterFlowTheme.of(context).alternate,
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
-                    color: Colors.white.withOpacity(0.1),
+                    color: FlutterFlowTheme.of(context).alternate,
                     width: 1,
                   ),
                 ),
@@ -92,7 +92,7 @@ class _CategoryPageState extends State<CategoryPage> {
                         gradient: LinearGradient(
                           colors: [
                             categoryColor,
-                            categoryColor.withOpacity(0.1),
+                            categoryColor.withValues(alpha: 0.1),
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
@@ -103,10 +103,10 @@ class _CategoryPageState extends State<CategoryPage> {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            Colors.transparent,
+                            FlutterFlowTheme.of(context).transparent,
                             FlutterFlowTheme.of(context)
                                 .primaryBackground
-                                .withOpacity(0.1),
+                                .withValues(alpha: 0.1),
                           ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
@@ -123,7 +123,7 @@ class _CategoryPageState extends State<CategoryPage> {
                           size: 180,
                           color: FlutterFlowTheme.of(context)
                               .primaryText
-                              .withOpacity(0.1),
+                              .withValues(alpha: 0.1),
                         ),
                       ),
                     ),
@@ -167,10 +167,10 @@ class _CategoryPageState extends State<CategoryPage> {
                 future: _servicesFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const SliverFillRemaining(
+                    return SliverFillRemaining(
                       child: Center(
-                        child:
-                            CircularProgressIndicator(color: Color(0xFFE50914)),
+                        child: CircularProgressIndicator(
+                            color: FlutterFlowTheme.of(context).primary),
                       ),
                     );
                   }
@@ -181,8 +181,10 @@ class _CategoryPageState extends State<CategoryPage> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(Icons.inventory_2_outlined,
-                                size: 80, color: Color(0x19FFFFFF)),
+                            Icon(Icons.inventory_2_outlined,
+                                size: 80,
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText),
                             const SizedBox(height: 16),
                             Text(
                               "SIN STOCK",

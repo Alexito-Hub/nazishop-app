@@ -17,7 +17,7 @@ class NotificationService {
         provisional: false,
       );
 
-      print(
+      debugPrint(
           '[NotificationService] User granted permission: ${settings.authorizationStatus}');
 
       if (settings.authorizationStatus == AuthorizationStatus.authorized) {
@@ -29,7 +29,7 @@ class NotificationService {
 
         // 3. Listener (Foreground)
         FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-          print(
+          debugPrint(
               '[NotificationService] Foreground Message: ${message.notification?.title}');
           // Optional: Show local notification or update provider
         });
@@ -40,7 +40,7 @@ class NotificationService {
         });
       }
     } catch (e) {
-      print('[NotificationService] Error initializing: $e');
+      debugPrint('[NotificationService] Error initializing: $e');
     }
   }
 
@@ -53,9 +53,9 @@ class NotificationService {
         'action': 'registerToken',
         'token': token,
       });
-      print('[NotificationService] Token registered in backend');
+      debugPrint('[NotificationService] Token registered in backend');
     } catch (e) {
-      print('[NotificationService] Error registering token: $e');
+      debugPrint('[NotificationService] Error registering token: $e');
     }
   }
 
@@ -80,7 +80,7 @@ class NotificationService {
 
       return [];
     } catch (e) {
-      print('[NotificationService] Error fetching notifications: $e');
+      debugPrint('[NotificationService] Error fetching notifications: $e');
       return [];
     }
   }
@@ -92,7 +92,7 @@ class NotificationService {
           body: {'action': 'markRead', 'id': notificationId});
       return true;
     } catch (e) {
-      print('[NotificationService] Error marking as read: $e');
+      debugPrint('[NotificationService] Error marking as read: $e');
       return false;
     }
   }
@@ -104,7 +104,7 @@ class NotificationService {
           body: {'action': 'delete', 'id': notificationId});
       return true;
     } catch (e) {
-      print('[NotificationService] Error deleting notification: $e');
+      debugPrint('[NotificationService] Error deleting notification: $e');
       return false;
     }
   }

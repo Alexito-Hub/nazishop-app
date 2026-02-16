@@ -13,10 +13,10 @@ class CreateCategoryPage extends StatefulWidget {
   const CreateCategoryPage({super.key, this.category});
 
   @override
-  _CreateCategoryPageState createState() => _CreateCategoryPageState();
+  CreateCategoryPageState createState() => CreateCategoryPageState();
 }
 
-class _CreateCategoryPageState extends State<CreateCategoryPage> {
+class CreateCategoryPageState extends State<CreateCategoryPage> {
   final _formKey = GlobalKey<FormState>();
 
   late TextEditingController _nameCtrl;
@@ -80,9 +80,11 @@ class _CreateCategoryPageState extends State<CreateCategoryPage> {
 
       if (mounted) Navigator.pop(context);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }
@@ -90,19 +92,15 @@ class _CreateCategoryPageState extends State<CreateCategoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final kBgColor = FlutterFlowTheme.of(context).primaryBackground;
-    final kSurfaceColor = FlutterFlowTheme.of(context).secondaryBackground;
-    final kPrimaryColor = FlutterFlowTheme.of(context).primary;
-
     final isDesktop = MediaQuery.of(context).size.width >= 900;
 
     return Scaffold(
-      backgroundColor: kBgColor,
+      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
       extendBodyBehindAppBar: true,
       appBar: isDesktop
           ? null
           : AppBar(
-              backgroundColor: Colors.transparent,
+              backgroundColor: FlutterFlowTheme.of(context).transparent,
               elevation: 0,
               leading: SmartBackButton(
                   color: FlutterFlowTheme.of(context).primaryText),
@@ -127,11 +125,14 @@ class _CreateCategoryPageState extends State<CreateCategoryPage> {
               height: 500,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: kPrimaryColor.withOpacity(0.05),
+                color: FlutterFlowTheme.of(context)
+                    .primary
+                    .withValues(alpha: 0.05),
               ),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
-                child: Container(color: Colors.transparent),
+                child:
+                    Container(color: FlutterFlowTheme.of(context).transparent),
               ),
             ),
           ),
@@ -169,7 +170,8 @@ class _CreateCategoryPageState extends State<CreateCategoryPage> {
                                       fontWeight: FontWeight.bold),
                                 ),
                                 const Spacer(),
-                                _buildSaveButton(kPrimaryColor),
+                                _buildSaveButton(
+                                    FlutterFlowTheme.of(context).primary),
                               ],
                             ),
                           ),
@@ -180,23 +182,32 @@ class _CreateCategoryPageState extends State<CreateCategoryPage> {
                               children: [
                                 Expanded(
                                     flex: 2,
-                                    child: _buildMainColumn(kSurfaceColor)),
+                                    child: _buildMainColumn(
+                                        FlutterFlowTheme.of(context)
+                                            .secondaryBackground)),
                                 const SizedBox(width: 24),
                                 Expanded(
                                     flex: 1,
                                     child: _buildSideColumn(
-                                        kSurfaceColor, kPrimaryColor)),
+                                        FlutterFlowTheme.of(context)
+                                            .secondaryBackground,
+                                        FlutterFlowTheme.of(context).primary)),
                               ],
                             );
                           } else {
                             return Column(
                               children: [
-                                _buildMainColumn(kSurfaceColor),
+                                _buildMainColumn(FlutterFlowTheme.of(context)
+                                    .secondaryBackground),
                                 const SizedBox(height: 24),
-                                _buildSideColumn(kSurfaceColor, kPrimaryColor),
+                                _buildSideColumn(
+                                    FlutterFlowTheme.of(context)
+                                        .secondaryBackground,
+                                    FlutterFlowTheme.of(context).primary),
                                 if (!isDesktop) ...[
                                   const SizedBox(height: 32),
-                                  _buildSaveButton(kPrimaryColor),
+                                  _buildSaveButton(
+                                      FlutterFlowTheme.of(context).primary),
                                 ],
                               ],
                             );
@@ -299,7 +310,7 @@ class _CreateCategoryPageState extends State<CreateCategoryPage> {
                       fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               SwitchListTile(
-                activeThumbColor: kPrimaryColor,
+                activeThumbColor: FlutterFlowTheme.of(context).primary,
                 contentPadding: EdgeInsets.zero,
                 title: Text('Categoría Activa',
                     style: GoogleFonts.outfit(
@@ -332,7 +343,7 @@ class _CreateCategoryPageState extends State<CreateCategoryPage> {
             : Icon(Icons.check, color: FlutterFlowTheme.of(context).info),
         label: Text(_isSaving ? 'Guardando...' : 'Guardar Datos'),
         style: ElevatedButton.styleFrom(
-          backgroundColor: kPrimaryColor,
+          backgroundColor: FlutterFlowTheme.of(context).primary,
           foregroundColor: FlutterFlowTheme.of(context).info,
           padding: const EdgeInsets.symmetric(horizontal: 24),
           shape:
@@ -350,7 +361,7 @@ class _CreateCategoryPageState extends State<CreateCategoryPage> {
     try {
       return Color(int.parse(hexColor, radix: 16));
     } catch (_) {
-      return Colors.transparent;
+      return FlutterFlowTheme.of(context).transparent;
     }
   }
 

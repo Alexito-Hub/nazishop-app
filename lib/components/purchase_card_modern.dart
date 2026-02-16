@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 // import 'package:flutter_animate/flutter_animate.dart';
 import '../backend/currency_service.dart';
 import '../backend/icon_helper.dart';
+import '../flutter_flow/flutter_flow_theme.dart';
 
 class PurchaseCardModern extends StatefulWidget {
   final Map<String, dynamic> order;
@@ -32,29 +33,29 @@ class _PurchaseCardModernState extends State<PurchaseCardModern> {
     final price = CurrencyService.formatFromUSD(totalPrice);
 
     // Status Logic
+    final theme = FlutterFlowTheme.of(context);
     String statusText = 'Pendiente';
-    Color statusColor = const Color(0xFFFF5963); // Red/Orange
+    Color statusColor = theme.error;
     IconData statusIcon = Icons.access_time_rounded;
 
     if (status == 'delivered') {
       statusText = 'Entregado';
-      statusColor = const Color(0xFF39D2C0); // Cyan/Green
+      statusColor = theme.success;
       statusIcon = Icons.check_circle_rounded;
     } else if (status == 'paid') {
       statusText = 'Pagado';
-      statusColor = const Color(0xFF4B39EF); // Blue
+      statusColor = theme.info;
       statusIcon = Icons.payment_rounded;
     } else if (status == 'cancelled') {
       statusText = 'Cancelado';
-      statusColor = Colors.grey;
+      statusColor = theme.secondaryText;
       statusIcon = Icons.cancel_rounded;
     }
 
     // Icon & Branding
     final iconCode = product['iconCode'];
     final colorVal = product['colorValue'];
-    final brandColor =
-        colorVal != null ? Color(colorVal) : const Color(0xFFE50914);
+    final brandColor = colorVal != null ? Color(colorVal) : theme.primary;
     final icon = iconCode != null
         ? IconHelper.getIcon(iconCode)
         : Icons.shopping_bag_outlined;
@@ -65,8 +66,8 @@ class _PurchaseCardModernState extends State<PurchaseCardModern> {
 
     // Hover Border Color
     final borderColor = _isHovered
-        ? brandColor.withOpacity(0.5)
-        : Colors.white.withOpacity(0.08);
+        ? brandColor.withValues(alpha: 0.5)
+        : theme.alternate.withValues(alpha: 0.3);
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
@@ -82,22 +83,22 @@ class _PurchaseCardModernState extends State<PurchaseCardModern> {
           curve: Curves.easeOut,
           margin: const EdgeInsets.only(bottom: 16),
           transform: Matrix4.identity()
-            ..translate(0.0, _isHovered ? -4.0 : 0.0),
+            ..translateByDouble(0.0, _isHovered ? -4.0 : 0.0, 0.0, 1.0),
           decoration: BoxDecoration(
-            color: const Color(0xFF141414),
+            color: theme.secondaryBackground,
             borderRadius: BorderRadius.circular(24),
             border: Border.all(color: borderColor, width: 1.5),
             boxShadow: _isHovered
                 ? [
                     BoxShadow(
-                      color: brandColor.withOpacity(0.15),
+                      color: brandColor.withValues(alpha: 0.15),
                       blurRadius: 20,
                       offset: const Offset(0, 8),
                     )
                   ]
                 : [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
+                      color: Colors.black.withValues(alpha: 0.2),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     )
@@ -114,7 +115,7 @@ class _PurchaseCardModernState extends State<PurchaseCardModern> {
                   child: Icon(
                     icon,
                     size: 150,
-                    color: brandColor.withOpacity(0.03),
+                    color: brandColor.withValues(alpha: 0.03),
                   ),
                 ),
 
@@ -133,15 +134,15 @@ class _PurchaseCardModernState extends State<PurchaseCardModern> {
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
-                                  brandColor.withOpacity(0.2),
-                                  brandColor.withOpacity(0.05)
+                                  brandColor.withValues(alpha: 0.2),
+                                  brandColor.withValues(alpha: 0.05)
                                 ],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                               ),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                  color: brandColor.withOpacity(0.2)),
+                                  color: brandColor.withValues(alpha: 0.2)),
                             ),
                             child: Icon(icon, color: brandColor, size: 28),
                           ),
@@ -155,7 +156,7 @@ class _PurchaseCardModernState extends State<PurchaseCardModern> {
                                 Text(
                                   serviceName,
                                   style: GoogleFonts.outfit(
-                                    color: Colors.white,
+                                    color: theme.primaryText,
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -164,7 +165,7 @@ class _PurchaseCardModernState extends State<PurchaseCardModern> {
                                 Text(
                                   'Orden #${order['orderId'] ?? order['id']?.toString().substring(0, 8) ?? '...'}',
                                   style: GoogleFonts.outfit(
-                                    color: Colors.white38,
+                                    color: theme.secondaryText,
                                     fontSize: 12,
                                     letterSpacing: 1,
                                     fontWeight: FontWeight.w500,
@@ -179,10 +180,10 @@ class _PurchaseCardModernState extends State<PurchaseCardModern> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 12, vertical: 6),
                             decoration: BoxDecoration(
-                              color: statusColor.withOpacity(0.1),
+                              color: statusColor.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(
-                                  color: statusColor.withOpacity(0.3)),
+                                  color: statusColor.withValues(alpha: 0.3)),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
@@ -204,7 +205,9 @@ class _PurchaseCardModernState extends State<PurchaseCardModern> {
                       ),
 
                       const SizedBox(height: 24),
-                      Divider(color: Colors.white.withOpacity(0.05), height: 1),
+                      Divider(
+                          color: theme.alternate.withValues(alpha: 0.3),
+                          height: 1),
                       const SizedBox(height: 24),
 
                       // Footer Row
@@ -214,7 +217,7 @@ class _PurchaseCardModernState extends State<PurchaseCardModern> {
                           _buildFooterItem(
                               'FECHA', _formatDate(order['createdAt'])),
                           _buildFooterItem('TOTAL', price,
-                              isValueBold: true, valueColor: Colors.white),
+                              isValueBold: true, valueColor: theme.primaryText),
 
                           const Spacer(),
 
@@ -241,7 +244,7 @@ class _PurchaseCardModernState extends State<PurchaseCardModern> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 16, vertical: 8),
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.05),
+                                color: theme.alternate.withValues(alpha: 0.3),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Row(
@@ -251,11 +254,12 @@ class _PurchaseCardModernState extends State<PurchaseCardModern> {
                                       height: 14,
                                       child: CircularProgressIndicator(
                                           strokeWidth: 2,
-                                          color: Colors.white54)),
+                                          color: theme.secondaryText)),
                                   const SizedBox(width: 10),
                                   Text("Procesando...",
                                       style: GoogleFonts.outfit(
-                                          color: Colors.white54, fontSize: 12))
+                                          color: theme.secondaryText,
+                                          fontSize: 12))
                                 ],
                               ),
                             )
@@ -280,7 +284,7 @@ class _PurchaseCardModernState extends State<PurchaseCardModern> {
         Text(
           label,
           style: GoogleFonts.outfit(
-            color: Colors.white38,
+            color: FlutterFlowTheme.of(context).secondaryText,
             fontSize: 10,
             fontWeight: FontWeight.bold,
             letterSpacing: 1,
@@ -290,7 +294,8 @@ class _PurchaseCardModernState extends State<PurchaseCardModern> {
         Text(
           value,
           style: GoogleFonts.outfit(
-            color: valueColor ?? Colors.white70,
+            color: valueColor ??
+                FlutterFlowTheme.of(context).primaryText.withValues(alpha: 0.7),
             fontSize: 14,
             fontWeight: isValueBold ? FontWeight.bold : FontWeight.w500,
           ),
@@ -310,9 +315,9 @@ class _PurchaseCardModernState extends State<PurchaseCardModern> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.2), // Gradient bg could be better
+          color: color.withValues(alpha: 0.2), // Gradient bg could be better
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withOpacity(0.5)),
+          border: Border.all(color: color.withValues(alpha: 0.5)),
         ),
         child: Row(
           children: [

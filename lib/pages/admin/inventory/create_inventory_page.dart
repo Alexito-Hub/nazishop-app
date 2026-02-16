@@ -110,7 +110,7 @@ class _CreateInventoryPageState extends State<CreateInventoryPage> {
               height: 500,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: FlutterFlowTheme.of(context).primary.withOpacity(0.05),
+                color: FlutterFlowTheme.of(context).primary.withValues(alpha: 0.05),
               ),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
@@ -314,13 +314,13 @@ class _CreateInventoryPageState extends State<CreateInventoryPage> {
               width: 24,
               height: 24,
               child: CircularProgressIndicator(
-                  color: FlutterFlowTheme.of(context).info, strokeWidth: 2))
+                  color: Colors.white, strokeWidth: 2))
           : Text(
               _selectedListingTitle != null
                   ? 'AÑADIR A "${_selectedListingTitle!.toUpperCase()}"'
                   : 'GUARDAR NUEVA CUENTA',
               style: GoogleFonts.outfit(
-                  color: FlutterFlowTheme.of(context).info,
+                  color: Colors.white,
                   fontSize: 16,
                   fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,

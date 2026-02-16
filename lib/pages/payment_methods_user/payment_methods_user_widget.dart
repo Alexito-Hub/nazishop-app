@@ -24,7 +24,6 @@ class _PaymentMethodsUserWidgetState extends State<PaymentMethodsUserWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   // Consistencia de Diseño
-  static const Color kPrimaryColor = Color(0xFFE50914);
 
   bool get _isDesktop => MediaQuery.of(context).size.width >= 900;
 
@@ -56,8 +55,8 @@ class _PaymentMethodsUserWidgetState extends State<PaymentMethodsUserWidget> {
       physics: const BouncingScrollPhysics(),
       slivers: [
         SliverAppBar(
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
+          backgroundColor: theme.transparent,
+          surfaceTintColor: theme.transparent,
           pinned: true,
           floating: true,
           elevation: 0,
@@ -162,7 +161,7 @@ class _PaymentMethodsUserWidgetState extends State<PaymentMethodsUserWidget> {
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: 0.2),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
@@ -199,12 +198,12 @@ class _PaymentMethodsUserWidgetState extends State<PaymentMethodsUserWidget> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: kPrimaryColor.withOpacity(0.15),
+                    color: theme.primary.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.account_balance_wallet_outlined,
-                    color: kPrimaryColor,
+                    color: theme.primary,
                     size: 32.0,
                   ),
                 ),
@@ -250,7 +249,7 @@ class _PaymentMethodsUserWidgetState extends State<PaymentMethodsUserWidget> {
                   title: 'PayPal',
                   subtitle: 'Paga de forma segura con PayPal',
                   color: const Color(0xFF0070BA),
-                  isEnabled: false,
+                  isEnabled: true,
                 ),
               ),
               SizedBox(
@@ -398,12 +397,12 @@ class _PaymentMethodsUserWidgetState extends State<PaymentMethodsUserWidget> {
         color: theme.secondaryBackground,
         borderRadius: BorderRadius.circular(24.0),
         border: Border.all(
-          color: isEnabled ? theme.alternate : Colors.transparent,
+          color: isEnabled ? theme.alternate : theme.transparent,
           width: 1.0,
         ),
       ),
       child: Material(
-        color: Colors.transparent,
+        color: theme.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(24),
           onTap: isEnabled ? () {} : null,
@@ -417,7 +416,7 @@ class _PaymentMethodsUserWidgetState extends State<PaymentMethodsUserWidget> {
                   height: 56.0,
                   decoration: BoxDecoration(
                     color: isEnabled
-                        ? color.withOpacity(0.1)
+                        ? color.withValues(alpha: 0.1)
                         : const Color(0xFF0F0F0F),
                     borderRadius: BorderRadius.circular(16.0),
                   ),
@@ -463,12 +462,12 @@ class _PaymentMethodsUserWidgetState extends State<PaymentMethodsUserWidget> {
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: isEnabled
-                        ? color.withOpacity(0.1)
-                        : theme.alternate.withOpacity(0.3),
+                        ? color.withValues(alpha: 0.1)
+                        : theme.alternate.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(10.0),
                     border: Border.all(
                       color:
-                          isEnabled ? color.withOpacity(0.2) : theme.alternate,
+                          isEnabled ? color.withValues(alpha: 0.2) : theme.alternate,
                     ),
                   ),
                   child: Text(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
 
 /// Widget that safely loads network images with error handling
 class SafeImage extends StatelessWidget {
@@ -55,11 +56,11 @@ class SafeImage extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      color: fallbackColor ?? Colors.grey[300],
+      color: fallbackColor ?? FlutterFlowTheme.of(context).alternate,
       child: Icon(
         fallbackIcon,
         size: fallbackIconSize,
-        color: Colors.grey[600],
+        color: FlutterFlowTheme.of(context).secondaryText,
       ),
     );
   }

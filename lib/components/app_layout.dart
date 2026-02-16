@@ -5,8 +5,6 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '../backend/catalog_cache.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 
-import '../models/category_model.dart';
-
 /// Layout wrapper que mantiene el sidebar de navegación consistente
 /// en desktop para todas las páginas de la app
 class AppLayout extends StatefulWidget {
@@ -29,7 +27,6 @@ class AppLayout extends StatefulWidget {
 
 class _AppLayoutState extends State<AppLayout> {
   final _catalogCache = CatalogCache();
-  List<Category> _categories = [];
 
   @override
   void initState() {
@@ -42,16 +39,16 @@ class _AppLayoutState extends State<AppLayout> {
     final cached = _catalogCache.cachedCategories;
     if (cached != null && mounted) {
       setState(() {
-        _categories = cached;
+        // Categories loaded from cache
       });
     }
 
     // Luego cargar en background (usará caché si es válido)
     try {
-      final categories = await _catalogCache.getCategories();
+      await _catalogCache.getCategories();
       if (mounted) {
         setState(() {
-          _categories = categories;
+          // Categories loaded from API
         });
       }
     } catch (e) {
@@ -95,7 +92,7 @@ class _AppLayoutState extends State<AppLayout> {
         color: theme.primaryBackground,
         border: Border(
           right: BorderSide(
-            color: theme.alternate.withOpacity(0.05), // Subtle border
+            color: theme.alternate.withValues(alpha: 0.05), // Subtle border
             width: 1,
           ),
         ),
@@ -312,49 +309,6 @@ class _AppLayoutState extends State<AppLayout> {
       return false;
     }
   }
-
-  IconData _parseIcon(String iconName) {
-    final lowerName = iconName.toLowerCase();
-
-    // Direct matches
-    final iconMap = {
-      'movie': Icons.movie_outlined,
-      'movies': Icons.movie_outlined,
-      'music': Icons.music_note_outlined,
-      'audio': Icons.headset_outlined,
-      'sports': Icons.sports_soccer_outlined,
-      'sport': Icons.sports_soccer_outlined,
-      'games': Icons.games_outlined,
-      'gaming': Icons.sports_esports_outlined,
-      'vpn': Icons.vpn_key_outlined,
-      'security': Icons.security_outlined,
-      'cloud': Icons.cloud_outlined,
-      'tv': Icons.tv_outlined,
-      'iptv': Icons.live_tv_outlined,
-      'play': Icons.play_circle_outline,
-      'star': Icons.star_border,
-      'shop': Icons.shopping_bag_outlined,
-      'streaming': Icons.live_tv,
-      'social': Icons.people_outline,
-      'gift': Icons.card_giftcard,
-    };
-
-    if (iconMap.containsKey(lowerName)) {
-      return iconMap[lowerName]!;
-    }
-
-    // Fuzzy matches
-    if (lowerName.contains('game')) return Icons.sports_esports_outlined;
-    if (lowerName.contains('music')) return Icons.music_note_outlined;
-    if (lowerName.contains('movie') || lowerName.contains('film')) {
-      return Icons.movie_outlined;
-    }
-    if (lowerName.contains('tv') || lowerName.contains('stream')) {
-      return Icons.tv_outlined;
-    }
-
-    return Icons.category_outlined;
-  }
 }
 
 class _SidebarItem extends StatelessWidget {
@@ -381,17 +335,17 @@ class _SidebarItem extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(12),
-          hoverColor: theme.primaryText.withOpacity(0.05),
+          hoverColor: theme.primaryText.withValues(alpha: 0.05),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
               color: isActive
-                  ? theme.primary.withOpacity(0.1)
+                  ? theme.primary.withValues(alpha: 0.1)
                   : Colors.transparent,
               borderRadius: BorderRadius.circular(12),
               border: isActive
                   ? Border.all(
-                      color: theme.primary.withOpacity(0.2),
+                      color: theme.primary.withValues(alpha: 0.2),
                       width: 1,
                     )
                   : null,

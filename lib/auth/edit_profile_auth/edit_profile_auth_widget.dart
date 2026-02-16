@@ -64,7 +64,7 @@ class _EditProfileAuthWidgetState extends State<EditProfileAuthWidget> {
                   height: 100,
                   decoration: BoxDecoration(
                     color:
-                        FlutterFlowTheme.of(context).primary.withOpacity(0.1),
+                        FlutterFlowTheme.of(context).primary.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                     border: Border.all(
                       color: FlutterFlowTheme.of(context).primary,
@@ -86,10 +86,10 @@ class _EditProfileAuthWidgetState extends State<EditProfileAuthWidget> {
                       color: FlutterFlowTheme.of(context).primary,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.camera_alt,
                       size: 20,
-                      color: Colors.white,
+                      color: FlutterFlowTheme.of(context).tertiary,
                     ),
                   ),
                 ),
@@ -114,7 +114,7 @@ class _EditProfileAuthWidgetState extends State<EditProfileAuthWidget> {
                     hintStyle: GoogleFonts.outfit(
                       color: FlutterFlowTheme.of(context)
                           .secondaryText
-                          .withOpacity(0.5),
+                          .withValues(alpha: 0.5),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -174,7 +174,7 @@ class _EditProfileAuthWidgetState extends State<EditProfileAuthWidget> {
                 style: GoogleFonts.outfit(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
-                  color: Colors.white,
+                  color: FlutterFlowTheme.of(context).tertiary,
                 ),
               ),
             ),

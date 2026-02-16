@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'config.dart';
 
 /// Modern API Client for CRUD operations with Firebase Auth
@@ -16,7 +17,7 @@ class ApiClient {
         return await user.getIdToken();
       }
     } catch (e) {
-      print('❌ Error getting Firebase token: $e');
+      debugPrint('❌ Error getting Firebase token: $e');
     }
     return null;
   }
@@ -39,13 +40,13 @@ class ApiClient {
         .replace(queryParameters: params);
     final headers = await _getHeaders();
 
-    print('🌐 [API GET] URL: $uri');
-    print('🔑 [API GET] Headers: $headers');
+    debugPrint('🌐 [API GET] URL: $uri');
+    debugPrint('🔑 [API GET] Headers: $headers');
 
     final response = await http.get(uri, headers: headers);
 
-    print('📥 [API GET] Status: ${response.statusCode}');
-    print(
+    debugPrint('📥 [API GET] Status: ${response.statusCode}');
+    debugPrint(
         '📦 [API GET] Body: ${response.body.substring(0, response.body.length > 200 ? 200 : response.body.length)}...');
 
     return _handleResponse(response);
@@ -56,16 +57,16 @@ class ApiClient {
     final uri = Uri.parse('${BackendConfig.baseUrl}$endpoint');
     final headers = await _getHeaders();
 
-    print('🌐 [API POST] URL: $uri');
-    print('🔑 [API POST] Headers: $headers');
-    print(
+    debugPrint('🌐 [API POST] URL: $uri');
+    debugPrint('🔑 [API POST] Headers: $headers');
+    debugPrint(
         '📤 [API POST] Body: ${json.encode(body).substring(0, json.encode(body).length > 200 ? 200 : json.encode(body).length)}...');
 
     final response =
         await http.post(uri, headers: headers, body: json.encode(body));
 
-    print('📥 [API POST] Status: ${response.statusCode}');
-    print(
+    debugPrint('📥 [API POST] Status: ${response.statusCode}');
+    debugPrint(
         '📦 [API POST] Response: ${response.body.substring(0, response.body.length > 200 ? 200 : response.body.length)}...');
 
     return _handleResponse(response);

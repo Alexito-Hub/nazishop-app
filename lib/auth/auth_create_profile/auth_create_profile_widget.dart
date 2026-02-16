@@ -101,7 +101,7 @@ class _AuthCreateProfileWidgetState extends State<AuthCreateProfileWidget>
                   gradient: LinearGradient(
                     colors: [
                       FlutterFlowTheme.of(context).primaryBackground,
-                      FlutterFlowTheme.of(context).primary.withOpacity(0.2),
+                      FlutterFlowTheme.of(context).primary.withValues(alpha: 0.2),
                     ],
                     stops: const [0.0, 1.0],
                     begin: const AlignmentDirectional(0.0, -1.0),
@@ -124,8 +124,9 @@ class _AuthCreateProfileWidgetState extends State<AuthCreateProfileWidget>
                     child: Container(
                       width: 100.0,
                       height: double.infinity,
-                      decoration: const BoxDecoration(
-                        color: Colors.black, // Dark matte
+                      decoration: BoxDecoration(
+                        color: FlutterFlowTheme.of(context)
+                            .primaryBackground, // Dark matte
                       ),
                       child: Stack(
                         alignment: const AlignmentDirectional(0.0, 0.0),
@@ -133,8 +134,9 @@ class _AuthCreateProfileWidgetState extends State<AuthCreateProfileWidget>
                           Container(
                             width: double.infinity,
                             height: double.infinity,
-                            decoration: const BoxDecoration(
-                              color: Colors.black,
+                            decoration: BoxDecoration(
+                              color: FlutterFlowTheme.of(context)
+                                  .primaryBackground,
                             ),
                           ),
                           Container(
@@ -143,11 +145,12 @@ class _AuthCreateProfileWidgetState extends State<AuthCreateProfileWidget>
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
-                                  const Color(
-                                      0x99000000), // Semi-transparent black
+                                  FlutterFlowTheme.of(context)
+                                      .primaryBackground
+                                      .withValues(alpha: 0.6),
                                   FlutterFlowTheme.of(context)
                                       .primary
-                                      .withOpacity(0.6),
+                                      .withValues(alpha: 0.6),
                                 ],
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
@@ -164,7 +167,8 @@ class _AuthCreateProfileWidgetState extends State<AuthCreateProfileWidget>
                                     .displayLarge
                                     .override(
                                       font: GoogleFonts.outfit(),
-                                      color: Colors.white,
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryText,
                                       fontWeight: FontWeight.bold,
                                     ),
                               ),
@@ -177,7 +181,8 @@ class _AuthCreateProfileWidgetState extends State<AuthCreateProfileWidget>
                                       .headlineSmall
                                       .override(
                                         font: GoogleFonts.outfit(),
-                                        color: const Color(0xCCFFFFFF),
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryText,
                                         fontWeight: FontWeight.w500,
                                       ),
                                 ),

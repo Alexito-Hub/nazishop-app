@@ -55,21 +55,20 @@ class PurchaseCard extends StatelessWidget {
     final deliveredCodes = order['deliveredCodes'] as List?;
     final hasCodes = deliveredCodes != null && deliveredCodes.isNotEmpty;
 
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final theme = FlutterFlowTheme.of(context);
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: isDark ? Colors.white.withOpacity(0.1) : theme.accent4,
+        color: theme.secondaryBackground,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: isDark ? Colors.white.withOpacity(0.1) : theme.alternate,
+          color: theme.alternate,
           width: 1.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -78,7 +77,7 @@ class PurchaseCard extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(24),
         child: Material(
-          color: Colors.transparent,
+          color: FlutterFlowTheme.of(context).transparent,
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
@@ -90,10 +89,10 @@ class PurchaseCard extends StatelessWidget {
                       width: 52.0,
                       height: 52.0,
                       decoration: BoxDecoration(
-                        color: color.withOpacity(0.1),
+                        color: color.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(14.0),
                         border: Border.all(
-                          color: color.withOpacity(0.1),
+                          color: color.withValues(alpha: 0.1),
                           width: 1,
                         ),
                       ),
@@ -133,10 +132,10 @@ class PurchaseCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 14, vertical: 8),
                       decoration: BoxDecoration(
-                        color: statusColor.withOpacity(0.1),
+                        color: statusColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: statusColor.withOpacity(0.1),
+                          color: statusColor.withValues(alpha: 0.1),
                           width: 1,
                         ),
                       ),
@@ -156,8 +155,7 @@ class PurchaseCard extends StatelessWidget {
                 Container(
                   height: 1,
                   width: double.infinity,
-                  color:
-                      isDark ? Colors.white.withOpacity(0.1) : theme.alternate,
+                  color: theme.alternate,
                 ),
                 const SizedBox(height: 20),
                 Row(
@@ -223,7 +221,7 @@ class PurchaseCard extends StatelessWidget {
                             FlutterFlowTheme.of(context).primary,
                             FlutterFlowTheme.of(context)
                                 .primary
-                                .withOpacity(0.1),
+                                .withValues(alpha: 0.1),
                           ],
                         ),
                         borderRadius: BorderRadius.circular(14),
@@ -231,7 +229,7 @@ class PurchaseCard extends StatelessWidget {
                           BoxShadow(
                             color: FlutterFlowTheme.of(context)
                                 .primary
-                                .withOpacity(0.1),
+                                .withValues(alpha: 0.1),
                             blurRadius: 10,
                           ),
                         ],
@@ -260,9 +258,10 @@ class PurchaseCard extends StatelessWidget {
                           ),
                         ),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
+                          backgroundColor:
+                              FlutterFlowTheme.of(context).transparent,
                           foregroundColor: Colors.white,
-                          shadowColor: Colors.transparent,
+                          shadowColor: FlutterFlowTheme.of(context).transparent,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(14),
                           ),
@@ -274,10 +273,10 @@ class PurchaseCard extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.orangeAccent.withOpacity(0.1),
+                        color: Colors.orangeAccent.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(
-                          color: Colors.orangeAccent.withOpacity(0.1),
+                          color: Colors.orangeAccent.withValues(alpha: 0.1),
                         ),
                       ),
                       child: Row(

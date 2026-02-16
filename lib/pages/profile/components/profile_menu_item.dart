@@ -41,8 +41,8 @@ class ProfileMenuItem extends StatelessWidget {
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color:
-              color?.withOpacity(0.1) ?? FlutterFlowTheme.of(context).accent1,
+          color: color?.withValues(alpha: 0.1) ??
+              FlutterFlowTheme.of(context).accent1,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Icon(
@@ -61,9 +61,9 @@ class ProfileMenuItem extends StatelessWidget {
           ? Switch.adaptive(
               value: switchValue,
               onChanged: onSwitchChanged,
-              activeColor: FlutterFlowTheme.of(context).primary,
+              activeThumbColor: FlutterFlowTheme.of(context).primary,
               activeTrackColor:
-                  FlutterFlowTheme.of(context).primary.withOpacity(0.1),
+                  FlutterFlowTheme.of(context).primary.withValues(alpha: 0.1),
             )
           : Icon(
               Icons.chevron_right,
@@ -78,22 +78,28 @@ class ProfileMenuItem extends StatelessWidget {
       width: 250,
       decoration: BoxDecoration(
         color: isHighlight
-            ? FlutterFlowTheme.of(context).primary.withOpacity(0.1)
-            : Colors.white.withOpacity(0.1),
+            ? FlutterFlowTheme.of(context).primary.withValues(alpha: 0.1)
+            : FlutterFlowTheme.of(context)
+                .secondaryBackground
+                .withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: isHighlight
               ? FlutterFlowTheme.of(context).primary
-              : Colors.white.withOpacity(0.1),
+              : FlutterFlowTheme.of(context)
+                  .secondaryBackground
+                  .withValues(alpha: 0.1),
           width: 1,
         ),
       ),
       child: Material(
-        color: Colors.transparent,
+        color: FlutterFlowTheme.of(context).transparent,
         child: InkWell(
           onTap: isSwitch ? null : onTap,
           borderRadius: BorderRadius.circular(20),
-          hoverColor: Colors.white.withOpacity(0.1),
+          hoverColor: FlutterFlowTheme.of(context)
+              .secondaryBackground
+              .withValues(alpha: 0.1),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             child: Row(
@@ -102,15 +108,19 @@ class ProfileMenuItem extends StatelessWidget {
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: isHighlight
-                        ? FlutterFlowTheme.of(context).primary.withOpacity(0.1)
-                        : Colors.white.withOpacity(0.1),
+                        ? FlutterFlowTheme.of(context)
+                            .primary
+                            .withValues(alpha: 0.1)
+                        : FlutterFlowTheme.of(context)
+                            .secondaryBackground
+                            .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
                     icon,
                     color: isHighlight
                         ? FlutterFlowTheme.of(context).primary
-                        : Colors.white70,
+                        : FlutterFlowTheme.of(context).secondaryText,
                     size: 20,
                   ),
                 ),
@@ -120,8 +130,10 @@ class ProfileMenuItem extends StatelessWidget {
                     title,
                     style: FlutterFlowTheme.of(context).titleSmall.override(
                           color: isHighlight
-                              ? Colors.white
-                              : Colors.white.withOpacity(0.1),
+                              ? FlutterFlowTheme.of(context).primaryText
+                              : FlutterFlowTheme.of(context)
+                                  .secondaryText
+                                  .withValues(alpha: 0.1),
                           fontWeight:
                               isHighlight ? FontWeight.bold : FontWeight.w500,
                           font: GoogleFonts.outfit(),

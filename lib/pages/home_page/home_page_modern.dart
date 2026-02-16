@@ -132,8 +132,8 @@ class _HomePageModernWidgetState extends State<HomePageModernWidget> {
       slivers: [
         // 1. Header Heroico Móvil Moderno
         SliverAppBar(
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
+          backgroundColor: FlutterFlowTheme.of(context).transparent,
+          surfaceTintColor: FlutterFlowTheme.of(context).transparent,
           elevation: 0,
           pinned: true,
           floating: true,
@@ -332,7 +332,8 @@ class _HomePageModernWidgetState extends State<HomePageModernWidget> {
 
   // --- COMPONENTE BANNER DESKTOP ---
   Widget _buildDesktopBanner() {
-    final primaryColor = FlutterFlowTheme.of(context).primary;
+    final theme = FlutterFlowTheme.of(context);
+    final primaryColor = theme.primary;
 
     return Container(
       constraints: const BoxConstraints(minHeight: 280),
@@ -349,13 +350,13 @@ class _HomePageModernWidgetState extends State<HomePageModernWidget> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 30,
             offset: const Offset(0, 10),
           ),
         ],
         border: Border.all(
-          color: FlutterFlowTheme.of(context).alternate.withOpacity(0.2),
+          color: FlutterFlowTheme.of(context).alternate.withValues(alpha: 0.2),
         ),
       ),
       child: Stack(
@@ -367,7 +368,7 @@ class _HomePageModernWidgetState extends State<HomePageModernWidget> {
             child: Icon(
               Icons.stars_rounded,
               size: 400,
-              color: primaryColor.withOpacity(0.03),
+              color: primaryColor.withValues(alpha: 0.03),
             ),
           ),
           Positioned(
@@ -378,7 +379,7 @@ class _HomePageModernWidgetState extends State<HomePageModernWidget> {
               height: 100,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: primaryColor.withOpacity(0.05),
+                color: primaryColor.withValues(alpha: 0.05),
               ),
             ),
           ),
@@ -398,12 +399,12 @@ class _HomePageModernWidgetState extends State<HomePageModernWidget> {
                             horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              colors: [primaryColor, const Color(0xFF800000)],
+                              colors: [theme.primary, theme.secondary],
                             ),
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
-                                  color: primaryColor.withOpacity(0.4),
+                                  color: primaryColor.withValues(alpha: 0.4),
                                   blurRadius: 10)
                             ]),
                         child: Text(
@@ -445,7 +446,7 @@ class _HomePageModernWidgetState extends State<HomePageModernWidget> {
                       size: 120,
                       color: FlutterFlowTheme.of(context)
                           .primaryText
-                          .withOpacity(0.8)),
+                          .withValues(alpha: 0.8)),
                 )
               ],
             ),
@@ -500,15 +501,17 @@ class _HomePageModernWidgetState extends State<HomePageModernWidget> {
       delegate: SliverChildBuilderDelegate(
         (_, __) => Container(
           decoration: BoxDecoration(
-              color:
-                  FlutterFlowTheme.of(context).secondaryText.withOpacity(0.1),
+              color: FlutterFlowTheme.of(context)
+                  .secondaryText
+                  .withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(24),
               border: Border.all(
-                  color:
-                      FlutterFlowTheme.of(context).alternate.withOpacity(0.2))),
+                  color: FlutterFlowTheme.of(context)
+                      .alternate
+                      .withValues(alpha: 0.2))),
         ).animate(onPlay: (c) => c.repeat()).shimmer(
             duration: 2.seconds,
-            color: FlutterFlowTheme.of(context).accent1.withOpacity(0.3)),
+            color: FlutterFlowTheme.of(context).accent1.withValues(alpha: 0.3)),
         childCount: 6,
       ),
     );
@@ -534,10 +537,11 @@ class _ModernSearchBar extends StatelessWidget {
         color: FlutterFlowTheme.of(context).secondaryBackground,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-            color: FlutterFlowTheme.of(context).alternate.withOpacity(0.2)),
+            color:
+                FlutterFlowTheme.of(context).alternate.withValues(alpha: 0.2)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -596,12 +600,14 @@ class _CategorySelector extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: FlutterFlowTheme.of(context)
                         .secondaryText
-                        .withOpacity(0.1),
+                        .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(30),
                   ))
               .animate(onPlay: (c) => c.repeat())
               .shimmer(
-                  color: FlutterFlowTheme.of(context).accent1.withOpacity(0.3)),
+                  color: FlutterFlowTheme.of(context)
+                      .accent1
+                      .withValues(alpha: 0.3)),
         ),
       );
     }
@@ -627,8 +633,10 @@ class _CategorySelector extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
               decoration: BoxDecoration(
                 gradient: isSelected
-                    ? LinearGradient(
-                        colors: [primaryColor, primaryColor.withOpacity(0.8)])
+                    ? LinearGradient(colors: [
+                        primaryColor,
+                        primaryColor.withValues(alpha: 0.8)
+                      ])
                     : null,
                 color: isSelected
                     ? null
@@ -636,15 +644,15 @@ class _CategorySelector extends StatelessWidget {
                 borderRadius: BorderRadius.circular(30),
                 border: Border.all(
                     color: isSelected
-                        ? Colors.transparent
+                        ? FlutterFlowTheme.of(context).transparent
                         : FlutterFlowTheme.of(context)
                             .alternate
-                            .withOpacity(0.2),
+                            .withValues(alpha: 0.2),
                     width: 1.5),
                 boxShadow: isSelected
                     ? [
                         BoxShadow(
-                            color: primaryColor.withOpacity(0.4),
+                            color: primaryColor.withValues(alpha: 0.4),
                             blurRadius: 12,
                             offset: const Offset(0, 4))
                       ]

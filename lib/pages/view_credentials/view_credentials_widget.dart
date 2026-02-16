@@ -74,7 +74,7 @@ class _ViewCredentialsWidgetState extends State<ViewCredentialsWidget> {
         }
       }
     } catch (e) {
-      print('Error fetching order: $e');
+      debugPrint('Error fetching order: $e');
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -89,7 +89,6 @@ class _ViewCredentialsWidgetState extends State<ViewCredentialsWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = FlutterFlowTheme.of(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     if (_isLoading) {
       return Scaffold(
@@ -180,7 +179,7 @@ class _ViewCredentialsWidgetState extends State<ViewCredentialsWidget> {
           top: 40,
           left: 40,
           child: FlutterFlowIconButton(
-            borderColor: Colors.white10,
+            borderColor: theme.alternate,
             borderRadius: 12,
             borderWidth: 1,
             buttonSize: 50,
@@ -245,7 +244,8 @@ class _ViewCredentialsWidgetState extends State<ViewCredentialsWidget> {
                                 color: theme.alternate.withValues(alpha: 0.3)),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.06),
+                                color:
+                                    theme.primaryText.withValues(alpha: 0.06),
                                 blurRadius: 32,
                                 offset: const Offset(0, 10),
                               ),
@@ -389,7 +389,7 @@ class _ViewCredentialsWidgetState extends State<ViewCredentialsWidget> {
         Text(
           label,
           style: GoogleFonts.outfit(
-              fontSize: 12, color: theme.secondaryText.withOpacity(0.8)),
+              fontSize: 12, color: theme.secondaryText.withValues(alpha: 0.8)),
         ),
         const SizedBox(height: 4),
         Text(
@@ -569,7 +569,7 @@ class _ViewCredentialsWidgetState extends State<ViewCredentialsWidget> {
           height: 48,
           color: theme.primary,
           textStyle: GoogleFonts.outfit(
-            color: Colors.white,
+            color: theme.secondaryText,
             fontSize: 14,
             fontWeight: FontWeight.bold,
           ),

@@ -52,7 +52,6 @@ abstract class FlutterFlowTheme {
       case ThemeMode.light:
         return LightModeTheme();
       case ThemeMode.system:
-      default:
         final brightness = MediaQuery.of(context).platformBrightness;
         return brightness == Brightness.dark
             ? DarkModeTheme()
@@ -83,6 +82,7 @@ abstract class FlutterFlowTheme {
   late Color warning;
   late Color error;
   late Color info;
+  late Color transparent;
 
   @Deprecated('Use displaySmallFamily instead')
   String get title1Family => displaySmallFamily;
@@ -188,6 +188,7 @@ class LightModeTheme extends FlutterFlowTheme {
   late Color warning = const Color(0xFFFFC107);
   late Color error = const Color(0xFFE50914);
   late Color info = const Color(0xFF2196F3);
+  late Color transparent = const Color(0x00000000);
 }
 
 abstract class Typography {
@@ -374,6 +375,7 @@ class DarkModeTheme extends FlutterFlowTheme {
   late Color warning = const Color(0xFFFFC107);
   late Color error = const Color(0xFFCF6679);
   late Color info = const Color(0xFF2196F3);
+  late Color transparent = const Color(0x00000000);
 }
 
 extension TextStyleHelper on TextStyle {

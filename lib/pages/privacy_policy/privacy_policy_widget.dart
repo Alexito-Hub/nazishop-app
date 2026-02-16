@@ -15,19 +15,18 @@ class PrivacyPolicyWidget extends StatefulWidget {
 
 class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
   final ScrollController _scrollController = ScrollController();
-  static const Color kPrimaryColor = Color(0xFFE50914);
+  Color get _primaryColor => FlutterFlowTheme.of(context).primary;
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final theme = FlutterFlowTheme.of(context);
     return Scaffold(
       backgroundColor: theme.primaryBackground,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: theme.transparent,
         elevation: 0,
-        surfaceTintColor: Colors.transparent,
+        surfaceTintColor: theme.transparent,
         leading: SmartBackButton(color: theme.primaryText),
         title: Text(
           'Política de Privacidad',
@@ -49,11 +48,11 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
               height: 500,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: kPrimaryColor.withOpacity(0.08),
+                color: _primaryColor.withValues(alpha: 0.08),
               ),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
-                child: Container(color: Colors.transparent),
+                child: Container(color: theme.transparent),
               ),
             ),
           ),
@@ -102,8 +101,7 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
                         child: Text(
                           'Última actualización: 7 de Febrero, 2026',
                           style: GoogleFonts.outfit(
-                            color:
-                                isDark ? Colors.white24 : theme.secondaryText,
+                            color: theme.secondaryText,
                             fontSize: 12,
                           ),
                         ),
@@ -126,7 +124,7 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(Icons.privacy_tip_outlined, color: kPrimaryColor, size: 48),
+        Icon(Icons.privacy_tip_outlined, color: _primaryColor, size: 48),
         const SizedBox(height: 16),
         Text(
           'Su privacidad es nuestra prioridad',
@@ -158,7 +156,7 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
           Text(
             title,
             style: GoogleFonts.outfit(
-              color: kPrimaryColor,
+              color: _primaryColor,
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),

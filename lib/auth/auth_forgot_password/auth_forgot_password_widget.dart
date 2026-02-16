@@ -25,10 +25,7 @@ class _AuthForgotPasswordWidgetState extends State<AuthForgotPasswordWidget>
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // Design Constants
-  static const Color kBgColor = Color(0xFF050505);
-  static const Color kCardColor = Color(0xFF141414);
-  static const Color kPrimaryColor = Color(0xFFE50914);
+  // Design constants removed – using FlutterFlowTheme tokens instead.
 
   // Security State
   bool _is2FAEnabled = false;
@@ -63,7 +60,7 @@ class _AuthForgotPasswordWidgetState extends State<AuthForgotPasswordWidget>
         });
       }
     } catch (e) {
-      print('Error loading security settings: $e');
+      debugPrint('Error loading security settings: $e');
       if (mounted) setState(() => _isLoadingSecurity = false);
     }
   }
@@ -118,8 +115,9 @@ class _AuthForgotPasswordWidgetState extends State<AuthForgotPasswordWidget>
           // Main Layout
           _isLoggedIn
               ? (_isLoadingSecurity
-                  ? const Center(
-                      child: CircularProgressIndicator(color: kPrimaryColor))
+                  ? Center(
+                      child: CircularProgressIndicator(
+                          color: FlutterFlowTheme.of(context).primary))
                   : _buildSecurityDashboard())
               : SafeArea(child: _buildForgotPasswordForm()),
 
@@ -133,7 +131,7 @@ class _AuthForgotPasswordWidgetState extends State<AuthForgotPasswordWidget>
                   decoration: BoxDecoration(
                       color: FlutterFlowTheme.of(context)
                           .primaryBackground
-                          .withOpacity(0.5),
+                          .withValues(alpha: 0.5),
                       borderRadius: BorderRadius.circular(12)),
                   child: BackButton(
                       color: FlutterFlowTheme.of(context).primaryText),
@@ -155,8 +153,8 @@ class _AuthForgotPasswordWidgetState extends State<AuthForgotPasswordWidget>
         physics: const BouncingScrollPhysics(),
         slivers: [
           SliverAppBar(
-            backgroundColor: Colors.transparent,
-            surfaceTintColor: Colors.transparent,
+            backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+            surfaceTintColor: FlutterFlowTheme.of(context).primaryBackground,
             pinned: true,
             floating: true,
             elevation: 0,
@@ -164,7 +162,9 @@ class _AuthForgotPasswordWidgetState extends State<AuthForgotPasswordWidget>
             leading: Container(
               margin: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.05),
+                color: FlutterFlowTheme.of(context)
+                    .alternate
+                    .withValues(alpha: 0.3),
                 shape: BoxShape.circle,
               ),
               child:
@@ -271,7 +271,7 @@ class _AuthForgotPasswordWidgetState extends State<AuthForgotPasswordWidget>
                           Row(
                             children: [
                               Icon(Icons.mark_email_read_outlined,
-                                  color: kPrimaryColor),
+                                  color: FlutterFlowTheme.of(context).primary),
                               const SizedBox(width: 12),
                               Expanded(
                                 child: Column(
@@ -279,23 +279,29 @@ class _AuthForgotPasswordWidgetState extends State<AuthForgotPasswordWidget>
                                   children: [
                                     Text('Correo Vinculado',
                                         style: GoogleFonts.outfit(
-                                            color: Colors.white70,
+                                            color: FlutterFlowTheme.of(context)
+                                                .secondaryText,
                                             fontSize: 12)),
                                     Text(currentUserEmail,
                                         style: GoogleFonts.outfit(
-                                            color: Colors.white, fontSize: 16)),
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryText,
+                                            fontSize: 16)),
                                   ],
                                 ),
                               ),
                             ],
                           ),
                           const SizedBox(height: 20),
-                          const Divider(color: Colors.white10),
+                          Divider(
+                              color: FlutterFlowTheme.of(context).alternate),
                           const SizedBox(height: 20),
                           Text(
                             'Para cambiar tu contraseña, te enviaremos un enlace.',
                             style: GoogleFonts.outfit(
-                                color: Colors.white38, fontSize: 14),
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                                fontSize: 14),
                           ),
                           const SizedBox(height: 16),
                           SizedBox(
@@ -310,16 +316,20 @@ class _AuthForgotPasswordWidgetState extends State<AuthForgotPasswordWidget>
                                       .showSnackBar(SnackBar(
                                     content: Text(
                                         'Enlace enviado a $currentUserEmail'),
-                                    backgroundColor: kPrimaryColor,
+                                    backgroundColor:
+                                        FlutterFlowTheme.of(context).primary,
                                   ));
                                 }
                               },
                               icon: const Icon(Icons.send_rounded, size: 18),
                               label: const Text('Enviar Correo'),
                               style: OutlinedButton.styleFrom(
-                                foregroundColor: Colors.white,
+                                foregroundColor:
+                                    FlutterFlowTheme.of(context).primaryText,
                                 side: BorderSide(
-                                    color: kPrimaryColor.withOpacity(0.5)),
+                                    color: FlutterFlowTheme.of(context)
+                                        .primary
+                                        .withValues(alpha: 0.5)),
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 16),
                                 shape: RoundedRectangleBorder(
@@ -348,46 +358,65 @@ class _AuthForgotPasswordWidgetState extends State<AuthForgotPasswordWidget>
                             value: _is2FAEnabled,
                             onChanged: (val) =>
                                 _toggleSetting('is2FAEnabled', val),
-                            activeThumbColor: kPrimaryColor,
-                            tileColor: Colors.transparent,
+                            activeThumbColor:
+                                FlutterFlowTheme.of(context).primary,
+                            tileColor: FlutterFlowTheme.of(context)
+                                .secondaryBackground,
                             contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 16, vertical: 8),
                             title: Text('2FA',
                                 style: GoogleFonts.outfit(
-                                    color: Colors.white, fontSize: 16)),
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryText,
+                                    fontSize: 16)),
                             subtitle: Text('Código extra al iniciar sesión.',
                                 style: GoogleFonts.outfit(
-                                    color: Colors.white54, fontSize: 13)),
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryText,
+                                    fontSize: 13)),
                             secondary: Container(
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.05),
+                                    color: FlutterFlowTheme.of(context)
+                                        .alternate
+                                        .withValues(alpha: 0.3),
                                     borderRadius: BorderRadius.circular(8)),
                                 child: Icon(Icons.security_rounded,
-                                    color: Colors.blueAccent)),
+                                    color: FlutterFlowTheme.of(context).info)),
                           ),
-                          const Divider(color: Colors.white10, height: 1),
+                          Divider(
+                              color: FlutterFlowTheme.of(context).alternate,
+                              height: 1),
                           SwitchListTile(
                             value: _isBiometricEnabled,
                             onChanged: (val) =>
                                 _toggleSetting('isBiometricEnabled', val),
-                            activeThumbColor: kPrimaryColor,
-                            tileColor: Colors.transparent,
+                            activeThumbColor:
+                                FlutterFlowTheme.of(context).primary,
+                            tileColor: FlutterFlowTheme.of(context)
+                                .secondaryBackground,
                             contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 16, vertical: 8),
                             title: Text('Biometría',
                                 style: GoogleFonts.outfit(
-                                    color: Colors.white, fontSize: 16)),
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryText,
+                                    fontSize: 16)),
                             subtitle: Text('FaceID o Huella digital.',
                                 style: GoogleFonts.outfit(
-                                    color: Colors.white54, fontSize: 13)),
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryText,
+                                    fontSize: 13)),
                             secondary: Container(
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.05),
+                                    color: FlutterFlowTheme.of(context)
+                                        .alternate
+                                        .withValues(alpha: 0.3),
                                     borderRadius: BorderRadius.circular(8)),
                                 child: Icon(Icons.fingerprint_rounded,
-                                    color: kPrimaryColor)),
+                                    color:
+                                        FlutterFlowTheme.of(context).primary)),
                           ),
                         ],
                       ),
@@ -405,14 +434,17 @@ class _AuthForgotPasswordWidgetState extends State<AuthForgotPasswordWidget>
             child: Column(
               children: [
                 ListTile(
-                  leading:
-                      Icon(Icons.laptop_mac_rounded, color: Colors.white70),
+                  leading: Icon(Icons.laptop_mac_rounded,
+                      color: FlutterFlowTheme.of(context).secondaryText),
                   title: Text('Sesión Actual',
-                      style: GoogleFonts.outfit(color: Colors.white)),
+                      style: GoogleFonts.outfit(
+                          color: FlutterFlowTheme.of(context).primaryText)),
                   subtitle: Text('Online • Ahora',
                       style: GoogleFonts.outfit(
-                          color: kPrimaryColor, fontSize: 12)),
-                  trailing: Icon(Icons.circle, size: 8, color: Colors.green),
+                          color: FlutterFlowTheme.of(context).primary,
+                          fontSize: 12)),
+                  trailing: Icon(Icons.circle,
+                      size: 8, color: FlutterFlowTheme.of(context).success),
                 ),
               ],
             ),
@@ -436,7 +468,8 @@ class _AuthForgotPasswordWidgetState extends State<AuthForgotPasswordWidget>
             children: [
               Row(
                 children: [
-                  Icon(Icons.mark_email_read_outlined, color: kPrimaryColor),
+                  Icon(Icons.mark_email_read_outlined,
+                      color: FlutterFlowTheme.of(context).primary),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
@@ -444,18 +477,12 @@ class _AuthForgotPasswordWidgetState extends State<AuthForgotPasswordWidget>
                       children: [
                         Text('Correo Vinculado',
                             style: GoogleFonts.outfit(
-                                color: Theme.of(context).brightness ==
-                                        Brightness.dark
-                                    ? Colors.white70
-                                    : FlutterFlowTheme.of(context)
-                                        .secondaryText,
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
                                 fontSize: 12)),
                         Text(currentUserEmail,
                             style: GoogleFonts.outfit(
-                                color: Theme.of(context).brightness ==
-                                        Brightness.dark
-                                    ? Colors.white
-                                    : FlutterFlowTheme.of(context).primaryText,
+                                color: FlutterFlowTheme.of(context).primaryText,
                                 fontSize: 16)),
                       ],
                     ),
@@ -463,14 +490,12 @@ class _AuthForgotPasswordWidgetState extends State<AuthForgotPasswordWidget>
                 ],
               ),
               const SizedBox(height: 20),
-              const Divider(color: Colors.white10),
+              Divider(color: FlutterFlowTheme.of(context).alternate),
               const SizedBox(height: 20),
               Text(
                 'Para cambiar tu contraseña, te enviaremos un enlace seguro a tu correo.',
                 style: GoogleFonts.outfit(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white38
-                        : FlutterFlowTheme.of(context).secondaryText,
+                    color: FlutterFlowTheme.of(context).secondaryText,
                     fontSize: 14),
               ),
               const SizedBox(height: 16),
@@ -483,15 +508,18 @@ class _AuthForgotPasswordWidgetState extends State<AuthForgotPasswordWidget>
                     if (mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text('Enlace enviado a $currentUserEmail'),
-                        backgroundColor: kPrimaryColor,
+                        backgroundColor: FlutterFlowTheme.of(context).primary,
                       ));
                     }
                   },
                   icon: const Icon(Icons.send_rounded, size: 18),
                   label: const Text('Enviar Correo de Restablecimiento'),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    side: BorderSide(color: kPrimaryColor.withOpacity(0.5)),
+                    foregroundColor: FlutterFlowTheme.of(context).primaryText,
+                    side: BorderSide(
+                        color: FlutterFlowTheme.of(context)
+                            .primary
+                            .withValues(alpha: 0.5)),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
@@ -513,54 +541,50 @@ class _AuthForgotPasswordWidgetState extends State<AuthForgotPasswordWidget>
               SwitchListTile(
                 value: _is2FAEnabled,
                 onChanged: (val) => _toggleSetting('is2FAEnabled', val),
-                activeThumbColor: kPrimaryColor,
-                tileColor: Colors.transparent,
+                activeThumbColor: FlutterFlowTheme.of(context).primary,
+                tileColor: FlutterFlowTheme.of(context).secondaryBackground,
                 title: Text('Autenticación en Dos Pasos (2FA)',
                     style: GoogleFonts.outfit(
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : FlutterFlowTheme.of(context).primaryText,
+                        color: FlutterFlowTheme.of(context).primaryText,
                         fontSize: 16)),
                 subtitle: Text(
                     'Solicita un código extra al iniciar sesión en dispositivos nuevos.',
                     style: GoogleFonts.outfit(
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white54
-                            : FlutterFlowTheme.of(context).secondaryText,
+                        color: FlutterFlowTheme.of(context).secondaryText,
                         fontSize: 13)),
                 secondary: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.05),
+                        color: FlutterFlowTheme.of(context)
+                            .alternate
+                            .withValues(alpha: 0.3),
                         borderRadius: BorderRadius.circular(8)),
-                    child:
-                        Icon(Icons.security_rounded, color: Colors.blueAccent)),
+                    child: Icon(Icons.security_rounded,
+                        color: FlutterFlowTheme.of(context).info)),
               ),
-              const Divider(color: Colors.white10, height: 1),
+              Divider(color: FlutterFlowTheme.of(context).alternate, height: 1),
               SwitchListTile(
                 value: _isBiometricEnabled,
                 onChanged: (val) => _toggleSetting('isBiometricEnabled', val),
-                activeThumbColor: kPrimaryColor,
-                tileColor: Colors.transparent,
+                activeThumbColor: FlutterFlowTheme.of(context).primary,
+                tileColor: FlutterFlowTheme.of(context).secondaryBackground,
                 title: Text('Desbloqueo Biométrico',
                     style: GoogleFonts.outfit(
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : FlutterFlowTheme.of(context).primaryText,
+                        color: FlutterFlowTheme.of(context).primaryText,
                         fontSize: 16)),
                 subtitle: Text('Usa FaceID o Huella para acceder rápidamente.',
                     style: GoogleFonts.outfit(
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white54
-                            : FlutterFlowTheme.of(context).secondaryText,
+                        color: FlutterFlowTheme.of(context).secondaryText,
                         fontSize: 13)),
                 secondary: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.05),
+                        color: FlutterFlowTheme.of(context)
+                            .alternate
+                            .withValues(alpha: 0.3),
                         borderRadius: BorderRadius.circular(8)),
-                    child:
-                        Icon(Icons.fingerprint_rounded, color: kPrimaryColor)),
+                    child: Icon(Icons.fingerprint_rounded,
+                        color: FlutterFlowTheme.of(context).primary)),
               ),
             ],
           ),
@@ -576,18 +600,16 @@ class _AuthForgotPasswordWidgetState extends State<AuthForgotPasswordWidget>
             children: [
               ListTile(
                 leading: Icon(Icons.laptop_mac_rounded,
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white70
-                        : FlutterFlowTheme.of(context).secondaryText),
+                    color: FlutterFlowTheme.of(context).secondaryText),
                 title: Text('Sesión Actual',
                     style: GoogleFonts.outfit(
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : FlutterFlowTheme.of(context).primaryText)),
+                        color: FlutterFlowTheme.of(context).primaryText)),
                 subtitle: Text('Online • Ahora',
-                    style:
-                        GoogleFonts.outfit(color: kPrimaryColor, fontSize: 12)),
-                trailing: Icon(Icons.circle, size: 8, color: Colors.green),
+                    style: GoogleFonts.outfit(
+                        color: FlutterFlowTheme.of(context).primary,
+                        fontSize: 12)),
+                trailing: Icon(Icons.circle,
+                    size: 8, color: FlutterFlowTheme.of(context).success),
               ),
             ],
           ),
@@ -613,9 +635,7 @@ class _AuthForgotPasswordWidgetState extends State<AuthForgotPasswordWidget>
               Text(
                 'Recuperar Contraseña',
                 style: GoogleFonts.outfit(
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : FlutterFlowTheme.of(context).primaryText,
+                  color: FlutterFlowTheme.of(context).primaryText,
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
                 ),
@@ -624,9 +644,7 @@ class _AuthForgotPasswordWidgetState extends State<AuthForgotPasswordWidget>
               Text(
                 'Ingresa el correo electrónico asociado a tu cuenta y te enviaremos un enlace para restablecerla.',
                 style: GoogleFonts.outfit(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white54
-                        : FlutterFlowTheme.of(context).secondaryText,
+                    color: FlutterFlowTheme.of(context).secondaryText,
                     fontSize: 16),
               ),
               const SizedBox(height: 40),
@@ -643,32 +661,22 @@ class _AuthForgotPasswordWidgetState extends State<AuthForgotPasswordWidget>
                       decoration: InputDecoration(
                         labelText: 'Correo Electrónico',
                         labelStyle: GoogleFonts.outfit(
-                            color: Theme.of(context).brightness ==
-                                    Brightness.dark
-                                ? Colors.white54
-                                : FlutterFlowTheme.of(context).secondaryText),
+                            color: FlutterFlowTheme.of(context).secondaryText),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white.withOpacity(0.1)
-                                  : FlutterFlowTheme.of(context).alternate),
+                              color: FlutterFlowTheme.of(context).alternate),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: kPrimaryColor),
+                          borderSide: BorderSide(
+                              color: FlutterFlowTheme.of(context).primary),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         filled: true,
-                        fillColor: Theme.of(context).brightness ==
-                                Brightness.dark
-                            ? Colors.white.withOpacity(0.05)
-                            : FlutterFlowTheme.of(context).secondaryBackground,
+                        fillColor:
+                            FlutterFlowTheme.of(context).primaryBackground,
                         prefixIcon: Icon(Icons.email_outlined,
-                            color: Theme.of(context).brightness ==
-                                    Brightness.dark
-                                ? Colors.white54
-                                : FlutterFlowTheme.of(context).secondaryText),
+                            color: FlutterFlowTheme.of(context).secondaryText),
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -685,13 +693,15 @@ class _AuthForgotPasswordWidgetState extends State<AuthForgotPasswordWidget>
                           await authManager.resetPassword(
                             email: _model.emailAddressTextController.text,
                           );
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text(
-                                      'Correo enviado. Revisa tu bandeja.')));
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text(
+                                        'Correo enviado. Revisa tu bandeja.')));
+                          }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: kPrimaryColor,
+                          backgroundColor: FlutterFlowTheme.of(context).primary,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),
@@ -701,7 +711,7 @@ class _AuthForgotPasswordWidgetState extends State<AuthForgotPasswordWidget>
                           style: GoogleFonts.outfit(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white),
+                              color: FlutterFlowTheme.of(context).tertiary),
                         ),
                       ),
                     ),
@@ -717,14 +727,9 @@ class _AuthForgotPasswordWidgetState extends State<AuthForgotPasswordWidget>
 
   // --- Helpers ---
   BoxDecoration get _cardDecoration => BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.dark
-            ? kCardColor
-            : FlutterFlowTheme.of(context).secondaryBackground,
+        color: FlutterFlowTheme.of(context).secondaryBackground,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white.withOpacity(0.08)
-                : FlutterFlowTheme.of(context).alternate),
+        border: Border.all(color: FlutterFlowTheme.of(context).alternate),
       );
 
   Widget _buildSectionTitle(String title) {
@@ -733,7 +738,7 @@ class _AuthForgotPasswordWidgetState extends State<AuthForgotPasswordWidget>
       child: Text(
         title,
         style: GoogleFonts.outfit(
-            color: kPrimaryColor,
+            color: FlutterFlowTheme.of(context).primary,
             fontSize: 14,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2),

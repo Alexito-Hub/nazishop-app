@@ -172,7 +172,7 @@ class _OrdersStatsWidgetState extends State<OrdersStatsWidget> {
                           children: [
                             Icon(
                               Icons.attach_money,
-                              color: Colors.white,
+                              color: FlutterFlowTheme.of(context).tertiary,
                               size: 32.0,
                             ),
                             const SizedBox(width: 12.0),
@@ -182,7 +182,8 @@ class _OrdersStatsWidgetState extends State<OrdersStatsWidget> {
                                   .titleMedium
                                   .override(
                                     font: GoogleFonts.inter(),
-                                    color: Colors.white,
+                                    color:
+                                        FlutterFlowTheme.of(context).tertiary,
                                     letterSpacing: 0.0,
                                   ),
                             ),
@@ -195,7 +196,7 @@ class _OrdersStatsWidgetState extends State<OrdersStatsWidget> {
                               .displaySmall
                               .override(
                                 font: GoogleFonts.inter(),
-                                color: Colors.white,
+                                color: FlutterFlowTheme.of(context).tertiary,
                                 letterSpacing: 0.0,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -205,7 +206,9 @@ class _OrdersStatsWidgetState extends State<OrdersStatsWidget> {
                           children: [
                             Icon(
                               Icons.trending_up,
-                              color: Colors.white70,
+                              color: FlutterFlowTheme.of(context)
+                                  .tertiary
+                                  .withValues(alpha: 0.7),
                               size: 20.0,
                             ),
                             const SizedBox(width: 4.0),
@@ -215,7 +218,9 @@ class _OrdersStatsWidgetState extends State<OrdersStatsWidget> {
                                   .bodySmall
                                   .override(
                                     font: GoogleFonts.inter(),
-                                    color: Colors.white70,
+                                    color: FlutterFlowTheme.of(context)
+                                        .tertiary
+                                        .withValues(alpha: 0.7),
                                     letterSpacing: 0.0,
                                   ),
                             ),
@@ -332,7 +337,7 @@ class _OrdersStatsWidgetState extends State<OrdersStatsWidget> {
           style: FlutterFlowTheme.of(context).bodyMedium.override(
                 font: GoogleFonts.inter(),
                 color: isSelected
-                    ? Colors.white
+                    ? FlutterFlowTheme.of(context).tertiary
                     : FlutterFlowTheme.of(context).primaryText,
                 letterSpacing: 0.0,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
@@ -346,9 +351,9 @@ class _OrdersStatsWidgetState extends State<OrdersStatsWidget> {
       String label, String value, IconData icon, Color color, String badge) {
     return Container(
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12.0),
-        border: Border.all(color: color.withOpacity(0.1)),
+        border: Border.all(color: color.withValues(alpha: 0.1)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -371,7 +376,7 @@ class _OrdersStatsWidgetState extends State<OrdersStatsWidget> {
                     badge,
                     style: FlutterFlowTheme.of(context).bodySmall.override(
                           font: GoogleFonts.inter(),
-                          color: Colors.white,
+                          color: FlutterFlowTheme.of(context).tertiary,
                           fontSize: 10.0,
                           letterSpacing: 0.0,
                           fontWeight: FontWeight.bold,
@@ -420,7 +425,7 @@ class _OrdersStatsWidgetState extends State<OrdersStatsWidget> {
         positionColor = const Color(0xFFCD7F32);
         break;
       default:
-        positionColor = Colors.grey;
+        positionColor = FlutterFlowTheme.of(context).secondaryText;
     }
 
     return Row(
@@ -429,7 +434,7 @@ class _OrdersStatsWidgetState extends State<OrdersStatsWidget> {
           width: 32.0,
           height: 32.0,
           decoration: BoxDecoration(
-            color: positionColor.withOpacity(0.1),
+            color: positionColor.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
           child: Center(

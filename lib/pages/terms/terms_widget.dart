@@ -15,20 +15,18 @@ class TermsWidget extends StatefulWidget {
 
 class _TermsWidgetState extends State<TermsWidget> {
   final ScrollController _scrollController = ScrollController();
-  static const Color kPrimaryColor = Color(0xFFE50914);
+  Color get _primaryColor => FlutterFlowTheme.of(context).primary;
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final theme = FlutterFlowTheme.of(context);
     return Scaffold(
-      backgroundColor:
-          isDark ? const Color(0xFF050505) : theme.primaryBackground,
+      backgroundColor: theme.primaryBackground,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: theme.transparent,
         elevation: 0,
-        surfaceTintColor: Colors.transparent,
+        surfaceTintColor: theme.transparent,
         leading:
             SmartBackButton(color: FlutterFlowTheme.of(context).primaryText),
         title: Text(
@@ -51,11 +49,11 @@ class _TermsWidgetState extends State<TermsWidget> {
               height: 500,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: kPrimaryColor.withOpacity(0.08),
+                color: _primaryColor.withValues(alpha: 0.08),
               ),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
-                child: Container(color: Colors.transparent),
+                child: Container(color: theme.transparent),
               ),
             ),
           ),
@@ -131,7 +129,7 @@ class _TermsWidgetState extends State<TermsWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(Icons.gavel_outlined, color: kPrimaryColor, size: 48),
+        Icon(Icons.gavel_outlined, color: _primaryColor, size: 48),
         const SizedBox(height: 16),
         Text(
           'Acuerdo de Uso',
@@ -163,7 +161,7 @@ class _TermsWidgetState extends State<TermsWidget> {
           Text(
             title,
             style: GoogleFonts.outfit(
-              color: kPrimaryColor,
+              color: _primaryColor,
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),

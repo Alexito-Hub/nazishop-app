@@ -140,7 +140,7 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
       slivers: [
         SliverAppBar(
           backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-          surfaceTintColor: Colors.transparent,
+          surfaceTintColor: FlutterFlowTheme.of(context).transparent,
           pinned: true,
           floating: true,
           elevation: 0,
@@ -314,7 +314,7 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
               ? FlutterFlowTheme.of(context).primary
               : FlutterFlowTheme.of(context)
                   .secondaryBackground
-                  .withOpacity(0.05),
+                  .withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected
@@ -427,15 +427,21 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
                       horizontal: 8.0, vertical: 4.0),
                   decoration: BoxDecoration(
                     color: isActive
-                        ? FlutterFlowTheme.of(context).success.withOpacity(0.1)
-                        : FlutterFlowTheme.of(context).error.withOpacity(0.1),
+                        ? FlutterFlowTheme.of(context)
+                            .success
+                            .withValues(alpha: 0.1)
+                        : FlutterFlowTheme.of(context)
+                            .error
+                            .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8.0),
                     border: Border.all(
                       color: isActive
                           ? FlutterFlowTheme.of(context)
                               .success
-                              .withOpacity(0.2)
-                          : FlutterFlowTheme.of(context).error.withOpacity(0.2),
+                              .withValues(alpha: 0.2)
+                          : FlutterFlowTheme.of(context)
+                              .error
+                              .withValues(alpha: 0.2),
                     ),
                   ),
                   child: Text(
@@ -480,7 +486,9 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
                           user['id'], {'is_active': !isActive});
                       if (success) {
                         _loadUsers();
-                        CustomSnackBar.success(context, 'Estado actualizado');
+                        if (mounted) {
+                          CustomSnackBar.success(context, 'Estado actualizado');
+                        }
                       }
                     },
                   ),
@@ -493,7 +501,9 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
                           user['id'], {'role': newRole});
                       if (success) {
                         _loadUsers();
-                        CustomSnackBar.success(context, 'Rol actualizado');
+                        if (mounted) {
+                          CustomSnackBar.success(context, 'Rol actualizado');
+                        }
                       }
                     },
                     color: FlutterFlowTheme.of(context).secondaryBackground,
@@ -567,9 +577,9 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
         padding:
             width == null ? const EdgeInsets.symmetric(horizontal: 12) : null,
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withOpacity(0.1)),
+          border: Border.all(color: color.withValues(alpha: 0.1)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -704,7 +714,8 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
             onPressed: () async {
               final amount = double.tryParse(amountController.text);
               if (amount != null && amount > 0) {
-                Navigator.pop(context);
+                final scaffoldContext = context;
+                Navigator.pop(scaffoldContext);
                 final success = await AdminService.addUserBalance(
                   user['id'],
                   amount,
@@ -712,9 +723,12 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
                 );
                 if (success) {
                   _loadUsers();
-                  CustomSnackBar.success(context, 'Saldo acreditado');
+                  // ignore: use_build_context_synchronously
+                  CustomSnackBar.success(scaffoldContext, 'Saldo acreditado');
                 } else {
-                  CustomSnackBar.error(context, 'Error al cargar saldo');
+                  // ignore: use_build_context_synchronously
+                  CustomSnackBar.error(
+                      scaffoldContext, 'Error al cargar saldo');
                 }
               }
             },

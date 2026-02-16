@@ -38,7 +38,7 @@ class _DomainApprovalPageState extends State<DomainApprovalPage> {
         });
       }
     } catch (e) {
-      print('Error loading domains: $e');
+      debugPrint('Error loading domains: $e');
       if (mounted) setState(() => _isLoading = false);
     }
   }
@@ -101,7 +101,9 @@ class _DomainApprovalPageState extends State<DomainApprovalPage> {
               height: 500,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: FlutterFlowTheme.of(context).primary.withOpacity(0.05),
+                color: FlutterFlowTheme.of(context)
+                    .primary
+                    .withValues(alpha: 0.05),
               ),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
@@ -318,7 +320,7 @@ class _DomainApprovalPageState extends State<DomainApprovalPage> {
         border: Border.all(color: FlutterFlowTheme.of(context).alternate),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withValues(alpha: 0.2),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -357,7 +359,7 @@ class _DomainApprovalPageState extends State<DomainApprovalPage> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: _statusColor(domain.status).withOpacity(0.2),
+                  color: _statusColor(domain.status).withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(

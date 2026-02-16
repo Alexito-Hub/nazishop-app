@@ -26,7 +26,7 @@ class _FavoritesModernWidgetState extends State<FavoritesModernWidget> {
   final ScrollController _scrollController = ScrollController();
 
   // --- COLORES (Coherentes con HomePage) ---
-  static const Color kPrimaryColor = Color(0xFFE50914);
+  Color get _primaryColor => FlutterFlowTheme.of(context).primary;
 
   // --- RESPONSIVE ---
   bool get _isDesktop => MediaQuery.of(context).size.width >= 900;
@@ -75,14 +75,12 @@ class _FavoritesModernWidgetState extends State<FavoritesModernWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final theme = FlutterFlowTheme.of(context);
     return Scaffold(
       backgroundColor: theme.primaryBackground,
       body: RefreshIndicator(
-        color: kPrimaryColor,
-        backgroundColor:
-            isDark ? const Color(0xFF141414) : theme.secondaryBackground,
+        color: theme.primary,
+        backgroundColor: theme.secondaryBackground,
         onRefresh: _loadFavorites,
         child: _isDesktop ? _buildDesktopLayout() : _buildMobileLayout(),
       ),
@@ -93,7 +91,6 @@ class _FavoritesModernWidgetState extends State<FavoritesModernWidget> {
   // 📱 MOBILE LAYOUT
   // ===========================================================================
   Widget _buildMobileLayout() {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final theme = FlutterFlowTheme.of(context);
     return CustomScrollView(
       controller: _scrollController,
@@ -101,8 +98,8 @@ class _FavoritesModernWidgetState extends State<FavoritesModernWidget> {
       slivers: [
         // 1. Header Standard Transparente & Centrado
         SliverAppBar(
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
+          backgroundColor: theme.transparent,
+          surfaceTintColor: theme.transparent,
           pinned: true,
           floating: true,
           elevation: 0,
@@ -110,20 +107,18 @@ class _FavoritesModernWidgetState extends State<FavoritesModernWidget> {
           leading: Container(
             margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: isDark
-                  ? Colors.white.withOpacity(0.05)
-                  : Colors.black.withOpacity(0.05),
+              color: theme.secondaryBackground,
               shape: BoxShape.circle,
             ),
             child: SmartBackButton(
-              color: isDark ? Colors.white : theme.primaryText,
+              color: theme.primaryText,
             ),
           ),
           centerTitle: true,
           title: Text(
             'Mis Favoritos',
             style: GoogleFonts.outfit(
-              color: isDark ? Colors.white : theme.primaryText,
+              color: theme.primaryText,
               fontWeight: FontWeight.w900,
               fontSize: 24,
               letterSpacing: 1.0,
@@ -158,7 +153,7 @@ class _FavoritesModernWidgetState extends State<FavoritesModernWidget> {
                           service: _favoriteServices[i],
                           primaryColor: _parseColor(
                                   _favoriteServices[i].branding.primaryColor) ??
-                              kPrimaryColor,
+                              _primaryColor,
                         )
                             .animate()
                             .fadeIn(delay: (50 * i).ms)
@@ -195,10 +190,7 @@ class _FavoritesModernWidgetState extends State<FavoritesModernWidget> {
                           style: GoogleFonts.outfit(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white
-                                    : FlutterFlowTheme.of(context).primaryText,
+                            color: FlutterFlowTheme.of(context).primaryText,
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -206,10 +198,8 @@ class _FavoritesModernWidgetState extends State<FavoritesModernWidget> {
                           'Gestiona tus servicios guardados',
                           style: GoogleFonts.outfit(
                               fontSize: 16,
-                              color: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white54
-                                  : FlutterFlowTheme.of(context).secondaryText),
+                              color:
+                                  FlutterFlowTheme.of(context).secondaryText),
                         ),
                       ],
                     ),
@@ -237,7 +227,7 @@ class _FavoritesModernWidgetState extends State<FavoritesModernWidget> {
                                 primaryColor: _parseColor(_favoriteServices[i]
                                         .branding
                                         .primaryColor) ??
-                                    kPrimaryColor,
+                                    _primaryColor,
                               )
                                   .animate()
                                   .fadeIn(delay: (50 * i).ms)
@@ -257,26 +247,18 @@ class _FavoritesModernWidgetState extends State<FavoritesModernWidget> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.favorite_border_rounded,
-              size: 64,
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.white24
-                  : FlutterFlowTheme.of(context).secondaryText),
+              size: 64, color: FlutterFlowTheme.of(context).secondaryText),
           const SizedBox(height: 16),
           Text(
             'No tienes favoritos aún',
             style: GoogleFonts.outfit(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : FlutterFlowTheme.of(context).primaryText,
-                fontSize: 20),
+                color: FlutterFlowTheme.of(context).primaryText, fontSize: 20),
           ),
           const SizedBox(height: 8),
           Text(
             'Explora el catálogo y guarda lo que te guste',
             style: GoogleFonts.outfit(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white54
-                    : FlutterFlowTheme.of(context).secondaryText,
+                color: FlutterFlowTheme.of(context).secondaryText,
                 fontSize: 16),
           ),
         ],
@@ -301,21 +283,15 @@ class _FavoritesModernWidgetState extends State<FavoritesModernWidget> {
             ),
       delegate: SliverChildBuilderDelegate(
         (context, index) {
-          final isDark = Theme.of(context).brightness == Brightness.dark;
           final theme = FlutterFlowTheme.of(context);
           return Container(
             decoration: BoxDecoration(
-              color:
-                  isDark ? const Color(0xFF141414) : theme.secondaryBackground,
+              color: theme.primaryBackground,
               borderRadius: BorderRadius.circular(20), // More rounded
-              border: Border.all(
-                  color: isDark
-                      ? Colors.white.withOpacity(0.08)
-                      : theme.alternate),
+              border: Border.all(color: theme.alternate),
             ),
-          )
-              .animate(onPlay: (c) => c.repeat())
-              .shimmer(duration: 1200.ms, color: Colors.white.withOpacity(0.1));
+          ).animate(onPlay: (c) => c.repeat()).shimmer(
+              duration: 1200.ms, color: theme.primaryText.withValues(alpha: 0.1));
         },
         childCount: 6,
       ),
@@ -340,7 +316,6 @@ class _FavoriteCardGridItemState extends State<FavoriteCardGridItem> {
   @override
   Widget build(BuildContext context) {
     // Theme variables
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final theme = FlutterFlowTheme.of(context);
 
     // Parsing Data
@@ -354,11 +329,8 @@ class _FavoriteCardGridItemState extends State<FavoriteCardGridItem> {
         inStock ? const Color(0xFF22C55E) : const Color(0xFFEF4444);
     final statusText = inStock ? 'STOCK' : 'AGOTADO';
 
-    final borderColor = _isHovered
-        ? const Color(0xFFE50914).withOpacity(0.5)
-        : isDark
-            ? Colors.white.withOpacity(0.08)
-            : theme.alternate;
+    final borderColor =
+        _isHovered ? theme.primary.withValues(alpha: 0.5) : theme.alternate;
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
@@ -370,12 +342,12 @@ class _FavoriteCardGridItemState extends State<FavoriteCardGridItem> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF141414) : theme.secondaryBackground,
+            color: theme.primaryBackground,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: borderColor),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.5),
+                color: Colors.black.withValues(alpha: 0.5),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               )
@@ -411,8 +383,8 @@ class _FavoriteCardGridItemState extends State<FavoriteCardGridItem> {
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
-                                Colors.transparent,
-                                Colors.black.withOpacity(0.8)
+                                FlutterFlowTheme.of(context).transparent,
+                                Colors.black.withValues(alpha: 0.8)
                               ],
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
@@ -429,7 +401,7 @@ class _FavoriteCardGridItemState extends State<FavoriteCardGridItem> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.7),
+                            color: Colors.black.withValues(alpha: 0.7),
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(color: statusColor, width: 1),
                           ),
@@ -516,7 +488,7 @@ class _FavoriteCardGridItemState extends State<FavoriteCardGridItem> {
                                   shape: BoxShape.circle,
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.white.withOpacity(0.2),
+                                      color: Colors.white.withValues(alpha: 0.2),
                                       blurRadius: 6,
                                     )
                                   ]),
@@ -550,11 +522,11 @@ class _FavoriteCardGridItemState extends State<FavoriteCardGridItem> {
               image: const NetworkImage(
                   "https://www.transparenttextures.com/patterns/cubes.png"),
               colorFilter: ColorFilter.mode(
-                  Colors.black.withOpacity(0.8), BlendMode.dstATop),
+                  Colors.black.withValues(alpha: 0.8), BlendMode.dstATop),
               fit: BoxFit.cover)),
       child: Center(
         child: Icon(Icons.shopping_bag_outlined,
-            color: Colors.white.withOpacity(0.1), size: 32),
+            color: Colors.white.withValues(alpha: 0.1), size: 32),
       ),
     );
   }

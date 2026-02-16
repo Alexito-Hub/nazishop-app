@@ -23,12 +23,11 @@ class AdminInventoryPage extends StatefulWidget {
 
 class _AdminInventoryPageState extends State<AdminInventoryPage> {
   // Styles
-  // static const Color kPrimaryColor = Color(0xFFE50914);
+  // Colores ahora gestionados por FlutterFlowTheme
 
   // State
   // final _inputCtrl = TextEditingController(); // REMOVED: Old bulk input
 
-  bool _isAuthorized = false;
   bool _isLoading = false;
   List<dynamic> _inventory = [];
   String _filterStatus = 'all'; // all, available, sold
@@ -49,7 +48,6 @@ class _AdminInventoryPageState extends State<AdminInventoryPage> {
     // 1. Check if we already have a valid session
     if (SecurityManager().isSessionValid) {
       if (mounted) {
-        setState(() => _isAuthorized = true);
         _loadInventory();
       }
       return;
@@ -65,7 +63,6 @@ class _AdminInventoryPageState extends State<AdminInventoryPage> {
     if (authorized == true) {
       SecurityManager().recordVerification(); // Start new session
       if (mounted) {
-        setState(() => _isAuthorized = true);
         _loadInventory();
       }
     } else {
@@ -122,7 +119,7 @@ class _AdminInventoryPageState extends State<AdminInventoryPage> {
                 gradient: LinearGradient(
                   colors: [
                     FlutterFlowTheme.of(context).primary,
-                    const Color(0xFFB71C1C)
+                    FlutterFlowTheme.of(context).secondary,
                   ], // Red Gradient
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -130,8 +127,9 @@ class _AdminInventoryPageState extends State<AdminInventoryPage> {
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color:
-                        FlutterFlowTheme.of(context).primary.withOpacity(0.4),
+                    color: FlutterFlowTheme.of(context)
+                        .primary
+                        .withValues(alpha: 0.4),
                     blurRadius: 12,
                     offset: const Offset(0, 6),
                   ),
@@ -139,16 +137,17 @@ class _AdminInventoryPageState extends State<AdminInventoryPage> {
               ),
               child: FloatingActionButton.extended(
                 onPressed: _showAddModal,
-                backgroundColor: Colors.transparent,
+                backgroundColor: FlutterFlowTheme.of(context).transparent,
                 elevation: 0,
                 highlightElevation: 0,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16)),
-                icon: const Icon(Icons.add_task, color: Colors.white),
+                icon: Icon(Icons.add_task,
+                    color: FlutterFlowTheme.of(context).primaryText),
                 label: Text(
                   'Añadir Cuenta',
                   style: GoogleFonts.outfit(
-                      color: Colors.white,
+                      color: FlutterFlowTheme.of(context).primaryText,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1),
                 ),
@@ -163,8 +162,8 @@ class _AdminInventoryPageState extends State<AdminInventoryPage> {
       physics: const BouncingScrollPhysics(),
       slivers: [
         SliverAppBar(
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
+          backgroundColor: FlutterFlowTheme.of(context).transparent,
+          surfaceTintColor: FlutterFlowTheme.of(context).transparent,
           pinned: true,
           floating: true,
           elevation: 0,
@@ -294,7 +293,7 @@ class _AdminInventoryPageState extends State<AdminInventoryPage> {
                             gradient: LinearGradient(
                               colors: [
                                 FlutterFlowTheme.of(context).primary,
-                                const Color(0xFFB71C1C)
+                                FlutterFlowTheme.of(context).secondary
                               ],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
@@ -304,7 +303,7 @@ class _AdminInventoryPageState extends State<AdminInventoryPage> {
                               BoxShadow(
                                 color: FlutterFlowTheme.of(context)
                                     .primary
-                                    .withOpacity(0.4),
+                                    .withValues(alpha: 0.4),
                                 blurRadius: 8,
                                 offset: const Offset(0, 4),
                               ),
@@ -313,19 +312,23 @@ class _AdminInventoryPageState extends State<AdminInventoryPage> {
                           child: ElevatedButton.icon(
                             onPressed: _showAddModal,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
+                              backgroundColor:
+                                  FlutterFlowTheme.of(context).primary,
                               shadowColor: Colors.transparent,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12)),
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20),
                             ),
-                            icon: const Icon(Icons.add_task,
-                                color: Colors.white, size: 20),
+                            icon: Icon(Icons.add_task,
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                                size: 20),
                             label: Text(
                               'Añadir Cuenta',
                               style: GoogleFonts.outfit(
-                                  color: Colors.white,
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryText,
                                   fontWeight: FontWeight.bold),
                             ),
                           ),
@@ -413,7 +416,7 @@ class _AdminInventoryPageState extends State<AdminInventoryPage> {
           label,
           style: GoogleFonts.outfit(
             color: isSelected
-                ? Colors.white
+                ? FlutterFlowTheme.of(context).secondaryText
                 : FlutterFlowTheme.of(context).secondaryText,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
@@ -614,7 +617,7 @@ class _InventoryRowItemState extends State<InventoryRowItem> {
       children: [
         CircleAvatar(
           radius: 16,
-          backgroundColor: color.withOpacity(0.2),
+          backgroundColor: color.withValues(alpha: 0.2),
           backgroundImage: photo != null ? NetworkImage(photo) : null,
           child:
               photo == null ? Icon(Icons.person, size: 16, color: color) : null,
@@ -721,7 +724,7 @@ class _InventoryRowItemState extends State<InventoryRowItem> {
         : '';
 
     final borderColor =
-        _isHovered ? theme.primary.withOpacity(0.5) : theme.alternate;
+        _isHovered ? theme.primary.withValues(alpha: 0.5) : theme.alternate;
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
@@ -739,7 +742,7 @@ class _InventoryRowItemState extends State<InventoryRowItem> {
             boxShadow: _isHovered
                 ? [
                     BoxShadow(
-                      color: theme.primary.withOpacity(0.15),
+                      color: theme.primary.withValues(alpha: 0.15),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     )
@@ -752,7 +755,7 @@ class _InventoryRowItemState extends State<InventoryRowItem> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: statusColor.withOpacity(0.1),
+                  color: statusColor.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(statusIcon, color: statusColor, size: 20),
@@ -854,7 +857,7 @@ class _InventoryRowItemState extends State<InventoryRowItem> {
                                     CircleAvatar(
                                       radius: 10,
                                       backgroundColor:
-                                          theme.warning.withOpacity(0.2),
+                                          theme.warning.withValues(alpha: 0.2),
                                       backgroundImage: photoUrl != null
                                           ? NetworkImage(photoUrl)
                                           : null,
@@ -907,9 +910,10 @@ class _InventoryRowItemState extends State<InventoryRowItem> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                        border: Border.all(color: statusColor.withOpacity(0.5)),
+                        border: Border.all(
+                            color: statusColor.withValues(alpha: 0.5)),
                         borderRadius: BorderRadius.circular(6),
-                        color: statusColor.withOpacity(0.05)),
+                        color: statusColor.withValues(alpha: 0.05)),
                     child: Text(statusText,
                         style: GoogleFonts.outfit(
                             color: statusColor,

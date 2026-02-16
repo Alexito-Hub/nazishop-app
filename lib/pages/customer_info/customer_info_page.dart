@@ -83,7 +83,7 @@ class _CustomerInfoPageState extends State<CustomerInfoPage> {
     return Scaffold(
       backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: FlutterFlowTheme.of(context).transparent,
         elevation: 0,
         leading: SmartBackButton(
           color: FlutterFlowTheme.of(context).primaryText,
@@ -171,10 +171,10 @@ class _CustomerInfoPageState extends State<CustomerInfoPage> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: FlutterFlowTheme.of(context).primary.withOpacity(0.1),
+                color: FlutterFlowTheme.of(context).primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: FlutterFlowTheme.of(context).primary.withOpacity(0.3),
+                  color: FlutterFlowTheme.of(context).primary.withValues(alpha: 0.3),
                 ),
               ),
               child: Row(
@@ -367,7 +367,7 @@ class _CustomerInfoPageState extends State<CustomerInfoPage> {
                   backgroundColor: FlutterFlowTheme.of(context).primary,
                   foregroundColor: Colors.white,
                   disabledBackgroundColor:
-                      FlutterFlowTheme.of(context).primary.withOpacity(0.5),
+                      FlutterFlowTheme.of(context).primary.withValues(alpha: 0.5),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),

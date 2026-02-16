@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:ui';
 import '/flutter_flow/flutter_flow_theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nazi_shop/backend/admin_service.dart';
@@ -50,32 +49,50 @@ class _AdminNotificationsPageState extends State<AdminNotificationsPage> {
       backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
       body: Stack(
         children: [
-          Positioned(
-            top: -100,
-            left: -100,
-            child: Container(
-              width: 500,
-              height: 500,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: FlutterFlowTheme.of(context)
-                      .primary
-                      .withValues(alpha: 0.05)),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
-                child: Container(color: Colors.transparent),
-              ),
-            ),
-          ),
+          // Removed background blur bubbles for cleaner look
           if (isDesktop) _buildDesktopLayout() else _buildMobileLayout(),
         ],
       ),
       floatingActionButton: isDesktop
           ? null
-          : FloatingActionButton(
-              onPressed: _goToCreatePage,
-              backgroundColor: FlutterFlowTheme.of(context).primary,
-              child: const Icon(Icons.add),
+          : Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    FlutterFlowTheme.of(context).primary,
+                    FlutterFlowTheme.of(context).secondary
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: FlutterFlowTheme.of(context)
+                        .primary
+                        .withValues(alpha: 0.4),
+                    blurRadius: 12,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: FloatingActionButton.extended(
+                onPressed: _goToCreatePage,
+                backgroundColor: FlutterFlowTheme.of(context).transparent,
+                elevation: 0,
+                highlightElevation: 0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
+                icon: Icon(Icons.add,
+                    color: FlutterFlowTheme.of(context).primaryText),
+                label: Text(
+                  'Nueva',
+                  style: GoogleFonts.outfit(
+                      color: FlutterFlowTheme.of(context).primaryText,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1),
+                ),
+              ),
             ),
     );
   }
@@ -107,21 +124,43 @@ class _AdminNotificationsPageState extends State<AdminNotificationsPage> {
                               fontSize: 16)),
                     ],
                   ),
-                  ElevatedButton.icon(
-                    onPressed: _goToCreatePage,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: FlutterFlowTheme.of(context).primary,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 16),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          FlutterFlowTheme.of(context).primary,
+                          FlutterFlowTheme.of(context).secondary
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: FlutterFlowTheme.of(context)
+                              .primary
+                              .withValues(alpha: 0.4),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        )
+                      ],
                     ),
-                    icon: Icon(Icons.send,
-                        color: FlutterFlowTheme.of(context).info),
-                    label: Text('Nueva Notificación',
-                        style: GoogleFonts.outfit(
-                            color: FlutterFlowTheme.of(context).info,
-                            fontWeight: FontWeight.bold)),
+                    child: ElevatedButton.icon(
+                      onPressed: _goToCreatePage,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 16),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                      icon: const Icon(Icons.send, color: Colors.white),
+                      label: Text('Nueva Notificación',
+                          style: GoogleFonts.outfit(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold)),
+                    ),
                   )
                 ],
               ),

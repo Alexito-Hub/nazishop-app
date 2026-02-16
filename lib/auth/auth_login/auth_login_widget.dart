@@ -1,8 +1,10 @@
 import '/flutter_flow/flutter_flow_animations.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // [IMPORTANTE] Necesario para TextInput
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,7 +16,7 @@ class AuthLoginWidget extends StatefulWidget {
   const AuthLoginWidget({super.key});
 
   static String routeName = 'login';
-  static String routePath = '/authLogin';
+  static String routePath = '/auth/login';
 
   @override
   State<AuthLoginWidget> createState() => _AuthLoginWidgetState();
@@ -71,6 +73,8 @@ class _AuthLoginWidgetState extends State<AuthLoginWidget>
 
   @override
   Widget build(BuildContext context) {
+    final theme = FlutterFlowTheme.of(context);
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -78,14 +82,14 @@ class _AuthLoginWidgetState extends State<AuthLoginWidget>
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Colors.black, // Strict Black
+        backgroundColor: theme.primaryBackground,
         body: Stack(
           children: [
             // Background Elements
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.black, const Color(0xFF1A1A1A)],
+                  colors: [theme.primaryBackground, theme.secondaryBackground],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
@@ -99,7 +103,7 @@ class _AuthLoginWidgetState extends State<AuthLoginWidget>
                 height: 400,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: const Color(0xFFE50914).withOpacity(0.1),
+                  color: theme.primary.withValues(alpha: 0.1),
                 ),
               ).animate().fadeIn(duration: 1000.ms),
             ),
@@ -116,7 +120,7 @@ class _AuthLoginWidgetState extends State<AuthLoginWidget>
                       Text(
                         'Nazi Shop',
                         style: GoogleFonts.outfit(
-                            color: const Color(0xFFE50914),
+                            color: theme.primary,
                             fontSize: 42,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 2.0),
@@ -127,124 +131,137 @@ class _AuthLoginWidgetState extends State<AuthLoginWidget>
                       Container(
                         padding: const EdgeInsets.all(32),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF1A1A1A),
+                          color: theme.secondaryBackground,
                           borderRadius: BorderRadius.circular(24),
-                          border:
-                              Border.all(color: Colors.white.withOpacity(0.1)),
+                          border: Border.all(color: theme.alternate),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
+                              color: Colors.black.withValues(alpha: 0.1),
                               blurRadius: 20,
                               offset: const Offset(0, 10),
                             ),
                           ],
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Text(
-                              'Bienvenido',
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.outfit(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Ingresa tus credenciales para continuar',
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.outfit(
-                                color: Colors.white54,
-                                fontSize: 14,
-                              ),
-                            ),
-                            const SizedBox(height: 32),
-
-                            // Inputs
-                            _buildInput(
-                              controller: _model.emailAddressTextController,
-                              focusNode: _model.emailAddressFocusNode,
-                              hint: 'Correo Electrónico',
-                              icon: Icons.email_outlined,
-                            ),
-                            const SizedBox(height: 16),
-                            _buildInput(
-                              controller: _model.passwordTextController,
-                              focusNode: _model.passwordFocusNode,
-                              hint: 'Contraseña',
-                              icon: Icons.lock_outline,
-                              isPassword: true,
-                            ),
-
-                            const SizedBox(height: 24),
-
-                            // Button
-                            FFButtonWidget(
-                              onPressed: () async {
-                                final authProvider =
-                                    Provider.of<NaziShopAuthProvider>(context,
-                                        listen: false);
-                                await authProvider.login(
-                                  email: _model.emailAddressTextController.text,
-                                  password: _model.passwordTextController.text,
-                                );
-
-                                if (!context.mounted) return;
-
-                                if (authProvider.isLoggedIn) {
-                                  updateCurrentUser(context);
-                                  context.goNamed('home');
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(authProvider.errorMessage ??
-                                          'Error al iniciar sesión'),
-                                      backgroundColor: const Color(0xFFE50914),
-                                    ),
-                                  );
-                                }
-                              },
-                              text: 'Iniciar Sesión',
-                              options: FFButtonOptions(
-                                width: double.infinity,
-                                height: 50,
-                                color: const Color(0xFFE50914),
-                                textStyle: GoogleFonts.outfit(
-                                  color: Colors.white,
-                                  fontSize: 16,
+                        // [MEJORA 1] AutofillGroup para agrupar las credenciales
+                        child: AutofillGroup(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Text(
+                                'Bienvenido',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.outfit(
+                                  color: theme.primaryText,
+                                  fontSize: 24,
                                   fontWeight: FontWeight.bold,
                                 ),
-                                borderRadius: BorderRadius.circular(12),
-                                elevation: 0,
                               ),
-                            ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Ingresa tus credenciales para continuar',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.outfit(
+                                  color: theme.secondaryText,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              const SizedBox(height: 32),
 
-                            const SizedBox(height: 20),
-                            // Google Auth
-                            OutlinedButton.icon(
-                              onPressed: () async {
-                                final user =
-                                    await authManager.signInWithGoogle(context);
-                                if (user == null || !context.mounted) return;
-                                context.goNamedAuth('home', context.mounted);
-                              },
-                              icon: const FaIcon(FontAwesomeIcons.google,
-                                  size: 18, color: Colors.white),
-                              label: Text('Continuar con Google',
-                                  style:
-                                      GoogleFonts.outfit(color: Colors.white)),
-                              style: OutlinedButton.styleFrom(
-                                side: BorderSide(
-                                    color: Colors.white.withOpacity(0.1)),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12)),
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 14),
+                              // Inputs
+                              _buildInput(
+                                controller: _model.emailAddressTextController,
+                                focusNode: _model.emailAddressFocusNode,
+                                hint: 'Correo Electrónico',
+                                icon: Icons.email_outlined,
+                                // [MEJORA 2] Hints para email y acción "Siguiente"
+                                autofillHints: const [AutofillHints.email],
+                                textInputAction: TextInputAction.next,
                               ),
-                            ),
-                          ],
+                              const SizedBox(height: 16),
+                              _buildInput(
+                                controller: _model.passwordTextController,
+                                focusNode: _model.passwordFocusNode,
+                                hint: 'Contraseña',
+                                icon: Icons.lock_outline,
+                                isPassword: true,
+                                // [MEJORA 3] Hint para contraseña existente
+                                autofillHints: const [AutofillHints.password],
+                                textInputAction: TextInputAction.done,
+                              ),
+
+                              const SizedBox(height: 24),
+
+                              // Button
+                              FFButtonWidget(
+                                onPressed: () async {
+                                  // [MEJORA 4] Forzar cierre de contexto para guardar/actualizar contraseña
+                                  TextInput.finishAutofillContext();
+
+                                  final authProvider =
+                                      Provider.of<NaziShopAuthProvider>(context,
+                                          listen: false);
+                                  await authProvider.login(
+                                    email:
+                                        _model.emailAddressTextController.text,
+                                    password:
+                                        _model.passwordTextController.text,
+                                  );
+
+                                  if (!context.mounted) return;
+
+                                  if (authProvider.isLoggedIn) {
+                                    updateCurrentUser(context);
+                                    context.goNamed('home');
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                            authProvider.errorMessage ??
+                                                'Error al iniciar sesión'),
+                                        backgroundColor: theme.error,
+                                      ),
+                                    );
+                                  }
+                                },
+                                text: 'Iniciar Sesión',
+                                options: FFButtonOptions(
+                                  width: double.infinity,
+                                  height: 50,
+                                  color: theme.primary,
+                                  textStyle: GoogleFonts.outfit(
+                                    color: theme.tertiary,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  borderRadius: BorderRadius.circular(12),
+                                  elevation: 0,
+                                ),
+                              ),
+
+                              const SizedBox(height: 20),
+                              // Google Auth
+                              OutlinedButton.icon(
+                                onPressed: () async {
+                                  final user = await authManager
+                                      .signInWithGoogle(context);
+                                  if (user == null || !context.mounted) return;
+                                  context.goNamedAuth('home', context.mounted);
+                                },
+                                icon: FaIcon(FontAwesomeIcons.google,
+                                    size: 18, color: theme.primaryText),
+                                label: Text('Continuar con Google',
+                                    style: GoogleFonts.outfit(
+                                        color: theme.primaryText)),
+                                style: OutlinedButton.styleFrom(
+                                  side: BorderSide(color: theme.alternate),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12)),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 14),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ).animate().scale(delay: 200.ms, duration: 400.ms),
 
@@ -253,13 +270,14 @@ class _AuthLoginWidgetState extends State<AuthLoginWidget>
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text("¿No tienes cuenta?",
-                              style: GoogleFonts.outfit(color: Colors.white54)),
+                              style: GoogleFonts.outfit(
+                                  color: theme.secondaryText)),
                           TextButton(
                             onPressed: () => context.pushNamed('register'),
                             child: Text(
                               'Regístrate',
                               style: GoogleFonts.outfit(
-                                color: const Color(0xFFE50914),
+                                color: theme.primary,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -277,45 +295,53 @@ class _AuthLoginWidgetState extends State<AuthLoginWidget>
     );
   }
 
+  // [Helper Optimizado] Acepta autofillHints y textInputAction
   Widget _buildInput({
     required TextEditingController? controller,
     required FocusNode? focusNode,
     required String hint,
     required IconData icon,
     bool isPassword = false,
+    Iterable<String>? autofillHints,
+    TextInputAction? textInputAction,
   }) {
+    final theme = FlutterFlowTheme.of(context);
+
     return TextFormField(
       controller: controller,
       focusNode: focusNode,
+      autofillHints: autofillHints, // Pasar hints
+      textInputAction: textInputAction, // Pasar acción de teclado
       obscureText: isPassword && !_model.passwordVisibility,
-      style: GoogleFonts.outfit(color: Colors.white),
+      style: GoogleFonts.outfit(color: theme.primaryText),
       decoration: InputDecoration(
         labelText: hint,
-        labelStyle: TextStyle(color: Colors.white54),
-        prefixIcon: Icon(icon, color: Colors.white24),
+        labelStyle: TextStyle(color: theme.secondaryText),
+        prefixIcon:
+            Icon(icon, color: theme.secondaryText.withValues(alpha: 0.5)),
         suffixIcon: isPassword
             ? IconButton(
                 icon: Icon(
                   _model.passwordVisibility
                       ? Icons.visibility
                       : Icons.visibility_off,
-                  color: Colors.white24,
+                  color: theme.secondaryText.withValues(alpha: 0.5),
                 ),
                 onPressed: () => safeSetState(() =>
                     _model.passwordVisibility = !_model.passwordVisibility),
               )
             : null,
         filled: true,
-        fillColor: Colors.black,
+        fillColor: theme.primaryBackground,
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide.none),
         enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Colors.white10)),
+            borderSide: BorderSide(color: theme.alternate)),
         focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: const Color(0xFFE50914))),
+            borderSide: BorderSide(color: theme.primary)),
       ),
     );
   }

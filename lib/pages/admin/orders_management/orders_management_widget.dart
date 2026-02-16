@@ -62,8 +62,8 @@ class _OrdersManagementWidgetState extends State<OrdersManagementWidget> {
       physics: const BouncingScrollPhysics(),
       slivers: [
         SliverAppBar(
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
+          backgroundColor: FlutterFlowTheme.of(context).transparent,
+          surfaceTintColor: FlutterFlowTheme.of(context).transparent,
           pinned: true,
           floating: true,
           elevation: 0,
@@ -333,7 +333,7 @@ class _OrdersManagementWidgetState extends State<OrdersManagementWidget> {
           label,
           style: GoogleFonts.outfit(
             color: isSelected
-                ? Colors.white
+                ? FlutterFlowTheme.of(context).primaryText
                 : FlutterFlowTheme.of(context).secondaryText,
             fontSize: 14,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
@@ -364,7 +364,7 @@ class _OrdersManagementWidgetState extends State<OrdersManagementWidget> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: color, size: 20),
@@ -435,7 +435,8 @@ class _OrdersManagementWidgetState extends State<OrdersManagementWidget> {
         ),
       ),
       child: Theme(
-        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        data: Theme.of(context)
+            .copyWith(dividerColor: FlutterFlowTheme.of(context).transparent),
         child: ExpansionTile(
           collapsedIconColor: FlutterFlowTheme.of(context).secondaryText,
           iconColor: FlutterFlowTheme.of(context).primary,
@@ -444,7 +445,7 @@ class _OrdersManagementWidgetState extends State<OrdersManagementWidget> {
             width: 48.0,
             height: 48.0,
             decoration: BoxDecoration(
-              color: statusColor.withOpacity(0.1),
+              color: statusColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(14.0),
             ),
             child: Icon(statusIcon, color: statusColor, size: 24),
@@ -473,9 +474,9 @@ class _OrdersManagementWidgetState extends State<OrdersManagementWidget> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
-                      color: statusColor.withOpacity(0.1),
+                      color: statusColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: statusColor.withOpacity(0.1)),
+                      border: Border.all(color: statusColor.withValues(alpha: 0.1)),
                     ),
                     child: Text(
                       status,
@@ -606,9 +607,9 @@ class _OrdersManagementWidgetState extends State<OrdersManagementWidget> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withOpacity(0.1)),
+          border: Border.all(color: color.withValues(alpha: 0.1)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,

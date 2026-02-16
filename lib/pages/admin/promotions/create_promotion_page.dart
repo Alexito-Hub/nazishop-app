@@ -89,7 +89,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage> {
       appBar: isDesktop
           ? null
           : AppBar(
-              backgroundColor: Colors.transparent,
+              backgroundColor: theme.transparent,
               elevation: 0,
               leading: SmartBackButton(color: theme.primaryText),
               centerTitle: true,
@@ -116,7 +116,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage> {
               ),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
-                child: Container(color: Colors.transparent),
+                child: Container(color: theme.transparent),
               ),
             ),
           ),

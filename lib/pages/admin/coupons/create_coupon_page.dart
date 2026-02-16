@@ -5,6 +5,7 @@ import '../../../components/smart_back_button.dart';
 import 'package:nazi_shop/backend/admin_service.dart';
 import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
 
 class CreateCouponPage extends StatefulWidget {
   final Map<String, dynamic>? coupon;
@@ -16,9 +17,7 @@ class CreateCouponPage extends StatefulWidget {
 
 class _CreateCouponPageState extends State<CreateCouponPage> {
   // Styles
-  static const Color kBgColor = Color(0xFF050505);
-  static const Color kSurfaceColor = Color(0xFF141414);
-  static const Color kPrimaryColor = Color(0xFFE50914);
+  // Constants removed for Theme usage
 
   final _formKey = GlobalKey<FormState>();
   final _codeCtrl = TextEditingController();
@@ -58,26 +57,27 @@ class _CreateCouponPageState extends State<CreateCouponPage> {
 
   @override
   Widget build(BuildContext context) {
-    const kBgColor = Color(0xFF050505);
-    const kSurfaceColor = Color(0xFF141414);
-    const kPrimaryColor = Color(0xFFE50914);
+    // Styles from Theme
+    final theme = FlutterFlowTheme.of(context);
 
     final isDesktop = MediaQuery.of(context).size.width >= 900;
 
     return Scaffold(
-      backgroundColor: kBgColor,
+      backgroundColor: theme.primaryBackground,
       extendBodyBehindAppBar: true,
       appBar: isDesktop
           ? null
           : AppBar(
               backgroundColor: Colors.transparent,
               elevation: 0,
-              leading: const SmartBackButton(color: Colors.white),
+              leading: SmartBackButton(
+                  color: FlutterFlowTheme.of(context).primaryText),
               centerTitle: true,
               title: Text(
                 widget.coupon != null ? 'Editar Cupón' : 'Nuevo Cupón',
                 style: GoogleFonts.outfit(
-                    color: Colors.white, fontWeight: FontWeight.bold),
+                    color: FlutterFlowTheme.of(context).primaryText,
+                    fontWeight: FontWeight.bold),
               ),
             ),
       body: Stack(
@@ -91,7 +91,7 @@ class _CreateCouponPageState extends State<CreateCouponPage> {
               height: 500,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: kPrimaryColor.withOpacity(0.05),
+                color: theme.primary.withValues(alpha: 0.5),
               ),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
@@ -126,7 +126,7 @@ class _CreateCouponPageState extends State<CreateCouponPage> {
                                 ? 'Editar Cupón'
                                 : 'Nuevo Cupón',
                             style: GoogleFonts.outfit(
-                              color: Colors.white,
+                              color: theme.tertiary,
                               fontSize: 32,
                               fontWeight: FontWeight.bold,
                             ),
@@ -144,9 +144,11 @@ class _CreateCouponPageState extends State<CreateCouponPage> {
                                   child: Container(
                                     padding: const EdgeInsets.all(24),
                                     decoration: BoxDecoration(
-                                      color: kSurfaceColor,
+                                      color: theme.secondaryBackground,
                                       borderRadius: BorderRadius.circular(24),
-                                      border: Border.all(color: Colors.white10),
+                                      border: Border.all(
+                                          color: FlutterFlowTheme.of(context)
+                                              .alternate),
                                     ),
                                     child: Column(
                                       crossAxisAlignment:
@@ -155,7 +157,8 @@ class _CreateCouponPageState extends State<CreateCouponPage> {
                                         Text(
                                           'Información General',
                                           style: GoogleFonts.outfit(
-                                            color: Colors.white,
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryText,
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold,
                                           ),
@@ -173,20 +176,24 @@ class _CreateCouponPageState extends State<CreateCouponPage> {
                                                 children: [
                                                   Text('TIPO DESCUENTO',
                                                       style: GoogleFonts.outfit(
-                                                          color: Colors.white70,
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .secondaryText,
                                                           fontSize: 13,
                                                           fontWeight:
                                                               FontWeight.bold)),
                                                   const SizedBox(height: 8),
                                                   Container(
                                                     decoration: BoxDecoration(
-                                                      color: kBgColor,
+                                                      color: theme
+                                                          .primaryBackground,
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               12),
                                                       border: Border.all(
-                                                          color:
-                                                              Colors.white10),
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .alternate),
                                                     ),
                                                     child: Row(
                                                       children: [
@@ -225,11 +232,13 @@ class _CreateCouponPageState extends State<CreateCouponPage> {
                                       Container(
                                         padding: const EdgeInsets.all(24),
                                         decoration: BoxDecoration(
-                                          color: kSurfaceColor,
+                                          color: theme.secondaryBackground,
                                           borderRadius:
                                               BorderRadius.circular(24),
-                                          border:
-                                              Border.all(color: Colors.white10),
+                                          border: Border.all(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .alternate),
                                         ),
                                         child: Column(
                                           crossAxisAlignment:
@@ -238,7 +247,7 @@ class _CreateCouponPageState extends State<CreateCouponPage> {
                                             Text(
                                               'Restricciones',
                                               style: GoogleFonts.outfit(
-                                                color: Colors.white,
+                                                color: theme.primaryText,
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.bold,
                                               ),
@@ -269,9 +278,9 @@ class _CreateCouponPageState extends State<CreateCouponPage> {
                                 Container(
                                   padding: const EdgeInsets.all(24),
                                   decoration: BoxDecoration(
-                                    color: kSurfaceColor,
+                                    color: theme.secondaryBackground,
                                     borderRadius: BorderRadius.circular(24),
-                                    border: Border.all(color: Colors.white10),
+                                    border: Border.all(color: theme.alternate),
                                   ),
                                   child: Column(
                                     crossAxisAlignment:
@@ -295,17 +304,17 @@ class _CreateCouponPageState extends State<CreateCouponPage> {
                                         children: [
                                           Text('TIPO DESCUENTO',
                                               style: GoogleFonts.outfit(
-                                                  color: Colors.white70,
+                                                  color: theme.secondaryText,
                                                   fontSize: 13,
                                                   fontWeight: FontWeight.bold)),
                                           const SizedBox(height: 8),
                                           Container(
                                             decoration: BoxDecoration(
-                                              color: kBgColor,
+                                              color: theme.primaryBackground,
                                               borderRadius:
                                                   BorderRadius.circular(12),
                                               border: Border.all(
-                                                  color: Colors.white10),
+                                                  color: theme.alternate),
                                             ),
                                             child: Row(
                                               children: [
@@ -364,14 +373,16 @@ class _CreateCouponPageState extends State<CreateCouponPage> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFE50914) : Colors.transparent,
+          color: isSelected
+              ? FlutterFlowTheme.of(context).primary
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(10),
         ),
         alignment: Alignment.center,
         child: Text(
           label,
           style: GoogleFonts.outfit(
-            color: isSelected ? Colors.white : Colors.white54,
+            color: FlutterFlowTheme.of(context).secondaryText,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -403,19 +414,21 @@ class _CreateCouponPageState extends State<CreateCouponPage> {
             height: 56, // Match TextField height default approx
             padding: const EdgeInsets.symmetric(horizontal: 12),
             decoration: BoxDecoration(
-              color: const Color(0xFF050505),
+              color: FlutterFlowTheme.of(context).primaryBackground,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: Colors.white10),
             ),
             child: Row(
               children: [
-                const Icon(Icons.calendar_today, color: Colors.white54),
+                Icon(Icons.calendar_today,
+                    color: FlutterFlowTheme.of(context).secondaryText),
                 const SizedBox(width: 12),
                 Text(
                   _validUntil != null
                       ? DateFormat('dd MMM yyyy').format(_validUntil!)
                       : 'Sin vencimiento',
-                  style: GoogleFonts.outfit(color: Colors.white),
+                  style: GoogleFonts.outfit(
+                      color: FlutterFlowTheme.of(context).primaryText),
                 )
               ],
             ),
@@ -443,7 +456,8 @@ class _CreateCouponPageState extends State<CreateCouponPage> {
           keyboardType: isNumber
               ? const TextInputType.numberWithOptions(decimal: true)
               : TextInputType.text,
-          style: GoogleFonts.outfit(color: Colors.white),
+          style: GoogleFonts.outfit(
+              color: FlutterFlowTheme.of(context).primaryText),
           validator: (value) {
             if (value == null || value.isEmpty) {
               return 'Campo requerido';
@@ -452,15 +466,17 @@ class _CreateCouponPageState extends State<CreateCouponPage> {
           },
           decoration: InputDecoration(
             filled: true,
-            fillColor: const Color(0xFF050505),
+            fillColor: FlutterFlowTheme.of(context).primaryBackground,
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide.none),
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: Color(0xFFE50914))),
-            prefixIcon:
-                maxLines == 1 ? Icon(icon, color: Colors.white54) : null,
+                borderSide:
+                    BorderSide(color: FlutterFlowTheme.of(context).primary)),
+            prefixIcon: maxLines == 1
+                ? Icon(icon, color: FlutterFlowTheme.of(context).secondaryText)
+                : null,
             contentPadding: maxLines > 1 ? const EdgeInsets.all(16) : null,
           ),
         ),
@@ -471,7 +487,7 @@ class _CreateCouponPageState extends State<CreateCouponPage> {
   Widget _buildSubmitButton() {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFFE50914),
+        backgroundColor: FlutterFlowTheme.of(context).primary,
         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 0,

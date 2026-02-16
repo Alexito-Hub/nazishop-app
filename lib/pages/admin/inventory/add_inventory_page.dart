@@ -241,7 +241,7 @@ class _AddInventoryPageState extends State<AddInventoryPage> {
                     style: GoogleFonts.outfit(
                         color: FlutterFlowTheme.of(context)
                             .secondaryText
-                            .withOpacity(0.5),
+                            .withValues(alpha: 0.5),
                         fontSize: 12),
                     textAlign: TextAlign.center,
                   ),

@@ -14,10 +14,10 @@ class AdminOffersPage extends StatefulWidget {
   static String routeName = 'admin_listings';
 
   @override
-  _AdminOffersPageState createState() => _AdminOffersPageState();
+  AdminOffersPageState createState() => AdminOffersPageState();
 }
 
-class _AdminOffersPageState extends State<AdminOffersPage> {
+class AdminOffersPageState extends State<AdminOffersPage> {
   List<Offer> _offers = [];
   bool _isLoading = true;
 
@@ -94,13 +94,15 @@ class _AdminOffersPageState extends State<AdminOffersPage> {
         throw res['msg'] ?? 'Error desconocido';
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text('Error al eliminar: $e',
-                style: GoogleFonts.outfit(
-                    color: FlutterFlowTheme.of(context).info)),
-            backgroundColor: FlutterFlowTheme.of(context).primary),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text('Error al eliminar: $e',
+                  style: GoogleFonts.outfit(
+                      color: FlutterFlowTheme.of(context).info)),
+              backgroundColor: FlutterFlowTheme.of(context).primary),
+        );
+      }
     }
   }
 
@@ -127,7 +129,8 @@ class _AdminOffersPageState extends State<AdminOffersPage> {
               ),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
-                child: Container(color: Colors.transparent),
+                child:
+                    Container(color: FlutterFlowTheme.of(context).transparent),
               ),
             ),
           ),
@@ -163,7 +166,7 @@ class _AdminOffersPageState extends State<AdminOffersPage> {
                   await context.pushNamed('create_listing');
                   _loadOffers();
                 },
-                backgroundColor: Colors.transparent,
+                backgroundColor: FlutterFlowTheme.of(context).transparent,
                 elevation: 0,
                 highlightElevation: 0,
                 shape: RoundedRectangleBorder(

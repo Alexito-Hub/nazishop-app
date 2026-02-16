@@ -16,11 +16,6 @@ class AdminCouponsPage extends StatefulWidget {
 }
 
 class _AdminCouponsPageState extends State<AdminCouponsPage> {
-  // Styles
-  // static const Color kBgColor = Color(0xFF050505);
-  // static const Color kSurfaceColor = Color(0xFF141414);
-  // static const Color kPrimaryColor = Color(0xFFE50914);
-
   bool _isLoading = false;
   List<Coupon> _coupons = [];
   String _filterStatus = 'all'; // all, active, inactive
@@ -84,14 +79,14 @@ class _AdminCouponsPageState extends State<AdminCouponsPage> {
           : Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [theme.primary, theme.error],
+                  colors: [theme.primary, theme.secondary],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: theme.primary.withOpacity(0.4),
+                    color: theme.primary.withValues(alpha: 0.4),
                     blurRadius: 12,
                     offset: const Offset(0, 6),
                   ),
@@ -99,17 +94,17 @@ class _AdminCouponsPageState extends State<AdminCouponsPage> {
               ),
               child: FloatingActionButton.extended(
                 onPressed: _showCreatePage,
-                backgroundColor: Colors.transparent,
+                backgroundColor: theme.transparent,
                 elevation: 0,
                 highlightElevation: 0,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16)),
-                icon:
-                    Icon(Icons.confirmation_number_outlined, color: theme.info),
+                icon: Icon(Icons.confirmation_number_outlined,
+                    color: theme.primaryText),
                 label: Text(
                   'Nuevo Cupón',
                   style: GoogleFonts.outfit(
-                      color: theme.info,
+                      color: theme.primaryText,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1),
                 ),
@@ -123,12 +118,14 @@ class _AdminCouponsPageState extends State<AdminCouponsPage> {
     final result = await context.pushNamed('create_coupon');
     if (result == true) {
       _loadCoupons();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Cupón creado exitosamente'),
-          backgroundColor: FlutterFlowTheme.of(context).success,
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Cupón creado exitosamente'),
+            backgroundColor: FlutterFlowTheme.of(context).success,
+          ),
+        );
+      }
     }
   }
 
@@ -147,8 +144,8 @@ class _AdminCouponsPageState extends State<AdminCouponsPage> {
       physics: const BouncingScrollPhysics(),
       slivers: [
         SliverAppBar(
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
+          backgroundColor: theme.transparent,
+          surfaceTintColor: theme.transparent,
           pinned: true,
           floating: true,
           elevation: 0,
@@ -156,7 +153,7 @@ class _AdminCouponsPageState extends State<AdminCouponsPage> {
           leading: Container(
             margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: theme.primaryBackground.withOpacity(0.5),
+              color: theme.primaryBackground.withValues(alpha: 0.5),
               shape: BoxShape.circle,
             ),
             child: SmartBackButton(color: theme.primaryText),
@@ -274,14 +271,14 @@ class _AdminCouponsPageState extends State<AdminCouponsPage> {
                           height: 44,
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              colors: [theme.primary, theme.error],
+                              colors: [theme.primary, theme.secondary],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             ),
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: theme.primary.withOpacity(0.4),
+                                color: theme.primary.withValues(alpha: 0.4),
                                 blurRadius: 8,
                                 offset: const Offset(0, 4),
                               ),
@@ -290,19 +287,19 @@ class _AdminCouponsPageState extends State<AdminCouponsPage> {
                           child: ElevatedButton.icon(
                             onPressed: _showCreatePage,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              shadowColor: Colors.transparent,
+                              backgroundColor: theme.transparent,
+                              shadowColor: theme.transparent,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12)),
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20),
                             ),
                             icon: Icon(Icons.add_circle_outline,
-                                color: theme.info, size: 20),
+                                color: theme.primaryText, size: 20),
                             label: Text(
                               'Nuevo Cupón',
                               style: GoogleFonts.outfit(
-                                color: theme.info,
+                                color: theme.primaryText,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15,
                               ),
@@ -432,7 +429,7 @@ class CouponRowItem extends StatelessWidget {
         border: Border.all(color: borderColor),
       ),
       child: Material(
-        color: Colors.transparent,
+        color: theme.transparent,
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(12),
@@ -445,7 +442,7 @@ class CouponRowItem extends StatelessWidget {
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: theme.primary.withOpacity(0.1),
+                    color: theme.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(Icons.local_offer, color: theme.primary),
@@ -472,7 +469,7 @@ class CouponRowItem extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 6, vertical: 2),
                             decoration: BoxDecoration(
-                              color: statusColor.withOpacity(0.2),
+                              color: statusColor.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Text(
@@ -550,13 +547,13 @@ class CouponCardItem extends StatelessWidget {
         border: Border.all(color: borderColor),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: theme.primaryText.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, 4)),
         ],
       ),
       child: Material(
-        color: Colors.transparent,
+        color: theme.transparent,
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(16),
@@ -574,7 +571,7 @@ class CouponCardItem extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
-                            color: theme.primary.withOpacity(0.1),
+                            color: theme.primary.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
@@ -635,7 +632,8 @@ class CouponCardItem extends StatelessWidget {
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                          color: statusColor.withOpacity(0.4), blurRadius: 6),
+                          color: statusColor.withValues(alpha: 0.4),
+                          blurRadius: 6),
                     ],
                   ),
                 ),

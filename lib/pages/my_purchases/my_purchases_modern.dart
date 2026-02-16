@@ -21,13 +21,12 @@ class _MyPurchasesModernWidgetState extends State<MyPurchasesModernWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   // --- PALETA DE COLORES (COHERENCIA CON HOME) ---
-  static const Color kPrimaryColor = Color(0xFFE50914);
+  Color get _primaryColor => FlutterFlowTheme.of(context).primary;
 
   bool get _isDesktop => MediaQuery.of(context).size.width >= 900;
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final theme = FlutterFlowTheme.of(context);
     return Scaffold(
       key: scaffoldKey,
@@ -48,6 +47,7 @@ class _MyPurchasesModernWidgetState extends State<MyPurchasesModernWidget> {
   // 💻 DESKTOP LAYOUT (ESTILO HOME DASHBOARD)
   // ===========================================================================
   Widget _buildDesktopLayout() {
+    final theme = FlutterFlowTheme.of(context);
     return Align(
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
@@ -68,20 +68,14 @@ class _MyPurchasesModernWidgetState extends State<MyPurchasesModernWidget> {
                         style: GoogleFonts.outfit(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : FlutterFlowTheme.of(context).primaryText,
+                          color: theme.primaryText,
                         ),
                       ),
                       const SizedBox(height: 8),
                       Text(
                         'Gestiona tus pedidos y visualiza tus credenciales activas',
                         style: GoogleFonts.outfit(
-                            fontSize: 16,
-                            color: Theme.of(context).brightness ==
-                                    Brightness.dark
-                                ? Colors.white54
-                                : FlutterFlowTheme.of(context).secondaryText),
+                            fontSize: 16, color: theme.secondaryText),
                       ),
                     ],
                   ),
@@ -135,14 +129,13 @@ class _MyPurchasesModernWidgetState extends State<MyPurchasesModernWidget> {
   // 📱 MOBILE LAYOUT (ESTILO HOME/SERVICE DETAIL)
   // ===========================================================================
   Widget _buildMobileLayout() {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final theme = FlutterFlowTheme.of(context);
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
         SliverAppBar(
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
+          backgroundColor: theme.transparent,
+          surfaceTintColor: theme.transparent,
           pinned: true,
           floating: true,
           elevation: 0,
@@ -151,20 +144,18 @@ class _MyPurchasesModernWidgetState extends State<MyPurchasesModernWidget> {
           leading: Container(
             margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: isDark
-                  ? Colors.white.withOpacity(0.05)
-                  : Colors.black.withOpacity(0.05),
+              color: theme.secondaryBackground,
               shape: BoxShape.circle,
             ),
             child: SmartBackButton(
-              color: isDark ? Colors.white : theme.primaryText,
+              color: theme.primaryText,
             ),
           ),
           centerTitle: true,
           title: Text(
             'Mis Compras',
             style: GoogleFonts.outfit(
-              color: isDark ? Colors.white : theme.primaryText,
+              color: theme.primaryText,
               fontWeight: FontWeight.w900,
               fontSize: 24,
               letterSpacing: 1.0,
@@ -210,6 +201,7 @@ class _MyPurchasesModernWidgetState extends State<MyPurchasesModernWidget> {
   }
 
   Widget _buildShimmerGrid({required bool isMobile}) {
+    final theme = FlutterFlowTheme.of(context);
     return SliverGrid(
       gridDelegate: isMobile
           ? const SliverGridDelegateWithFixedCrossAxisCount(
@@ -226,19 +218,20 @@ class _MyPurchasesModernWidgetState extends State<MyPurchasesModernWidget> {
       delegate: SliverChildBuilderDelegate(
         (_, __) => Container(
           decoration: BoxDecoration(
-              color: FlutterFlowTheme.of(context).secondaryBackground,
+              color: theme.secondaryBackground,
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(
-                  color:
-                      FlutterFlowTheme.of(context).alternate.withOpacity(0.2))),
-        ).animate(onPlay: (c) => c.repeat()).shimmer(
-            duration: 2.seconds, color: FlutterFlowTheme.of(context).accent1),
+              border:
+                  Border.all(color: theme.alternate.withValues(alpha: 0.2))),
+        )
+            .animate(onPlay: (c) => c.repeat())
+            .shimmer(duration: 2.seconds, color: theme.accent1),
         childCount: 6,
       ),
     );
   }
 
   Widget _buildEmptyState() {
+    final theme = FlutterFlowTheme.of(context);
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -246,25 +239,18 @@ class _MyPurchasesModernWidgetState extends State<MyPurchasesModernWidget> {
           Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? const Color(0xFF141414)
-                  : FlutterFlowTheme.of(context).secondaryBackground,
+              color: theme.secondaryBackground,
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.white10),
+              border: Border.all(color: theme.alternate),
             ),
             child: Icon(Icons.receipt_long_rounded,
-                size: 40,
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white24
-                    : FlutterFlowTheme.of(context).secondaryText),
+                size: 40, color: theme.secondaryText),
           ),
           const SizedBox(height: 24),
           Text(
             'Aún no has realizado compras',
             style: GoogleFonts.outfit(
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.white
-                  : FlutterFlowTheme.of(context).primaryText,
+              color: theme.primaryText,
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
@@ -272,17 +258,13 @@ class _MyPurchasesModernWidgetState extends State<MyPurchasesModernWidget> {
           const SizedBox(height: 8),
           Text(
             'Tus pedidos aparecerán aquí',
-            style: GoogleFonts.outfit(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white38
-                    : FlutterFlowTheme.of(context).secondaryText,
-                fontSize: 16),
+            style: GoogleFonts.outfit(color: theme.secondaryText, fontSize: 16),
           ),
           const SizedBox(height: 32),
           ElevatedButton(
             onPressed: () => context.goNamed('home'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: kPrimaryColor,
+              backgroundColor: _primaryColor,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               shape: RoundedRectangleBorder(
@@ -340,32 +322,29 @@ class _OrderCardGridItemState extends State<OrderCardGridItem> {
 
     // Status Conf
     Color statusColor;
+    final theme = FlutterFlowTheme.of(context);
     String statusText;
     IconData statusIcon;
     switch (status) {
       case 'paid':
       case 'completed':
-        statusColor = const Color(0xFF22C55E);
+        statusColor = theme.success;
         statusText = 'COMPLETADO';
         statusIcon = Icons.check_circle;
         break;
       case 'pending':
-        statusColor = const Color(0xFFF59E0B);
+        statusColor = theme.warning;
         statusText = 'PENDIENTE';
         statusIcon = Icons.access_time_filled;
         break;
       default:
-        statusColor = const Color(0xFFEF4444);
+        statusColor = theme.error;
         statusText = 'CANCELADO';
         statusIcon = Icons.cancel;
     }
 
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final borderColor = _isHovered
-        ? primaryColor.withOpacity(0.5)
-        : (isDark
-            ? Colors.white.withOpacity(0.08)
-            : FlutterFlowTheme.of(context).alternate.withOpacity(0.15));
+    final borderColor =
+        _isHovered ? primaryColor.withValues(alpha: 0.5) : theme.alternate;
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
@@ -384,24 +363,22 @@ class _OrderCardGridItemState extends State<OrderCardGridItem> {
           duration: const Duration(milliseconds: 250),
           curve: Curves.easeOut,
           transform: Matrix4.identity()
-            ..translate(0.0, _isHovered ? -8.0 : 0.0),
+            ..translateByDouble(0.0, _isHovered ? -8.0 : 0.0, 0.0, 1.0),
           decoration: BoxDecoration(
-            color: isDark
-                ? const Color(0xFF141414)
-                : FlutterFlowTheme.of(context).secondaryBackground,
+            color: theme.secondaryBackground,
             borderRadius: BorderRadius.circular(24),
             border: Border.all(color: borderColor, width: 1.5),
             boxShadow: _isHovered
                 ? [
                     BoxShadow(
-                      color: primaryColor.withOpacity(0.25),
+                      color: primaryColor.withValues(alpha: 0.25),
                       blurRadius: 25,
                       offset: const Offset(0, 10),
                     )
                   ]
                 : [
                     BoxShadow(
-                      color: Colors.black.withOpacity(isDark ? 0.4 : 0.08),
+                      color: Colors.black.withValues(alpha: 0.15),
                       blurRadius: 10,
                       offset: const Offset(0, 5),
                     )
@@ -421,9 +398,7 @@ class _OrderCardGridItemState extends State<OrderCardGridItem> {
                       Container(
                         width: double.infinity,
                         height: double.infinity,
-                        color: isDark
-                            ? const Color(0xFF0A0A0A)
-                            : FlutterFlowTheme.of(context).secondaryBackground,
+                        color: theme.secondaryBackground,
                         child: logoUrl != null
                             ? SafeImage(
                                 logoUrl,
@@ -440,8 +415,8 @@ class _OrderCardGridItemState extends State<OrderCardGridItem> {
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
-                                Colors.transparent,
-                                Colors.black.withOpacity(0.6)
+                                theme.transparent,
+                                Colors.black.withValues(alpha: 0.6)
                               ],
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
@@ -493,17 +468,17 @@ class _OrderCardGridItemState extends State<OrderCardGridItem> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 6, vertical: 3),
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.3),
+                            color: Colors.black.withValues(alpha: 0.3),
                             borderRadius: BorderRadius.circular(6),
                             border: Border.all(
-                                color: Colors.white.withOpacity(0.1)),
+                                color: Colors.white.withValues(alpha: 0.1)),
                           ),
                           child: Text(
                             formattedDate,
                             style: GoogleFonts.outfit(
                               fontSize: 9,
                               fontWeight: FontWeight.w600,
-                              color: Colors.white.withOpacity(0.9),
+                              color: Colors.white.withValues(alpha: 0.9),
                             ),
                           ),
                         ),
@@ -518,9 +493,7 @@ class _OrderCardGridItemState extends State<OrderCardGridItem> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 14, vertical: 12),
-                    color: isDark
-                        ? const Color(0xFF141414)
-                        : FlutterFlowTheme.of(context).secondaryBackground,
+                    color: theme.secondaryBackground,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -533,7 +506,7 @@ class _OrderCardGridItemState extends State<OrderCardGridItem> {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: GoogleFonts.outfit(
-                                color: FlutterFlowTheme.of(context).primaryText,
+                                color: theme.primaryText,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15 * FlutterFlowTheme.fontSizeFactor,
                                 height: 1.2,
@@ -548,8 +521,7 @@ class _OrderCardGridItemState extends State<OrderCardGridItem> {
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: GoogleFonts.outfit(
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryText,
+                                  color: theme.secondaryText,
                                   fontSize:
                                       12 * FlutterFlowTheme.fontSizeFactor,
                                   height: 1.3),
@@ -569,8 +541,7 @@ class _OrderCardGridItemState extends State<OrderCardGridItem> {
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.outfit(
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
+                                  color: theme.primaryText,
                                   fontWeight: FontWeight.w900,
                                   fontSize:
                                       18 * FlutterFlowTheme.fontSizeFactor,
@@ -587,18 +558,9 @@ class _OrderCardGridItemState extends State<OrderCardGridItem> {
                                     colors: _isHovered
                                         ? [
                                             primaryColor,
-                                            primaryColor.withOpacity(0.8)
+                                            primaryColor.withValues(alpha: 0.8)
                                           ]
-                                        : [
-                                            isDark
-                                                ? Colors.white10
-                                                : FlutterFlowTheme.of(context)
-                                                    .alternate,
-                                            isDark
-                                                ? Colors.white10
-                                                : FlutterFlowTheme.of(context)
-                                                    .alternate
-                                          ],
+                                        : [theme.alternate, theme.alternate],
                                   ),
                                   shape: BoxShape.circle,
                                 ),
@@ -606,8 +568,7 @@ class _OrderCardGridItemState extends State<OrderCardGridItem> {
                                   Icons.arrow_forward_rounded,
                                   color: _isHovered
                                       ? Colors.white
-                                      : FlutterFlowTheme.of(context)
-                                          .secondaryText,
+                                      : theme.secondaryText,
                                   size: 20,
                                 ),
                               ),
@@ -626,6 +587,7 @@ class _OrderCardGridItemState extends State<OrderCardGridItem> {
   }
 
   Widget _buildRatingStars(String orderId) {
+    final theme = FlutterFlowTheme.of(context);
     // Generate mock rating based on order ID hash for consistency
     final hash = orderId.hashCode.abs();
     final rating = 4.5 + ((hash % 5) / 10); // Generates 4.5-4.9
@@ -638,24 +600,23 @@ class _OrderCardGridItemState extends State<OrderCardGridItem> {
           children: List.generate(5, (index) {
             if (index < rating.floor()) {
               // Full star
-              return const Icon(
+              return Icon(
                 Icons.star_rounded,
-                color: Color(0xFFFFC107),
+                color: theme.warning,
                 size: 14,
               );
             } else if (index < rating) {
               // Half star
-              return const Icon(
+              return Icon(
                 Icons.star_half_rounded,
-                color: Color(0xFFFFC107),
+                color: theme.warning,
                 size: 14,
               );
             } else {
               // Empty star
               return Icon(
                 Icons.star_outline_rounded,
-                color:
-                    FlutterFlowTheme.of(context).secondaryText.withOpacity(0.3),
+                color: theme.secondaryText.withValues(alpha: 0.3),
                 size: 14,
               );
             }
@@ -665,7 +626,7 @@ class _OrderCardGridItemState extends State<OrderCardGridItem> {
         Text(
           rating.toStringAsFixed(1),
           style: GoogleFonts.outfit(
-            color: FlutterFlowTheme.of(context).secondaryText,
+            color: theme.secondaryText,
             fontSize: 12 * FlutterFlowTheme.fontSizeFactor,
             fontWeight: FontWeight.w600,
           ),
@@ -675,21 +636,19 @@ class _OrderCardGridItemState extends State<OrderCardGridItem> {
   }
 
   Widget _buildPlaceholder(Color color) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = FlutterFlowTheme.of(context);
     return Container(
       decoration: BoxDecoration(
-          color: isDark
-              ? const Color(0xFF1E1E1E)
-              : FlutterFlowTheme.of(context).secondaryBackground,
+          color: theme.secondaryBackground,
           image: DecorationImage(
               image: const NetworkImage(
                   "https://www.transparenttextures.com/patterns/cubes.png"),
               colorFilter: ColorFilter.mode(
-                  Colors.black.withOpacity(0.8), BlendMode.dstATop),
+                  Colors.black.withValues(alpha: 0.8), BlendMode.dstATop),
               fit: BoxFit.cover)),
       child: Center(
         child: Icon(Icons.shopping_bag_outlined,
-            size: 40, color: color.withOpacity(0.3)),
+            size: 40, color: color.withValues(alpha: 0.3)),
       ),
     );
   }

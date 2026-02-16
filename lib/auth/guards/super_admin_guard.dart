@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:nazi_shop/auth/nazishop_auth/nazishop_auth_provider.dart';
+import 'package:nazi_shop/flutter_flow/flutter_flow_theme.dart';
 import 'package:nazi_shop/flutter_flow/flutter_flow_util.dart';
 
 class SuperAdminAuthGuard extends StatefulWidget {
@@ -25,10 +26,11 @@ class _SuperAdminAuthGuardState extends State<SuperAdminAuthGuard> {
 
     // 1. Si está cargando, mostrar spinner y NO redirigir aún
     if (authProvider.isLoading) {
-      return const Scaffold(
-        backgroundColor: Colors.black,
+      return Scaffold(
+        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         body: Center(
-          child: CircularProgressIndicator(color: Color(0xFFE50914)),
+          child: CircularProgressIndicator(
+              color: FlutterFlowTheme.of(context).primary),
         ),
       );
     }
@@ -38,10 +40,11 @@ class _SuperAdminAuthGuardState extends State<SuperAdminAuthGuard> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         context.goNamed('login');
       });
-      return const Scaffold(
-        backgroundColor: Colors.black,
+      return Scaffold(
+        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         body: Center(
-          child: CircularProgressIndicator(color: Color(0xFFE50914)),
+          child: CircularProgressIndicator(
+              color: FlutterFlowTheme.of(context).primary),
         ),
       );
     }
@@ -49,8 +52,9 @@ class _SuperAdminAuthGuardState extends State<SuperAdminAuthGuard> {
     // 3. Si está logueado pero NO es SuperAdmin -> Pantalla de acceso denegado
     // Importante: isSuperAdmin es un getter en NaziShopUser
     if (!user.isSuperAdmin) {
+      final theme = FlutterFlowTheme.of(context);
       return Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: theme.primaryBackground,
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(32.0),
@@ -60,20 +64,20 @@ class _SuperAdminAuthGuardState extends State<SuperAdminAuthGuard> {
                 Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFF3366).withOpacity(0.1),
+                    color: theme.error.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.security_rounded,
                     size: 80,
-                    color: Color(0xFFFF3366),
+                    color: theme.error,
                   ),
                 ),
                 const SizedBox(height: 32),
                 Text(
                   'SÓLO SUPERADMINISTRADORES',
                   style: GoogleFonts.outfit(
-                    color: const Color(0xFFFF3366),
+                    color: theme.error,
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 2,
@@ -85,7 +89,7 @@ class _SuperAdminAuthGuardState extends State<SuperAdminAuthGuard> {
                   style: GoogleFonts.outfit(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: theme.primaryText,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -94,20 +98,20 @@ class _SuperAdminAuthGuardState extends State<SuperAdminAuthGuard> {
                   textAlign: TextAlign.center,
                   style: GoogleFonts.outfit(
                     fontSize: 15,
-                    color: Colors.white38,
+                    color: theme.secondaryText,
                   ),
                 ),
                 const SizedBox(height: 48),
                 ElevatedButton(
                   onPressed: () => Navigator.of(context).pop(),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white.withOpacity(0.1),
-                    foregroundColor: Colors.white,
+                    backgroundColor: theme.alternate.withValues(alpha: 0.3),
+                    foregroundColor: theme.primaryText,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 32, vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
-                      side: BorderSide(color: Colors.white.withOpacity(0.1)),
+                      side: BorderSide(color: theme.alternate),
                     ),
                   ),
                   child: Text(

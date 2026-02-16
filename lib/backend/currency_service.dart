@@ -28,7 +28,7 @@ class CurrencyService {
 
   // Inicializar el servicio de monedas (llamar al inicio de la app)
   static Future<void> initialize() async {
-    print('💱 Initializing currency service...');
+    debugPrint('💱 Initializing currency service...');
     await fetchCurrencies();
     await _loadSelectedCurrency();
   }
@@ -36,7 +36,7 @@ class CurrencyService {
   // Obtener monedas desde el backend
   static Future<void> fetchCurrencies() async {
     try {
-      print('🌐 Fetching currencies from backend...');
+      debugPrint('🌐 Fetching currencies from backend...');
 
       // Verificar si hay cache válido (menos de 24 horas)
       final prefs = await SharedPreferences.getInstance();
@@ -44,7 +44,7 @@ class CurrencyService {
       final now = DateTime.now().millisecondsSinceEpoch;
 
       if (now - lastFetch < 86400000 && _currenciesCache.isNotEmpty) {
-        print('✅ Using cached currencies');
+        debugPrint('✅ Using cached currencies');
         return;
       }
 
@@ -62,10 +62,11 @@ class CurrencyService {
         await prefs.setString(_currenciesCacheKey, json.encode(data['data']));
         await prefs.setInt(_lastFetchKey, now);
 
-        print('✅ Loaded ${_currenciesCache.length} currencies from backend');
+        debugPrint(
+            '✅ Loaded ${_currenciesCache.length} currencies from backend');
       }
     } catch (e) {
-      print('⚠️ Error fetching currencies: $e');
+      debugPrint('⚠️ Error fetching currencies: $e');
       // Intentar cargar desde cache
       await _loadFromCache();
     }
@@ -94,10 +95,10 @@ class CurrencyService {
           final currency = Currency.fromJson(currencyData);
           _currenciesCache[currency.code] = currency;
         }
-        print('✅ Loaded ${_currenciesCache.length} currencies from cache');
+        debugPrint('✅ Loaded ${_currenciesCache.length} currencies from cache');
       }
     } catch (e) {
-      print('⚠️ Error loading from cache: $e');
+      debugPrint('⚠️ Error loading from cache: $e');
     }
   }
 
@@ -108,7 +109,7 @@ class CurrencyService {
 
     if (currencyCode != null && _currenciesCache.containsKey(currencyCode)) {
       _selectedCurrency = _currenciesCache[currencyCode];
-      print('✅ Loaded selected currency: $currencyCode');
+      debugPrint('✅ Loaded selected currency: $currencyCode');
       return;
     }
 
@@ -148,7 +149,7 @@ class CurrencyService {
           if (_currenciesCache.containsKey(currencyCode)) {
             _selectedCurrency = _currenciesCache[currencyCode];
             await prefs.setString(_selectedCurrencyKey, currencyCode);
-            print(
+            debugPrint(
                 '✅ Detected and set currency: $currencyCode for country: $detectedCountry');
             return _selectedCurrency!;
           }
@@ -208,7 +209,7 @@ class CurrencyService {
     _selectedCurrency = _currenciesCache[currencyCode];
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_selectedCurrencyKey, currencyCode);
-    print('✅ Currency changed to: $currencyCode');
+    debugPrint('✅ Currency changed to: $currencyCode');
   }
 
   // Obtener todas las monedas disponibles

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../models/offer_model.dart';
 import '../../../backend/currency_service.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
 
 class ServiceOfferCard extends StatelessWidget {
   final Offer offer;
@@ -25,18 +26,18 @@ class ServiceOfferCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: FlutterFlowTheme.of(context).alternate,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
           color: hasStock
-              ? primaryColor.withOpacity(0.1)
-              : Colors.white.withOpacity(0.1),
+              ? primaryColor.withValues(alpha: 0.1)
+              : FlutterFlowTheme.of(context).alternate,
           width: 1.5,
         ),
         boxShadow: [
           if (hasStock)
             BoxShadow(
-              color: primaryColor.withOpacity(0.1),
+              color: primaryColor.withValues(alpha: 0.1),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -44,7 +45,7 @@ class ServiceOfferCard extends StatelessWidget {
       ),
       clipBehavior: Clip.antiAlias,
       child: Material(
-        color: Colors.transparent,
+        color: FlutterFlowTheme.of(context).transparent,
         child: InkWell(
           onTap: hasStock ? onPurchase : null,
           child: Padding(
@@ -68,7 +69,7 @@ class ServiceOfferCard extends StatelessWidget {
                                       horizontal: 10, vertical: 4),
                                   margin: const EdgeInsets.only(right: 12),
                                   decoration: BoxDecoration(
-                                    color: primaryColor.withOpacity(0.1),
+                                    color: primaryColor.withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Text(
@@ -88,15 +89,20 @@ class ServiceOfferCard extends StatelessWidget {
                                       horizontal: 10, vertical: 4),
                                   margin: const EdgeInsets.only(right: 12),
                                   decoration: BoxDecoration(
-                                    color: Colors.amber.withOpacity(0.1),
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondary
+                                        .withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(8),
                                     border: Border.all(
-                                        color: Colors.amber.withOpacity(0.1)),
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondary
+                                            .withValues(alpha: 0.1)),
                                   ),
                                   child: Text(
                                     offer.ui.badge!.toUpperCase(),
                                     style: GoogleFonts.outfit(
-                                      color: Colors.amber,
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondary,
                                       fontSize: 10,
                                       fontWeight: FontWeight.bold,
                                       letterSpacing: 1,
@@ -110,8 +116,10 @@ class ServiceOfferCard extends StatelessWidget {
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                     color: hasStock
-                                        ? Colors.white
-                                        : Colors.white.withOpacity(0.1),
+                                        ? FlutterFlowTheme.of(context)
+                                            .primaryText
+                                        : FlutterFlowTheme.of(context)
+                                            .alternate,
                                   ),
                                 ),
                               ),
@@ -123,7 +131,8 @@ class ServiceOfferCard extends StatelessWidget {
                               offer.description!,
                               style: GoogleFonts.outfit(
                                 fontSize: 14,
-                                color: Colors.white.withOpacity(0.1),
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
                                 height: 1.5,
                               ),
                             ),
@@ -142,7 +151,7 @@ class ServiceOfferCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(14),
                           boxShadow: [
                             BoxShadow(
-                              color: primaryColor.withOpacity(0.1),
+                              color: primaryColor.withValues(alpha: 0.1),
                               blurRadius: 10,
                             ),
                           ],
@@ -150,7 +159,7 @@ class ServiceOfferCard extends StatelessWidget {
                         child: Text(
                           '-${offer.discountPercent}%',
                           style: GoogleFonts.outfit(
-                            color: Colors.white,
+                            color: FlutterFlowTheme.of(context).primaryText,
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
@@ -162,7 +171,7 @@ class ServiceOfferCard extends StatelessWidget {
                 Container(
                   height: 1,
                   width: double.infinity,
-                  color: Colors.white.withOpacity(0.1),
+                  color: FlutterFlowTheme.of(context).alternate,
                 ),
                 const SizedBox(height: 12),
                 Row(
@@ -178,7 +187,7 @@ class ServiceOfferCard extends StatelessWidget {
                             CurrencyService.formatFromUSD(offer.originalPrice),
                             style: GoogleFonts.outfit(
                               decoration: TextDecoration.lineThrough,
-                              color: Colors.white.withOpacity(0.1),
+                              color: FlutterFlowTheme.of(context).secondaryText,
                               fontSize: 14,
                             ),
                           ),
@@ -190,8 +199,8 @@ class ServiceOfferCard extends StatelessWidget {
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
                             color: hasStock
-                                ? Colors.white
-                                : Colors.white.withOpacity(0.1),
+                                ? FlutterFlowTheme.of(context).primaryText
+                                : FlutterFlowTheme.of(context).alternate,
                           ),
                         ),
                         if (hasStock && stockCount > 0) ...[
@@ -203,19 +212,22 @@ class ServiceOfferCard extends StatelessWidget {
                                 height: 8,
                                 decoration: BoxDecoration(
                                   color: stockCount > 5
-                                      ? Colors.greenAccent
+                                      ? FlutterFlowTheme.of(context).success
                                       : stockCount > 2
-                                          ? Colors.orangeAccent
-                                          : Colors.redAccent,
+                                          ? FlutterFlowTheme.of(context).warning
+                                          : FlutterFlowTheme.of(context).error,
                                   shape: BoxShape.circle,
                                   boxShadow: [
                                     BoxShadow(
                                       color: (stockCount > 5
-                                              ? Colors.greenAccent
+                                              ? FlutterFlowTheme.of(context)
+                                                  .success
                                               : stockCount > 2
-                                                  ? Colors.orangeAccent
-                                                  : Colors.redAccent)
-                                          .withOpacity(0.1),
+                                                  ? FlutterFlowTheme.of(context)
+                                                      .warning
+                                                  : FlutterFlowTheme.of(context)
+                                                      .error)
+                                          .withValues(alpha: 0.1),
                                       blurRadius: 4,
                                     ),
                                   ],
@@ -226,7 +238,8 @@ class ServiceOfferCard extends StatelessWidget {
                                 '$stockCount disponibles',
                                 style: GoogleFonts.outfit(
                                   fontSize: 12,
-                                  color: Colors.white.withOpacity(0.1),
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryText,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -253,14 +266,14 @@ class ServiceOfferCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         gradient: hasStock
             ? LinearGradient(
-                colors: [primaryColor, primaryColor.withOpacity(0.1)],
+                colors: [primaryColor, primaryColor.withValues(alpha: 0.1)],
               )
             : null,
-        color: hasStock ? null : Colors.white.withOpacity(0.1),
+        color: hasStock ? null : FlutterFlowTheme.of(context).alternate,
         boxShadow: [
           if (hasStock)
             BoxShadow(
-              color: primaryColor.withOpacity(0.1),
+              color: primaryColor.withValues(alpha: 0.1),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -269,9 +282,9 @@ class ServiceOfferCard extends StatelessWidget {
       child: ElevatedButton(
         onPressed: hasStock ? onPurchase : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent,
-          foregroundColor: Colors.white,
-          shadowColor: Colors.transparent,
+          backgroundColor: FlutterFlowTheme.of(context).transparent,
+          foregroundColor: FlutterFlowTheme.of(context).primaryText,
+          shadowColor: FlutterFlowTheme.of(context).transparent,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),

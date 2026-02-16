@@ -32,7 +32,7 @@ class _EditProfileModernWidgetState extends State<EditProfileModernWidget> {
   final _formKey = GlobalKey<FormState>();
 
   // Consistencia de Diseño Moderno
-  static const Color kPrimaryColor = Color(0xFFE50914);
+  Color get _primaryColor => FlutterFlowTheme.of(context).primary;
 
   // Controllers
   TextEditingController? nameController;
@@ -116,11 +116,11 @@ class _EditProfileModernWidgetState extends State<EditProfileModernWidget> {
               height: 500,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: kPrimaryColor.withOpacity(0.05),
+                color: _primaryColor.withValues(alpha: 0.05),
               ),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
-                child: Container(color: Colors.transparent),
+                child: Container(color: theme.transparent),
               ),
             ),
           ),
@@ -137,8 +137,8 @@ class _EditProfileModernWidgetState extends State<EditProfileModernWidget> {
       physics: const BouncingScrollPhysics(),
       slivers: [
         SliverAppBar(
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
+          backgroundColor: theme.transparent,
+          surfaceTintColor: theme.transparent,
           pinned: true,
           floating: true,
           elevation: 0,
@@ -250,12 +250,12 @@ class _EditProfileModernWidgetState extends State<EditProfileModernWidget> {
                       color: theme.secondaryBackground,
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: kPrimaryColor,
+                        color: _primaryColor,
                         width: 2,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: kPrimaryColor.withOpacity(0.2),
+                          color: _primaryColor.withValues(alpha: 0.2),
                           blurRadius: 20,
                         )
                       ],
@@ -272,15 +272,15 @@ class _EditProfileModernWidgetState extends State<EditProfileModernWidget> {
                 const SizedBox(height: 24),
                 TextButton.icon(
                   onPressed: _uploadProfilePhoto,
-                  icon: const Icon(Icons.camera_alt_outlined,
-                      size: 18, color: kPrimaryColor),
+                  icon: Icon(Icons.camera_alt_outlined,
+                      size: 18, color: _primaryColor),
                   label: Text('Cambiar Foto',
                       style: GoogleFonts.outfit(
-                          color: kPrimaryColor, fontWeight: FontWeight.bold)),
+                          color: _primaryColor, fontWeight: FontWeight.bold)),
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 12),
-                    backgroundColor: kPrimaryColor.withOpacity(0.1),
+                    backgroundColor: _primaryColor.withValues(alpha: 0.1),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                   ),
@@ -421,7 +421,7 @@ class _EditProfileModernWidgetState extends State<EditProfileModernWidget> {
                         onPressed: _saveChanges,
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 22),
-                          backgroundColor: kPrimaryColor,
+                          backgroundColor: _primaryColor,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),
@@ -431,7 +431,7 @@ class _EditProfileModernWidgetState extends State<EditProfileModernWidget> {
                           style: GoogleFonts.outfit(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white),
+                              color: FlutterFlowTheme.of(context).tertiary),
                         ),
                       ),
                     ),
@@ -465,12 +465,12 @@ class _EditProfileModernWidgetState extends State<EditProfileModernWidget> {
                       color: theme.secondaryBackground,
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: kPrimaryColor,
+                        color: _primaryColor,
                         width: 2,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: kPrimaryColor.withOpacity(0.2),
+                          color: _primaryColor.withValues(alpha: 0.2),
                           blurRadius: 20,
                         )
                       ],
@@ -487,15 +487,15 @@ class _EditProfileModernWidgetState extends State<EditProfileModernWidget> {
                 const SizedBox(height: 16),
                 TextButton.icon(
                   onPressed: _uploadProfilePhoto,
-                  icon: const Icon(Icons.camera_alt_outlined,
-                      size: 18, color: kPrimaryColor),
+                  icon: Icon(Icons.camera_alt_outlined,
+                      size: 18, color: _primaryColor),
                   label: Text('Cambiar Foto',
                       style: GoogleFonts.outfit(
-                          color: kPrimaryColor, fontWeight: FontWeight.bold)),
+                          color: _primaryColor, fontWeight: FontWeight.bold)),
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 12),
-                    backgroundColor: kPrimaryColor.withOpacity(0.1),
+                    backgroundColor: _primaryColor.withValues(alpha: 0.1),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                   ),
@@ -639,7 +639,7 @@ class _EditProfileModernWidgetState extends State<EditProfileModernWidget> {
                   onPressed: _saveChanges,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 18),
-                    backgroundColor: kPrimaryColor,
+                    backgroundColor: _primaryColor,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
@@ -649,7 +649,7 @@ class _EditProfileModernWidgetState extends State<EditProfileModernWidget> {
                     style: GoogleFonts.outfit(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white),
+                        color: theme.tertiary),
                   ),
                 ),
               ),
@@ -687,7 +687,7 @@ class _EditProfileModernWidgetState extends State<EditProfileModernWidget> {
         child: Icon(
           Icons.person,
           size: 60,
-          color: kPrimaryColor.withOpacity(0.5),
+          color: _primaryColor.withValues(alpha: 0.5),
         ),
       ),
     );
@@ -714,7 +714,7 @@ class _EditProfileModernWidgetState extends State<EditProfileModernWidget> {
         labelStyle: GoogleFonts.outfit(color: theme.secondaryText),
         hintText: hint,
         hintStyle:
-            GoogleFonts.outfit(color: theme.secondaryText.withOpacity(0.5)),
+            GoogleFonts.outfit(color: theme.secondaryText.withValues(alpha: 0.5)),
         prefixIcon:
             icon != null ? Icon(icon, color: theme.secondaryText) : null,
         enabledBorder: OutlineInputBorder(
@@ -722,15 +722,18 @@ class _EditProfileModernWidgetState extends State<EditProfileModernWidget> {
           borderRadius: BorderRadius.circular(12),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: kPrimaryColor, width: 2),
+          borderSide: BorderSide(color: _primaryColor, width: 2),
           borderRadius: BorderRadius.circular(12),
         ),
         errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.red.withOpacity(0.5), width: 1),
+          borderSide: BorderSide(
+              color: FlutterFlowTheme.of(context).error.withValues(alpha: 0.5),
+              width: 1),
           borderRadius: BorderRadius.circular(12),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.red, width: 1),
+          borderSide:
+              BorderSide(color: FlutterFlowTheme.of(context).error, width: 1),
           borderRadius: BorderRadius.circular(12),
         ),
         filled: true,

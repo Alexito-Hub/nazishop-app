@@ -117,30 +117,35 @@ class _ServiceDetailWidgetState extends State<ServiceDetailWidget> {
       slivers: [
         SliverAppBar(
           expandedHeight: 320,
-          backgroundColor: Theme.of(context).brightness == Brightness.dark
-              ? const Color(0xFF050505)
-              : FlutterFlowTheme.of(context).primaryBackground,
+          backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
           pinned: true,
           stretch: true,
           leading: Container(
             padding: const EdgeInsets.all(8),
-            decoration: const BoxDecoration(
-              color: Colors.black45,
+            decoration: BoxDecoration(
+              color: FlutterFlowTheme.of(context)
+                  .secondaryBackground
+                  .withValues(alpha: 0.45),
               shape: BoxShape.circle,
             ),
-            child: const SmartBackButton(color: Colors.white),
+            child:
+                SmartBackButton(color: FlutterFlowTheme.of(context).tertiary),
           ),
           actions: [
             Container(
               margin: const EdgeInsets.only(right: 16),
-              decoration: const BoxDecoration(
-                color: Colors.black45,
+              decoration: BoxDecoration(
+                color: FlutterFlowTheme.of(context)
+                    .secondaryBackground
+                    .withValues(alpha: 0.45),
                 shape: BoxShape.circle,
               ),
               child: IconButton(
                 icon: Icon(
                   _isFavorite ? Icons.favorite : Icons.favorite_border,
-                  color: _isFavorite ? Colors.red : Colors.white,
+                  color: _isFavorite
+                      ? FlutterFlowTheme.of(context).error
+                      : FlutterFlowTheme.of(context).tertiary,
                 ),
                 onPressed: _toggleFavorite,
               ),
@@ -161,20 +166,12 @@ class _ServiceDetailWidgetState extends State<ServiceDetailWidget> {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Colors.transparent,
-                        (Theme.of(context).brightness == Brightness.dark
-                                ? const Color(0xFF050505)
-                                : FlutterFlowTheme.of(context)
-                                    .primaryBackground)
-                            .withOpacity(0.0),
-                        (Theme.of(context).brightness == Brightness.dark
-                                ? const Color(0xFF050505)
-                                : FlutterFlowTheme.of(context)
-                                    .primaryBackground)
-                            .withOpacity(0.8),
-                        Theme.of(context).brightness == Brightness.dark
-                            ? const Color(0xFF050505)
-                            : FlutterFlowTheme.of(context).primaryBackground,
+                        FlutterFlowTheme.of(context).transparent,
+                        (FlutterFlowTheme.of(context).primaryBackground)
+                            .withValues(alpha: 0.0),
+                        (FlutterFlowTheme.of(context).primaryBackground)
+                            .withValues(alpha: 0.8),
+                        FlutterFlowTheme.of(context).primaryBackground,
                       ],
                       stops: const [0.0, 0.3, 0.75, 1.0],
                       begin: Alignment.topCenter,
@@ -192,20 +189,14 @@ class _ServiceDetailWidgetState extends State<ServiceDetailWidget> {
                         width: 64,
                         height: 64,
                         decoration: BoxDecoration(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? const Color(0xFF1A1A1A)
-                                    : FlutterFlowTheme.of(context)
-                                        .secondaryBackground,
+                            color: FlutterFlowTheme.of(context)
+                                .secondaryBackground,
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                                color: Theme.of(context).brightness ==
-                                        Brightness.dark
-                                    ? Colors.white10
-                                    : FlutterFlowTheme.of(context).alternate),
+                                color: FlutterFlowTheme.of(context).alternate),
                             boxShadow: [
                               BoxShadow(
-                                  color: primaryColor.withOpacity(0.2),
+                                  color: primaryColor.withValues(alpha: 0.2),
                                   blurRadius: 15)
                             ]),
                         child: widget.service.branding.logoUrl != null
@@ -304,17 +295,13 @@ class _ServiceDetailWidgetState extends State<ServiceDetailWidget> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 12, vertical: 8),
                               decoration: BoxDecoration(
-                                color: Theme.of(context).brightness ==
-                                        Brightness.dark
-                                    ? Colors.white.withOpacity(0.05)
-                                    : FlutterFlowTheme.of(context).accent4,
+                                color: FlutterFlowTheme.of(context)
+                                    .alternate
+                                    .withValues(alpha: 0.3),
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
-                                    color: Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? Colors.white12
-                                        : FlutterFlowTheme.of(context)
-                                            .alternate),
+                                    color:
+                                        FlutterFlowTheme.of(context).alternate),
                               ),
                               child: Text(f,
                                   style: GoogleFonts.outfit(
@@ -410,17 +397,11 @@ class _ServiceDetailWidgetState extends State<ServiceDetailWidget> {
                           width: 80,
                           height: 80,
                           decoration: BoxDecoration(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? const Color(0xFF1A1A1A)
-                                    : FlutterFlowTheme.of(context)
-                                        .secondaryBackground,
+                            color: FlutterFlowTheme.of(context)
+                                .secondaryBackground,
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
-                                color: Theme.of(context).brightness ==
-                                        Brightness.dark
-                                    ? Colors.white12
-                                    : FlutterFlowTheme.of(context).alternate),
+                                color: FlutterFlowTheme.of(context).alternate),
                           ),
                           child: widget.service.branding.logoUrl != null
                               ? ClipRRect(
@@ -448,20 +429,17 @@ class _ServiceDetailWidgetState extends State<ServiceDetailWidget> {
                                   const SizedBox(width: 20),
                                   Container(
                                     decoration: BoxDecoration(
-                                      color: Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Colors.white.withOpacity(0.05)
-                                          : FlutterFlowTheme.of(context)
-                                              .accent4,
+                                      color: FlutterFlowTheme.of(context)
+                                          .alternate
+                                          .withValues(alpha: 0.3),
                                       shape: BoxShape.circle,
                                       border: Border.all(
                                         color: _isFavorite
-                                            ? Colors.red.withOpacity(0.5)
-                                            : (Theme.of(context).brightness ==
-                                                    Brightness.dark
-                                                ? Colors.white10
-                                                : FlutterFlowTheme.of(context)
-                                                    .alternate),
+                                            ? FlutterFlowTheme.of(context)
+                                                .error
+                                                .withValues(alpha: 0.5)
+                                            : FlutterFlowTheme.of(context)
+                                                .alternate,
                                       ),
                                     ),
                                     child: IconButton(
@@ -470,7 +448,7 @@ class _ServiceDetailWidgetState extends State<ServiceDetailWidget> {
                                             ? Icons.favorite
                                             : Icons.favorite_border,
                                         color: _isFavorite
-                                            ? Colors.red
+                                            ? FlutterFlowTheme.of(context).error
                                             : FlutterFlowTheme.of(context)
                                                 .secondaryText,
                                         size: 28,
@@ -494,19 +472,13 @@ class _ServiceDetailWidgetState extends State<ServiceDetailWidget> {
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 12, vertical: 6),
                                       decoration: BoxDecoration(
-                                        color: Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? Colors.white.withOpacity(0.05)
-                                            : FlutterFlowTheme.of(context)
-                                                .accent4,
+                                        color: FlutterFlowTheme.of(context)
+                                            .alternate
+                                            .withValues(alpha: 0.3),
                                         borderRadius: BorderRadius.circular(20),
                                         border: Border.all(
-                                            color: Theme.of(context)
-                                                        .brightness ==
-                                                    Brightness.dark
-                                                ? Colors.white10
-                                                : FlutterFlowTheme.of(context)
-                                                    .alternate),
+                                            color: FlutterFlowTheme.of(context)
+                                                .alternate),
                                       ),
                                       child: Text(widget.service.categoryName!,
                                           style: GoogleFonts.outfit(
@@ -540,7 +512,7 @@ class _ServiceDetailWidgetState extends State<ServiceDetailWidget> {
                           borderRadius: BorderRadius.circular(24),
                           boxShadow: [
                             BoxShadow(
-                                color: primaryColor.withOpacity(0.15),
+                                color: primaryColor.withValues(alpha: 0.15),
                                 blurRadius: 40,
                                 offset: const Offset(0, 10)),
                           ],
@@ -608,7 +580,7 @@ class _ServiceDetailWidgetState extends State<ServiceDetailWidget> {
                               border: Border.all(
                                   color: Theme.of(context).brightness ==
                                           Brightness.dark
-                                      ? Colors.white10
+                                      ? FlutterFlowTheme.of(context).alternate
                                       : FlutterFlowTheme.of(context).alternate),
                             ),
                             child: Row(
@@ -650,15 +622,17 @@ class _ServiceDetailWidgetState extends State<ServiceDetailWidget> {
                         borderRadius: BorderRadius.circular(24),
                         border: Border.all(
                           color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white10
+                              ? FlutterFlowTheme.of(context).alternate
                               : FlutterFlowTheme.of(context)
                                   .alternate
-                                  .withOpacity(0.4),
+                                  .withValues(alpha: 0.4),
                         ),
                         boxShadow: [
                           if (Theme.of(context).brightness == Brightness.light)
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.04),
+                              color: FlutterFlowTheme.of(context)
+                                  .primaryText
+                                  .withValues(alpha: 0.04),
                               blurRadius: 24,
                               offset: const Offset(0, 12),
                             ),
@@ -673,7 +647,7 @@ class _ServiceDetailWidgetState extends State<ServiceDetailWidget> {
                               Container(
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                    color: primaryColor.withOpacity(0.1),
+                                    color: primaryColor.withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(8)),
                                 child: Icon(Icons.verified_outlined,
                                     color: primaryColor, size: 20),
@@ -711,10 +685,10 @@ class _ServiceDetailWidgetState extends State<ServiceDetailWidget> {
                           Divider(
                               color: Theme.of(context).brightness ==
                                       Brightness.dark
-                                  ? Colors.white10
+                                  ? FlutterFlowTheme.of(context).alternate
                                   : FlutterFlowTheme.of(context)
                                       .alternate
-                                      .withOpacity(0.4)),
+                                      .withValues(alpha: 0.4)),
                           const SizedBox(height: 16),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -764,19 +738,21 @@ class _StatusBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
         color: isOpen
-            ? const Color(0xFF2E7D32).withOpacity(0.2)
-            : Colors.red.withOpacity(0.2),
+            ? FlutterFlowTheme.of(context).success.withValues(alpha: 0.2)
+            : FlutterFlowTheme.of(context).error.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(6),
         border: Border.all(
           color: isOpen
-              ? const Color(0xFF2E7D32).withOpacity(0.5)
-              : Colors.red.withOpacity(0.5),
+              ? FlutterFlowTheme.of(context).success.withValues(alpha: 0.5)
+              : FlutterFlowTheme.of(context).error.withValues(alpha: 0.5),
         ),
       ),
       child: Text(
         isOpen ? 'DISPONIBLE' : 'AGOTADO',
         style: GoogleFonts.outfit(
-          color: isOpen ? const Color(0xFF4CAF50) : Colors.red,
+          color: isOpen
+              ? FlutterFlowTheme.of(context).success
+              : FlutterFlowTheme.of(context).error,
           fontSize: 11 * FlutterFlowTheme.fontSizeFactor,
           fontWeight: FontWeight.bold,
           letterSpacing: 0.5,
@@ -806,7 +782,6 @@ class _OfferCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasDiscount = offer.discountPercent > 0;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return GestureDetector(
       onTap: onTap,
@@ -815,23 +790,20 @@ class _OfferCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isSelected
-              ? primaryColor.withOpacity(0.04)
-              : (isDark
-                  ? Colors.white.withOpacity(0.02)
-                  : FlutterFlowTheme.of(context).secondaryBackground),
+              ? primaryColor.withValues(alpha: 0.04)
+              : FlutterFlowTheme.of(context).secondaryBackground,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isSelected
-                ? primaryColor.withOpacity(0.25)
-                : (isDark
-                    ? Colors.white.withOpacity(0.08)
-                    : FlutterFlowTheme.of(context).alternate.withOpacity(0.25)),
+                ? primaryColor.withValues(alpha: 0.25)
+                : FlutterFlowTheme.of(context).alternate,
             width: 1,
           ),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                      color: primaryColor.withOpacity(0.1), blurRadius: 10)
+                      color: primaryColor.withValues(alpha: 0.1),
+                      blurRadius: 10)
                 ]
               : [],
         ),
@@ -849,11 +821,7 @@ class _OfferCard extends StatelessWidget {
                     border: Border.all(
                         color: isSelected
                             ? primaryColor
-                            : (isDark
-                                ? Colors.white24
-                                : FlutterFlowTheme.of(context)
-                                    .alternate
-                                    .withOpacity(0.5)),
+                            : FlutterFlowTheme.of(context).alternate,
                         width: 2),
                   ),
                   child: isSelected
@@ -893,9 +861,9 @@ class _OfferCard extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
-                            color: isDark
-                                ? Colors.white.withOpacity(0.05)
-                                : FlutterFlowTheme.of(context).accent4,
+                            color: FlutterFlowTheme.of(context)
+                                .alternate
+                                .withValues(alpha: 0.3),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
@@ -949,7 +917,7 @@ class _OfferCard extends StatelessWidget {
                       onPressed: offer.inStock ? onPurchase : null,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primaryColor,
-                        foregroundColor: Colors.white,
+                        foregroundColor: FlutterFlowTheme.of(context).tertiary,
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12)),
@@ -974,20 +942,13 @@ class _OfferCard extends StatelessWidget {
 class _NoStockWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: isDark
-            ? const Color(0xFF1A1A1A)
-            : FlutterFlowTheme.of(context).secondaryBackground,
+        color: FlutterFlowTheme.of(context).secondaryBackground,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-            color: isDark
-                ? Colors.white10
-                : FlutterFlowTheme.of(context).alternate),
+        border: Border.all(color: FlutterFlowTheme.of(context).alternate),
       ),
       child: Column(
         children: [
@@ -1025,13 +986,13 @@ class _VisualTagsWidget extends StatelessWidget {
       children: tags.map((tag) {
         final color = tag.color != null
             ? ColorUtils.parseColor(context, tag.color!)
-            : Colors.blue;
+            : FlutterFlowTheme.of(context).info;
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(6),
-            border: Border.all(color: color.withOpacity(0.3)),
+            border: Border.all(color: color.withValues(alpha: 0.3)),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -1089,14 +1050,9 @@ class _TechnicalSpecsWidget extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? const Color(0xFF141414)
-                : FlutterFlowTheme.of(context).secondaryBackground,
+            color: FlutterFlowTheme.of(context).secondaryBackground,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white10
-                    : FlutterFlowTheme.of(context).alternate),
+            border: Border.all(color: FlutterFlowTheme.of(context).alternate),
           ),
           child: Column(
             children: [
@@ -1111,10 +1067,7 @@ class _TechnicalSpecsWidget extends StatelessWidget {
                 _buildRow(context, 'Sitio web', info.website!),
               if (info.requirements.isNotEmpty) ...[
                 const SizedBox(height: 8),
-                Divider(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white10
-                        : FlutterFlowTheme.of(context).alternate),
+                Divider(color: FlutterFlowTheme.of(context).alternate),
                 const SizedBox(height: 8),
                 Align(
                   alignment: Alignment.centerLeft,

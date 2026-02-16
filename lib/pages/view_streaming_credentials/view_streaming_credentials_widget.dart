@@ -133,7 +133,7 @@ class _ViewStreamingCredentialsWidgetState
                               BoxShadow(
                                 color: FlutterFlowTheme.of(context)
                                     .primaryText
-                                    .withOpacity(0.05),
+                                    .withValues(alpha: 0.05),
                                 blurRadius: 20.0,
                                 offset: const Offset(0, 6),
                               ),
@@ -177,7 +177,7 @@ class _ViewStreamingCredentialsWidgetState
                               FlutterFlowTheme.of(context).primary,
                               FlutterFlowTheme.of(context)
                                   .primary
-                                  .withOpacity(0.8)
+                                  .withValues(alpha: 0.8)
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -187,7 +187,7 @@ class _ViewStreamingCredentialsWidgetState
                             BoxShadow(
                               color: FlutterFlowTheme.of(context)
                                   .primary
-                                  .withOpacity(0.3),
+                                  .withValues(alpha: 0.3),
                               blurRadius: 12.0,
                               offset: const Offset(0, 4),
                             ),
@@ -204,12 +204,15 @@ class _ViewStreamingCredentialsWidgetState
                                     width: 60.0,
                                     height: 60.0,
                                     decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.1),
+                                      color: FlutterFlowTheme.of(context)
+                                          .primary
+                                          .withValues(alpha: 0.1),
                                       borderRadius: BorderRadius.circular(12.0),
                                     ),
-                                    child: const Icon(
+                                    child: Icon(
                                       Icons.play_circle_filled,
-                                      color: Colors.white,
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryText,
                                       size: 36.0,
                                     ),
                                   ),
@@ -225,7 +228,9 @@ class _ViewStreamingCredentialsWidgetState
                                               .headlineSmall
                                               .override(
                                                 font: GoogleFonts.inter(),
-                                                color: Colors.white,
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primaryText,
                                                 letterSpacing: 0.0,
                                                 fontWeight: FontWeight.bold,
                                               ),
@@ -237,8 +242,10 @@ class _ViewStreamingCredentialsWidgetState
                                               .bodyMedium
                                               .override(
                                                 font: GoogleFonts.inter(),
-                                                color: Colors.white
-                                                    .withOpacity(0.1),
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryText
+                                                        .withValues(alpha: 0.1),
                                                 letterSpacing: 0.0,
                                               ),
                                         ),
@@ -277,8 +284,10 @@ class _ViewStreamingCredentialsWidgetState
                                               .bodySmall
                                               .override(
                                                 font: GoogleFonts.inter(),
-                                                color: Colors.white
-                                                    .withOpacity(0.1),
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryText
+                                                        .withValues(alpha: 0.1),
                                                 letterSpacing: 0.0,
                                               ),
                                         ),
@@ -288,7 +297,9 @@ class _ViewStreamingCredentialsWidgetState
                                               .bodyLarge
                                               .override(
                                                 font: GoogleFonts.inter(),
-                                                color: Colors.white,
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primaryText,
                                                 letterSpacing: 0.0,
                                                 fontWeight: FontWeight.w600,
                                               ),
@@ -358,7 +369,7 @@ class _ViewStreamingCredentialsWidgetState
                         decoration: BoxDecoration(
                           color: FlutterFlowTheme.of(context)
                               .info
-                              .withOpacity(0.1),
+                              .withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12.0),
                           border: Border.all(
                             color: FlutterFlowTheme.of(context).info,
@@ -418,7 +429,7 @@ class _ViewStreamingCredentialsWidgetState
                         decoration: BoxDecoration(
                           color: FlutterFlowTheme.of(context)
                               .warning
-                              .withOpacity(0.1),
+                              .withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12.0),
                           border: Border.all(
                             color: FlutterFlowTheme.of(context).warning,

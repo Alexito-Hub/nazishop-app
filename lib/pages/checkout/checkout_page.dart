@@ -59,9 +59,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
     }
   }
 
-  final List<_PaymentMethod> _paymentMethods = [
+  late final List<_PaymentMethod> _paymentMethods = [
     _PaymentMethod('Saldo de cuenta', Icons.account_balance_wallet_rounded,
-        const Color(0xFFE50914), true),
+        FlutterFlowTheme.of(context).primary, true),
     _PaymentMethod(
         'PayPal', Icons.payments_rounded, const Color(0xFF0070BA), false),
     _PaymentMethod('Tarjeta de crédito', Icons.credit_card_rounded,
@@ -69,7 +69,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     _PaymentMethod('Criptomonedas', Icons.currency_bitcoin_rounded,
         const Color(0xFFF7931A), false),
     _PaymentMethod('Transferencia', Icons.account_balance_rounded,
-        const Color(0xFF4CAF50), false),
+        FlutterFlowTheme.of(context).success, false),
   ];
 
   bool get _isDesktop => MediaQuery.of(context).size.width >= 900;
@@ -140,7 +140,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message, style: GoogleFonts.outfit()),
-        backgroundColor: Colors.red[700],
+        backgroundColor: FlutterFlowTheme.of(context).error,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
@@ -177,11 +177,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
               stretch: true,
               leading: Container(
                 padding: const EdgeInsets.all(8),
-                decoration: const BoxDecoration(
-                  color: Colors.black45,
+                decoration: BoxDecoration(
+                  color: FlutterFlowTheme.of(context)
+                      .primaryBackground
+                      .withValues(alpha: 0.5),
                   shape: BoxShape.circle,
                 ),
-                child: const SmartBackButton(color: Colors.white),
+                child: SmartBackButton(
+                    color: FlutterFlowTheme.of(context).primaryText),
               ),
               actions: [
                 Padding(
@@ -190,20 +193,25 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF4CAF50).withOpacity(0.15),
+                      color: FlutterFlowTheme.of(context)
+                          .success
+                          .withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                          color: const Color(0xFF4CAF50).withOpacity(0.5)),
+                          color: FlutterFlowTheme.of(context)
+                              .success
+                              .withValues(alpha: 0.5)),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.lock_rounded,
-                            color: Color(0xFF4CAF50), size: 12),
+                        Icon(Icons.lock_rounded,
+                            color: FlutterFlowTheme.of(context).success,
+                            size: 12),
                         const SizedBox(width: 4),
                         Text('Pago Seguro',
                             style: GoogleFonts.outfit(
-                                color: const Color(0xFF4CAF50),
+                                color: FlutterFlowTheme.of(context).success,
                                 fontSize: 10,
                                 fontWeight: FontWeight.w600)),
                       ],
@@ -226,8 +234,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              _primaryColor.withOpacity(0.3),
-                              _primaryColor.withOpacity(0.1)
+                              _primaryColor.withValues(alpha: 0.3),
+                              _primaryColor.withValues(alpha: 0.1)
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -242,10 +250,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             FlutterFlowTheme.of(context).primaryBackground,
                             FlutterFlowTheme.of(context)
                                 .primaryBackground
-                                .withOpacity(0.0),
+                                .withValues(alpha: 0.0),
                             FlutterFlowTheme.of(context)
                                 .primaryBackground
-                                .withOpacity(0.8),
+                                .withValues(alpha: 0.8),
                             FlutterFlowTheme.of(context).primaryBackground,
                           ],
                           stops: const [0.0, 0.2, 0.7, 1.0],
@@ -265,20 +273,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             width: 64,
                             height: 64,
                             decoration: BoxDecoration(
-                              color: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? const Color(0xFF1A1A1A)
-                                  : FlutterFlowTheme.of(context)
-                                      .secondaryBackground,
+                              color: FlutterFlowTheme.of(context)
+                                  .secondaryBackground,
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                  color: Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? Colors.white10
-                                      : FlutterFlowTheme.of(context).alternate),
+                                  color:
+                                      FlutterFlowTheme.of(context).alternate),
                               boxShadow: [
                                 BoxShadow(
-                                  color: _primaryColor.withOpacity(0.2),
+                                  color: _primaryColor.withValues(alpha: 0.2),
                                   blurRadius: 15,
                                 ),
                               ],
@@ -414,18 +417,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     Container(
                       padding: const EdgeInsets.all(32),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? const Color(0xFF121212).withOpacity(0.8)
-                            : FlutterFlowTheme.of(context).secondaryBackground,
+                        color: FlutterFlowTheme.of(context).secondaryBackground,
                         borderRadius: BorderRadius.circular(32),
                         border: Border.all(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white10
-                                    : FlutterFlowTheme.of(context).alternate),
+                            color: FlutterFlowTheme.of(context).alternate),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.5),
+                            color: Colors.black.withValues(alpha: 0.5),
                             blurRadius: 30,
                             offset: const Offset(0, 10),
                           ),
@@ -446,10 +444,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           _buildPriceSummary(),
                           const SizedBox(height: 24),
                           Divider(
-                              color: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white10
-                                  : FlutterFlowTheme.of(context).alternate),
+                              color: FlutterFlowTheme.of(context).alternate),
                           const SizedBox(height: 16),
                           _buildTermsRow(),
                           const SizedBox(height: 36),
@@ -513,17 +508,17 @@ class _CheckoutPageState extends State<CheckoutPage> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               decoration: BoxDecoration(
-                color: const Color(0xFF4CAF50).withOpacity(0.15),
+                color: FlutterFlowTheme.of(context).success.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
                 children: [
                   Icon(Icons.lock_rounded,
-                      color: const Color(0xFF4CAF50), size: 14),
+                      color: FlutterFlowTheme.of(context).success, size: 14),
                   const SizedBox(width: 6),
                   Text('Pago seguro',
                       style: GoogleFonts.outfit(
-                          color: const Color(0xFF4CAF50),
+                          color: FlutterFlowTheme.of(context).success,
                           fontSize: 11,
                           fontWeight: FontWeight.w600)),
                 ],
@@ -551,14 +546,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.dark
-            ? const Color(0xFF141414)
-            : FlutterFlowTheme.of(context).secondaryBackground,
+        color: FlutterFlowTheme.of(context).secondaryBackground,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white10
-                : FlutterFlowTheme.of(context).alternate),
+        border: Border.all(color: FlutterFlowTheme.of(context).alternate),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -604,14 +594,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.dark
-            ? Colors.white.withOpacity(0.03)
-            : FlutterFlowTheme.of(context).secondaryBackground,
+        color: FlutterFlowTheme.of(context).secondaryBackground,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white10
-                : FlutterFlowTheme.of(context).alternate),
+        border: Border.all(color: FlutterFlowTheme.of(context).alternate),
       ),
       child: Row(
         children: [
@@ -619,9 +604,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.white.withOpacity(0.08)
-                  : FlutterFlowTheme.of(context).primaryBackground,
+              color: FlutterFlowTheme.of(context).alternate.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(12),
             ),
             child: widget.service.branding.logoUrl != null
@@ -658,9 +641,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white.withOpacity(0.1)
-                          : FlutterFlowTheme.of(context).accent4,
+                      color: FlutterFlowTheme.of(context)
+                          .alternate
+                          .withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
@@ -707,14 +690,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.dark
-            ? Colors.white.withOpacity(0.03)
-            : FlutterFlowTheme.of(context).secondaryBackground,
+        color: FlutterFlowTheme.of(context).secondaryBackground,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white10
-                : FlutterFlowTheme.of(context).alternate),
+        border: Border.all(color: FlutterFlowTheme.of(context).alternate),
       ),
       child: Row(
         children: [
@@ -722,9 +700,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             width: 80,
             height: 80,
             decoration: BoxDecoration(
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.white.withOpacity(0.08)
-                  : FlutterFlowTheme.of(context).primaryBackground,
+              color: FlutterFlowTheme.of(context).alternate.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(16),
             ),
             child: widget.service.branding.logoUrl != null
@@ -758,15 +734,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white.withOpacity(0.08)
-                              : FlutterFlowTheme.of(context).primaryBackground,
+                          color: FlutterFlowTheme.of(context)
+                              .alternate
+                              .withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(6),
                           border: Border.all(
-                              color: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white10
-                                  : FlutterFlowTheme.of(context).alternate),
+                              color: FlutterFlowTheme.of(context).alternate),
                         ),
                         child: Text(duration,
                             style: GoogleFonts.outfit(
@@ -781,10 +754,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: 5),
                           decoration: BoxDecoration(
-                            color: Colors.blue.withOpacity(0.1),
+                            color: FlutterFlowTheme.of(context)
+                                .info
+                                .withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(6),
-                            border:
-                                Border.all(color: Colors.blue.withOpacity(0.3)),
+                            border: Border.all(
+                                color: FlutterFlowTheme.of(context)
+                                    .info
+                                    .withValues(alpha: 0.3)),
                           ),
                           child: Text(
                               widget.selectedOffer.dataDeliveryType ==
@@ -795,7 +772,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                       ? 'Perfil Individual'
                                       : 'Licencia Digital',
                               style: GoogleFonts.outfit(
-                                  color: Colors.blue[200],
+                                  color: FlutterFlowTheme.of(context).info,
                                   fontSize: 11,
                                   fontWeight: FontWeight.w600)),
                         ),
@@ -824,15 +801,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFE50914).withOpacity(0.2),
+                        color: FlutterFlowTheme.of(context)
+                            .primary
+                            .withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(4),
                         border: Border.all(
-                          color: const Color(0xFFE50914).withOpacity(0.5),
+                          color: FlutterFlowTheme.of(context)
+                              .primary
+                              .withValues(alpha: 0.5),
                         ),
                       ),
                       child: Text('-${widget.selectedOffer.discountPercent}%',
                           style: GoogleFonts.outfit(
-                              color: const Color(0xFFE50914),
+                              color: FlutterFlowTheme.of(context).primary,
                               fontSize: 10,
                               fontWeight: FontWeight.bold)),
                     ),
@@ -866,15 +847,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
     }
 
     final needsMore = widget.selectedOffer.discountPrice - _accountBalance;
-    final successColor = const Color(0xFF4CAF50);
-    final warningColor = Colors.orange;
+    final successColor = FlutterFlowTheme.of(context).success;
+    final warningColor = FlutterFlowTheme.of(context).warning;
 
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: _hasEnoughBalance
-            ? successColor.withOpacity(0.08)
-            : warningColor.withOpacity(0.08),
+            ? successColor.withValues(alpha: 0.08)
+            : warningColor.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: _hasEnoughBalance ? successColor : warningColor,
@@ -887,8 +868,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: _hasEnoughBalance
-                  ? successColor.withOpacity(0.2)
-                  : warningColor.withOpacity(0.2),
+                  ? successColor.withValues(alpha: 0.2)
+                  : warningColor.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
@@ -918,10 +899,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: successColor.withOpacity(0.2),
+                color: successColor.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(6),
                 border: Border.all(
-                  color: successColor.withOpacity(0.5),
+                  color: successColor.withValues(alpha: 0.5),
                 ),
               ),
               child: Text('SUFICIENTE',
@@ -950,7 +931,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   ),
                   child: Text('RECARGAR',
                       style: GoogleFonts.outfit(
-                          color: Colors.white,
+                          color: FlutterFlowTheme.of(context).tertiary,
                           fontSize: 11 * FlutterFlowTheme.fontSizeFactor,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 0.5)),
@@ -993,23 +974,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: isSelected && isAvailable
-                    ? safeColor.withOpacity(0.08)
-                    : (Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white.withOpacity(isAvailable ? 0.03 : 0.02)
-                        : FlutterFlowTheme.of(context).secondaryBackground),
+                    ? safeColor.withValues(alpha: 0.08)
+                    : FlutterFlowTheme.of(context).secondaryBackground,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: isSelected && isAvailable
                       ? safeColor
-                      : (Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white10
-                          : FlutterFlowTheme.of(context).alternate),
+                      : FlutterFlowTheme.of(context).alternate,
                   width: isSelected && isAvailable ? 2 : 1,
                 ),
                 boxShadow: isSelected && isAvailable
                     ? [
                         BoxShadow(
-                          color: safeColor.withOpacity(0.1),
+                          color: safeColor.withValues(alpha: 0.1),
                           blurRadius: 10,
                         ),
                       ]
@@ -1083,9 +1060,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white.withOpacity(0.06)
-                            : FlutterFlowTheme.of(context).accent4,
+                        color: FlutterFlowTheme.of(context)
+                            .alternate
+                            .withValues(alpha: 0.3),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text('SOON',
@@ -1122,14 +1099,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white.withOpacity(0.05)
-                          : FlutterFlowTheme.of(context).secondaryBackground,
+                      color: FlutterFlowTheme.of(context).secondaryBackground,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white12
-                              : FlutterFlowTheme.of(context).alternate),
+                          color: FlutterFlowTheme.of(context).alternate),
                     ),
                     child: Text(f,
                         style: GoogleFonts.outfit(
@@ -1146,19 +1119,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
     final hasDiscount = widget.selectedOffer.discountPercent > 0;
     final savings =
         widget.selectedOffer.originalPrice - widget.selectedOffer.discountPrice;
-    final successColor = const Color(0xFF4CAF50);
+    final successColor = FlutterFlowTheme.of(context).success;
 
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.dark
-            ? Colors.white.withOpacity(0.03)
-            : FlutterFlowTheme.of(context).secondaryBackground,
+        color: FlutterFlowTheme.of(context).secondaryBackground,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white10
-                : FlutterFlowTheme.of(context).alternate),
+        border: Border.all(color: FlutterFlowTheme.of(context).alternate),
       ),
       child: Column(
         children: [
@@ -1194,10 +1162,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           ],
           Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
-              child: Divider(
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white10
-                      : FlutterFlowTheme.of(context).alternate)),
+              child: Divider(color: FlutterFlowTheme.of(context).alternate)),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -1230,9 +1195,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
             decoration: BoxDecoration(
               gradient: _acceptedTerms
                   ? LinearGradient(
-                      colors: [_primaryColor, _primaryColor.withOpacity(0.8)])
+                      colors: [_primaryColor, _primaryColor.withValues(alpha: 0.8)])
                   : null,
-              color: _acceptedTerms ? null : Colors.transparent,
+              color: _acceptedTerms
+                  ? null
+                  : FlutterFlowTheme.of(context).transparent,
               borderRadius: BorderRadius.circular(6),
               border: Border.all(
                   color: _acceptedTerms
@@ -1241,7 +1208,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   width: 2),
             ),
             child: _acceptedTerms
-                ? const Icon(Icons.check_rounded, color: Colors.white, size: 15)
+                ? Icon(Icons.check_rounded,
+                    color: FlutterFlowTheme.of(context).tertiary, size: 15)
                 : null,
           ),
           const SizedBox(width: 12),
@@ -1276,17 +1244,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
         top: 18,
       ),
       decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.dark
-            ? const Color(0xFF0D0D0D)
-            : FlutterFlowTheme.of(context).secondaryBackground,
+        color: FlutterFlowTheme.of(context).secondaryBackground,
         border: Border(
-            top: BorderSide(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white.withOpacity(0.08)
-                    : FlutterFlowTheme.of(context).alternate)),
+            top: BorderSide(color: FlutterFlowTheme.of(context).alternate)),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withOpacity(0.3),
+              color: Colors.black.withValues(alpha: 0.3),
               blurRadius: 20,
               offset: const Offset(0, -5)),
         ],
@@ -1321,24 +1284,20 @@ class _CheckoutPageState extends State<CheckoutPage> {
     return ElevatedButton(
       onPressed: _isProcessing ? null : _processPayment,
       style: ElevatedButton.styleFrom(
-        backgroundColor: canPay
-            ? _primaryColor
-            : (Theme.of(context).brightness == Brightness.dark
-                ? Colors.grey[700]
-                : FlutterFlowTheme.of(context).alternate),
-        foregroundColor: Colors.white,
+        backgroundColor:
+            canPay ? _primaryColor : FlutterFlowTheme.of(context).alternate,
+        foregroundColor: FlutterFlowTheme.of(context).tertiary,
         padding: const EdgeInsets.symmetric(vertical: 18),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        disabledBackgroundColor: _primaryColor.withOpacity(0.5),
+        disabledBackgroundColor: _primaryColor.withValues(alpha: 0.5),
         elevation: 0,
       ),
       child: _isProcessing
-          ? const SizedBox(
+          ? SizedBox(
               width: 20,
               height: 20,
               child: CircularProgressIndicator(
-                  color: Colors.white, // White on colored background
-                  strokeWidth: 2))
+                  color: FlutterFlowTheme.of(context).tertiary, strokeWidth: 2))
           : Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

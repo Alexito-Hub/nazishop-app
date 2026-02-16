@@ -27,13 +27,13 @@ class MobileCarouselCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: categoryColor.withOpacity(0.1),
+              color: categoryColor.withValues(alpha: 0.1),
               blurRadius: 15,
               offset: const Offset(0, 8),
             ),
           ],
           border: Border.all(
-            color: categoryColor.withOpacity(0.1),
+            color: categoryColor.withValues(alpha: 0.1),
             width: 1,
           ),
         ),
@@ -52,11 +52,11 @@ class MobileCarouselCard extends StatelessWidget {
                     colors: service.branding.logoUrl != null &&
                             service.branding.logoUrl!.isNotEmpty
                         ? [
-                            categoryColor.withOpacity(0.1),
-                            categoryColor.withOpacity(0.1),
+                            categoryColor.withValues(alpha: 0.1),
+                            categoryColor.withValues(alpha: 0.1),
                           ]
                         : [
-                            categoryColor.withOpacity(0.1),
+                            categoryColor.withValues(alpha: 0.1),
                             categoryColor,
                           ],
                   ),
@@ -95,7 +95,7 @@ class MobileCarouselCard extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.1),
+                                color: Colors.black.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(
@@ -153,7 +153,7 @@ class MobileCarouselCard extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
-                            color: Colors.green.withOpacity(0.1),
+                            color: Colors.green.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Row(
@@ -195,7 +195,7 @@ class MobileCarouselCard extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            categoryColor.withOpacity(0.1),
+            categoryColor.withValues(alpha: 0.1),
             categoryColor,
           ],
         ),
@@ -221,7 +221,7 @@ class MobileCarouselCard extends StatelessWidget {
                 Text(
                   service.name,
                   style: GoogleFonts.outfit(
-                    color: Colors.white.withOpacity(0.1),
+                    color: Colors.white.withValues(alpha: 0.1),
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
                   ),
@@ -239,7 +239,7 @@ class MobileCarouselCard extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(

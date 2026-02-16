@@ -167,7 +167,7 @@ class _AdminConfigPageState extends State<AdminConfigPage> {
                           BoxShadow(
                               color: FlutterFlowTheme.of(context)
                                   .primary
-                                  .withOpacity(0.4),
+                                  .withValues(alpha: 0.4),
                               blurRadius: 8,
                               offset: const Offset(0, 4))
                         ],
@@ -482,10 +482,10 @@ class _AdminConfigPageState extends State<AdminConfigPage> {
             style: GoogleFonts.outfit(
                 color: theme.primaryText, fontWeight: FontWeight.w500)),
         activeThumbColor: FlutterFlowTheme.of(context).primary,
-        activeTrackColor: FlutterFlowTheme.of(context).primary.withOpacity(0.3),
+        activeTrackColor: FlutterFlowTheme.of(context).primary.withValues(alpha: 0.3),
         inactiveThumbColor: FlutterFlowTheme.of(context).secondaryText,
         inactiveTrackColor:
-            FlutterFlowTheme.of(context).secondaryText.withOpacity(0.3),
+            FlutterFlowTheme.of(context).secondaryText.withValues(alpha: 0.3),
       ),
     );
   }

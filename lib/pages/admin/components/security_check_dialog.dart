@@ -123,13 +123,13 @@ class _SecurityCheckDialogState extends State<SecurityCheckDialog> {
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
             color: _hasError
-                ? FlutterFlowTheme.of(context).error.withOpacity(0.5)
-                : FlutterFlowTheme.of(context).primaryText.withOpacity(0.1),
+                ? FlutterFlowTheme.of(context).error.withValues(alpha: 0.5)
+                : FlutterFlowTheme.of(context).primaryText.withValues(alpha: 0.1),
             width: 1.5,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.5),
+              color: Colors.black.withValues(alpha: 0.5),
               blurRadius: 20,
               offset: const Offset(0, 10),
             )
@@ -143,7 +143,7 @@ class _SecurityCheckDialogState extends State<SecurityCheckDialog> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: FlutterFlowTheme.of(context).primary.withOpacity(0.1),
+                color: FlutterFlowTheme.of(context).primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -211,7 +211,7 @@ class _SecurityCheckDialogState extends State<SecurityCheckDialog> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: FlutterFlowTheme.of(context)
                         .primaryBackground
-                        .withOpacity(0.1),
+                        .withValues(alpha: 0.1),
                     foregroundColor: FlutterFlowTheme.of(context).primaryText,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 24, vertical: 12),
@@ -246,7 +246,7 @@ class _SecurityCheckDialogState extends State<SecurityCheckDialog> {
                         backgroundColor: FlutterFlowTheme.of(context).primary,
                         disabledBackgroundColor: FlutterFlowTheme.of(context)
                             .primary
-                            .withOpacity(0.3),
+                            .withValues(alpha: 0.3),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -260,7 +260,7 @@ class _SecurityCheckDialogState extends State<SecurityCheckDialog> {
                               ? FlutterFlowTheme.of(context).info
                               : FlutterFlowTheme.of(context)
                                   .secondaryText
-                                  .withOpacity(0.5),
+                                  .withValues(alpha: 0.5),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -280,7 +280,7 @@ class _SecurityCheckDialogState extends State<SecurityCheckDialog> {
                   style: GoogleFonts.outfit(
                       color: FlutterFlowTheme.of(context)
                           .secondaryText
-                          .withOpacity(0.5)),
+                          .withValues(alpha: 0.5)),
                 ),
               ),
             ],
@@ -325,7 +325,7 @@ class _SecurityCheckDialogState extends State<SecurityCheckDialog> {
                         ? FlutterFlowTheme.of(context).primary
                         : FlutterFlowTheme.of(context)
                             .primaryText
-                            .withOpacity(0.1),
+                            .withValues(alpha: 0.1),
                     width: isFocused ? 2 : 1,
                   ),
                   boxShadow: isFocused
@@ -333,7 +333,7 @@ class _SecurityCheckDialogState extends State<SecurityCheckDialog> {
                           BoxShadow(
                             color: FlutterFlowTheme.of(context)
                                 .primary
-                                .withOpacity(0.2),
+                                .withValues(alpha: 0.2),
                             blurRadius: 12,
                             spreadRadius: 2,
                           )

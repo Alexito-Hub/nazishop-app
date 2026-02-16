@@ -71,7 +71,9 @@ class _AdminUsersPageState extends State<AdminUsersPage> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content:
                 Text(!oldVal ? 'Usuario Bloqueado' : 'Usuario Desbloqueado'),
-            backgroundColor: !oldVal ? Colors.red : Colors.green));
+            backgroundColor: !oldVal
+                ? FlutterFlowTheme.of(context).error
+                : FlutterFlowTheme.of(context).success));
       }
     } catch (_) {
       // Revert on error
@@ -127,11 +129,13 @@ class _AdminUsersPageState extends State<AdminUsersPage> {
               height: 500,
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color:
-                      FlutterFlowTheme.of(context).primary.withOpacity(0.05)),
+                  color: FlutterFlowTheme.of(context)
+                      .primary
+                      .withValues(alpha: 0.05)),
               child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
-                  child: Container(color: Colors.transparent)),
+                  child: Container(
+                      color: FlutterFlowTheme.of(context).transparent)),
             ),
           ),
           if (isDesktop) _buildDesktopLayout() else _buildMobileLayout(),
@@ -220,8 +224,8 @@ class _AdminUsersPageState extends State<AdminUsersPage> {
     return CustomScrollView(
       slivers: [
         SliverAppBar(
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
+          backgroundColor: FlutterFlowTheme.of(context).transparent,
+          surfaceTintColor: FlutterFlowTheme.of(context).transparent,
           leading:
               SmartBackButton(color: FlutterFlowTheme.of(context).primaryText),
           title: Text('Usuarios',
@@ -322,11 +326,13 @@ class _AdminUsersPageState extends State<AdminUsersPage> {
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
               color: user.isBlocked
-                  ? Colors.red.withOpacity(0.3)
+                  ? FlutterFlowTheme.of(context).error.withValues(alpha: 0.3)
                   : FlutterFlowTheme.of(context).alternate),
           boxShadow: [
             BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(
+                    alpha:
+                        0.2), // Keep shadow as is or use theme shadow if available
                 blurRadius: 8,
                 offset: const Offset(0, 4)),
           ]),
@@ -430,9 +436,9 @@ class _AdminUsersPageState extends State<AdminUsersPage> {
       margin: const EdgeInsets.only(right: 8),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
+        color: color.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Text(text,
           style: GoogleFonts.outfit(

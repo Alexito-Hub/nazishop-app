@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:flutter/foundation.dart';
 
 import '../base_auth_user_provider.dart';
 
@@ -82,7 +83,7 @@ class NaziShopFirebaseUser extends BaseAuthUser {
         _isActive = data?['isActive'] as bool?;
       }
     } catch (e) {
-      print('[FIREBASE_USER] Error fetching role from Firestore: $e');
+      debugPrint('[FIREBASE_USER] Error fetching role from Firestore: $e');
       _role = 'customer'; // Default fallback
       _isActive = true;
     }
@@ -148,14 +149,16 @@ Stream<BaseAuthUser> naziShopFirebaseUserStream() {
           final data = doc.data();
           role = data?['role'] as String?;
           isActive = data?['isActive'] as bool?;
-          print('[FIREBASE_USER] ✅ Role loaded: $role (isActive: $isActive)');
+          debugPrint(
+              '[FIREBASE_USER] ✅ Role loaded: $role (isActive: $isActive)');
         } else {
-          print('[FIREBASE_USER] ⚠️ No Firestore document for ${user.uid}');
+          debugPrint(
+              '[FIREBASE_USER] ⚠️ No Firestore document for ${user.uid}');
           role = 'customer';
           isActive = true;
         }
       } catch (e) {
-        print('[FIREBASE_USER] ❌ Error loading role: $e');
+        debugPrint('[FIREBASE_USER] ❌ Error loading role: $e');
         role = 'customer';
         isActive = true;
       }
@@ -189,7 +192,7 @@ void _startRoleRefreshTimer(String uid) {
 
         if (newRole != (currentUser as NaziShopFirebaseUser)._role ||
             newIsActive != (currentUser as NaziShopFirebaseUser)._isActive) {
-          print(
+          debugPrint(
               '[FIREBASE_USER] 🔄 Role refreshed: $newRole (isActive: $newIsActive)');
           (currentUser as NaziShopFirebaseUser)._role = newRole;
           (currentUser as NaziShopFirebaseUser)._isActive = newIsActive;
@@ -199,7 +202,7 @@ void _startRoleRefreshTimer(String uid) {
         }
       }
     } catch (e) {
-      print('[FIREBASE_USER] ⚠️ Role refresh failed: $e');
+      debugPrint('[FIREBASE_USER] ⚠️ Role refresh failed: $e');
     }
   });
 }

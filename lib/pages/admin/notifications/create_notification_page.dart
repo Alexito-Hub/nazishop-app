@@ -83,7 +83,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
               height: 500,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: kPrimaryColor.withOpacity(0.05),
+                color: kPrimaryColor.withValues(alpha: 0.05),
               ),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
@@ -247,7 +247,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
               border: Border.all(
                   color: FlutterFlowTheme.of(context)
                       .primaryText
-                      .withOpacity(0.1)),
+                      .withValues(alpha: 0.1)),
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
@@ -307,7 +307,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected ? color.withOpacity(0.2) : Colors.transparent,
+          color: isSelected ? color.withValues(alpha: 0.2) : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
           border: isSelected ? Border.all(color: color) : null,
         ),
@@ -382,7 +382,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         elevation: 0,
-        shadowColor: kPrimaryColor.withOpacity(0.5),
+        shadowColor: kPrimaryColor.withValues(alpha: 0.5),
       ),
       onPressed: _isSubmitting ? null : _submit,
       child: _isSubmitting

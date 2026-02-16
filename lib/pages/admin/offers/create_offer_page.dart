@@ -8,16 +8,16 @@ import 'package:nazi_shop/models/service_model.dart';
 import '../../../components/smart_back_button.dart';
 
 class CreateListingPage extends StatefulWidget {
-  final Offer? offer; // TODO: Rename model to Listing eventually
+  final Offer? offer;
   const CreateListingPage({super.key, this.offer});
 
   static const String routeName = 'create_listing';
 
   @override
-  _CreateListingPageState createState() => _CreateListingPageState();
+  CreateListingPageState createState() => CreateListingPageState();
 }
 
-class _CreateListingPageState extends State<CreateListingPage> {
+class CreateListingPageState extends State<CreateListingPage> {
   final _formKey = GlobalKey<FormState>();
 
   // --- CONTROLLERS ---
@@ -213,11 +213,13 @@ class _CreateListingPageState extends State<CreateListingPage> {
 
       if (mounted) Navigator.pop(context);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            backgroundColor: FlutterFlowTheme.of(context).error,
-            content: Text('Error: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              backgroundColor: FlutterFlowTheme.of(context).error,
+              content: Text('Error: $e')),
+        );
+      }
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }
@@ -314,7 +316,8 @@ class _CreateListingPageState extends State<CreateListingPage> {
               ),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
-                child: Container(color: Colors.transparent),
+                child:
+                    Container(color: FlutterFlowTheme.of(context).transparent),
               ),
             ),
           ),
@@ -421,7 +424,8 @@ class _CreateListingPageState extends State<CreateListingPage> {
               else
                 DropdownButtonFormField<String>(
                   initialValue: _selectedServiceId,
-                  dropdownColor: const Color(0xFF1F1F1F),
+                  dropdownColor:
+                      FlutterFlowTheme.of(context).secondaryBackground,
                   style: GoogleFonts.outfit(
                       color: FlutterFlowTheme.of(context).primaryText),
                   decoration: _inputDeco('Servicio / Plataforma', Icons.layers),
@@ -492,7 +496,9 @@ class _CreateListingPageState extends State<CreateListingPage> {
                         keyboardType: TextInputType.number, prefixText: '\$'),
                   ),
                   const SizedBox(width: 12),
-                  const Text('USD', style: TextStyle(color: Colors.white54)),
+                  Text('USD',
+                      style: TextStyle(
+                          color: FlutterFlowTheme.of(context).secondaryText)),
                 ],
               ),
               const SizedBox(height: 16),

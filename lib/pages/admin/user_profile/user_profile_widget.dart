@@ -98,7 +98,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
     return CustomScrollView(
       slivers: [
         SliverAppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: FlutterFlowTheme.of(context).transparent,
           expandedHeight: 120,
           pinned: true,
           leading: Padding(
@@ -126,7 +126,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                 gradient: LinearGradient(
                   colors: [
                     FlutterFlowTheme.of(context).primary.withValues(alpha: 0.2),
-                    Colors.transparent,
+                    FlutterFlowTheme.of(context).transparent,
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -249,14 +249,18 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
           Container(
             decoration: BoxDecoration(
                 color: active
-                    ? Colors.green.withValues(alpha: 0.1)
+                    ? FlutterFlowTheme.of(context)
+                        .success
+                        .withValues(alpha: 0.1)
                     : FlutterFlowTheme.of(context)
                         .primary
                         .withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(20.0),
                 border: Border.all(
                     color: active
-                        ? Colors.green.withValues(alpha: 0.3)
+                        ? FlutterFlowTheme.of(context)
+                            .success
+                            .withValues(alpha: 0.3)
                         : FlutterFlowTheme.of(context)
                             .primary
                             .withValues(alpha: 0.3))),
@@ -266,7 +270,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
               active ? '● Activo' : '● Inactivo',
               style: GoogleFonts.outfit(
                 color: active
-                    ? Colors.green
+                    ? FlutterFlowTheme.of(context).success
                     : FlutterFlowTheme.of(context).primary,
                 fontWeight: FontWeight.bold,
               ),
@@ -317,7 +321,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: active
                     ? FlutterFlowTheme.of(context).primary
-                    : Colors.green,
+                    : FlutterFlowTheme.of(context).success,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),

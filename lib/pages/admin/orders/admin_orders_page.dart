@@ -192,7 +192,7 @@ class _AdminOrdersPageState extends State<AdminOrdersPage> {
       slivers: [
         SliverAppBar(
           backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-          surfaceTintColor: Colors.transparent,
+          surfaceTintColor: FlutterFlowTheme.of(context).transparent,
           pinned: true,
           floating: true,
           elevation: 0,
@@ -200,7 +200,7 @@ class _AdminOrdersPageState extends State<AdminOrdersPage> {
           leading: Container(
             margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: theme.primaryText.withOpacity(0.05),
+              color: theme.primaryText.withValues(alpha: 0.05),
               shape: BoxShape.circle,
             ),
             child: SmartBackButton(
@@ -379,7 +379,7 @@ class _AdminOrderCardState extends State<AdminOrderCard> {
     final String? logoUrl = branding?['logoUrl'];
 
     // Attempt to parse primary color from branding
-    Color primaryColor = const Color(0xFFE50914);
+    Color primaryColor = FlutterFlowTheme.of(context).primary;
     if (branding?['primaryColor'] != null) {
       try {
         String hex = branding!['primaryColor'].toString().replaceAll('#', '');
@@ -432,7 +432,7 @@ class _AdminOrderCardState extends State<AdminOrderCard> {
     }
 
     final borderColor = _isHovered
-        ? primaryColor.withOpacity(0.5)
+        ? primaryColor.withValues(alpha: 0.5)
         : FlutterFlowTheme.of(context).alternate;
 
     return MouseRegion(
@@ -441,7 +441,8 @@ class _AdminOrderCardState extends State<AdminOrderCard> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeOut,
-        transform: Matrix4.identity()..translate(0.0, _isHovered ? -8.0 : 0.0),
+        transform: Matrix4.identity()
+          ..translateByDouble(0.0, _isHovered ? -8.0 : 0.0, 0.0, 1.0),
         decoration: BoxDecoration(
           color: FlutterFlowTheme.of(context).secondaryBackground,
           borderRadius: BorderRadius.circular(24),
@@ -449,7 +450,7 @@ class _AdminOrderCardState extends State<AdminOrderCard> {
           boxShadow: _isHovered
               ? [
                   BoxShadow(
-                    color: primaryColor.withOpacity(0.15),
+                    color: primaryColor.withValues(alpha: 0.15),
                     blurRadius: 20,
                     offset: const Offset(0, 8),
                   )
@@ -478,7 +479,7 @@ class _AdminOrderCardState extends State<AdminOrderCard> {
                             colorFilter: logoUrl != null
                                 ? null
                                 : ColorFilter.mode(
-                                    Colors.black.withOpacity(0.5),
+                                    Colors.black.withValues(alpha: 0.5),
                                     BlendMode.dstATop),
                             fit: logoUrl != null ? BoxFit.cover : BoxFit.cover),
                       ),
@@ -496,7 +497,7 @@ class _AdminOrderCardState extends State<AdminOrderCard> {
                           gradient: LinearGradient(
                             colors: [
                               Colors.transparent,
-                              Colors.black.withOpacity(0.7)
+                              Colors.black.withValues(alpha: 0.7)
                             ],
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
@@ -609,21 +610,21 @@ class _AdminOrderCardState extends State<AdminOrderCard> {
                             // Process
                             _actionBtn(
                                 Icons.sync,
-                                Colors.orange,
+                                FlutterFlowTheme.of(context).warning,
                                 'Process',
                                 () => widget.onUpdateStatus(
                                     orderId, 'PROCESSING')),
                             // Complete
                             _actionBtn(
                                 Icons.check_circle,
-                                Colors.green,
+                                FlutterFlowTheme.of(context).success,
                                 'Done',
                                 () => widget.onUpdateStatus(
                                     orderId, 'COMPLETED')),
                             // Cancel
                             _actionBtn(
                                 Icons.cancel,
-                                Colors.red,
+                                FlutterFlowTheme.of(context).error,
                                 'Cancel',
                                 () => widget.onUpdateStatus(
                                     orderId, 'CANCELLED')),

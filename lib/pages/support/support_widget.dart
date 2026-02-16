@@ -16,7 +16,7 @@ class SupportWidget extends StatefulWidget {
 
 class _SupportWidgetState extends State<SupportWidget> {
   final ScrollController _scrollController = ScrollController();
-  static const Color kPrimaryColor = Color(0xFFE50914);
+  Color get _primaryColor => FlutterFlowTheme.of(context).primary;
 
   Future<void> _launchUrl(String urlString) async {
     final Uri url = Uri.parse(urlString);
@@ -31,16 +31,14 @@ class _SupportWidgetState extends State<SupportWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final theme = FlutterFlowTheme.of(context);
     return Scaffold(
-      backgroundColor:
-          isDark ? const Color(0xFF050505) : theme.primaryBackground,
+      backgroundColor: theme.primaryBackground,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: theme.transparent,
         elevation: 0,
-        surfaceTintColor: Colors.transparent,
+        surfaceTintColor: theme.transparent,
         leading:
             SmartBackButton(color: FlutterFlowTheme.of(context).primaryText),
         title: Text(
@@ -63,11 +61,11 @@ class _SupportWidgetState extends State<SupportWidget> {
               height: 500,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: kPrimaryColor.withOpacity(0.08),
+                color: _primaryColor.withValues(alpha: 0.08),
               ),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
-                child: Container(color: Colors.transparent),
+                child: Container(color: theme.transparent),
               ),
             ),
           ),
@@ -92,7 +90,7 @@ class _SupportWidgetState extends State<SupportWidget> {
                         subtitle: 'Respuesta inmediata 24/7',
                         actionText: 'Iniciar Chat',
                         onTap: () => _launchUrl('https://t.me/NaziShopSupport'),
-                        color: const Color(0xFF229ED9),
+                        color: FlutterFlowTheme.of(context).primary,
                       ),
                       const SizedBox(height: 24),
                       _buildContactOption(
@@ -102,7 +100,7 @@ class _SupportWidgetState extends State<SupportWidget> {
                         actionText: 'Enviar Mensaje',
                         onTap: () => _launchUrl(
                             'https://wa.me/1234567890'), // Replace with real number
-                        color: const Color(0xFF25D366),
+                        color: FlutterFlowTheme.of(context).secondary,
                       ),
                       const SizedBox(height: 24),
                       _buildContactOption(
@@ -112,7 +110,6 @@ class _SupportWidgetState extends State<SupportWidget> {
                         actionText: 'Enviar Email',
                         onTap: () => _launchUrl('mailto:support@nazishop.com'),
                         color: FlutterFlowTheme.of(context).primary,
-                        isDark: isDark,
                       ),
                       const SizedBox(height: 48),
                       _buildFAQSection(),
@@ -137,11 +134,11 @@ class _SupportWidgetState extends State<SupportWidget> {
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: kPrimaryColor.withOpacity(0.1),
+            color: _primaryColor.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
           child:
-              Icon(Icons.support_agent_rounded, color: kPrimaryColor, size: 48),
+              Icon(Icons.support_agent_rounded, color: _primaryColor, size: 48),
         ),
         const SizedBox(height: 24),
         Text(
@@ -174,31 +171,25 @@ class _SupportWidgetState extends State<SupportWidget> {
     required String actionText,
     required VoidCallback onTap,
     required Color color,
-    bool isDark = true,
   }) {
     return Material(
-      color: Colors.transparent,
+      color: FlutterFlowTheme.of(context).transparent,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(20),
         child: Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: isDark
-                ? Colors.white.withOpacity(0.05)
-                : FlutterFlowTheme.of(context).secondaryBackground,
+            color: FlutterFlowTheme.of(context).secondaryBackground,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-                color: isDark
-                    ? Colors.white.withOpacity(0.1)
-                    : FlutterFlowTheme.of(context).alternate),
+            border: Border.all(color: FlutterFlowTheme.of(context).alternate),
           ),
           child: Row(
             children: [
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.2),
+                  color: color.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(icon, color: color, size: 28),
@@ -260,19 +251,14 @@ class _SupportWidgetState extends State<SupportWidget> {
   }
 
   Widget _buildFAQItem(String question, String answer) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = FlutterFlowTheme.of(context);
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark
-            ? Colors.white.withOpacity(0.03)
-            : FlutterFlowTheme.of(context).secondaryBackground,
+        color: theme.secondaryBackground,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-            color: isDark
-                ? Colors.white.withOpacity(0.05)
-                : FlutterFlowTheme.of(context).alternate),
+        border: Border.all(color: theme.alternate),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

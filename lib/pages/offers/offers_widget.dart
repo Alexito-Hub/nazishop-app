@@ -42,7 +42,6 @@ class _OffersWidgetState extends State<OffersWidget> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isDesktop = screenWidth > 1200;
-    final isTablet = screenWidth > 600;
 
     return GestureDetector(
       onTap: () => _model.unfocusNode.canRequestFocus
@@ -138,7 +137,8 @@ class _OffersWidgetState extends State<OffersWidget> {
                             borderRadius: BorderRadius.circular(16.0),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFF4B39EF).withOpacity(0.1),
+                                color: const Color(0xFF4B39EF)
+                                    .withValues(alpha: 0.1),
                                 blurRadius: 10,
                                 offset: const Offset(0, 5),
                               ),
@@ -180,7 +180,8 @@ class _OffersWidgetState extends State<OffersWidget> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 16, vertical: 8),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.1),
+                                    color:
+                                        FlutterFlowTheme.of(context).alternate,
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
@@ -272,7 +273,8 @@ class _OffersWidgetState extends State<OffersWidget> {
     final serviceId =
         isMap ? (product['serviceId'] ?? product['id']) : product.id;
 
-    final color = colorVal != null ? Color(colorVal) : const Color(0xFF4B39EF);
+    final color =
+        colorVal != null ? Color(colorVal) : FlutterFlowTheme.of(context).info;
     final icon =
         iconCode != null ? IconHelper.getIcon(iconCode) : Icons.local_offer;
 
@@ -293,7 +295,7 @@ class _OffersWidgetState extends State<OffersWidget> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -307,7 +309,7 @@ class _OffersWidgetState extends State<OffersWidget> {
               'serviceId': serviceId,
               'serviceName': serviceName,
               'serviceIcon': icon.codePoint.toString(),
-              'serviceColor': color.value.toString(),
+              'serviceColor': color.toARGB32().toString(),
             }.withoutNulls,
           );
         },
@@ -325,7 +327,7 @@ class _OffersWidgetState extends State<OffersWidget> {
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: color.withOpacity(0.1),
+                          color: color.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(
@@ -404,7 +406,7 @@ class _OffersWidgetState extends State<OffersWidget> {
                               'serviceId': serviceId,
                               'serviceName': serviceName,
                               'serviceIcon': icon.codePoint.toString(),
-                              'serviceColor': color.value.toString(),
+                              'serviceColor': color.toARGB32().toString(),
                             }.withoutNulls,
                           );
                         },
@@ -421,13 +423,13 @@ class _OffersWidgetState extends State<OffersWidget> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.red,
+                  color: FlutterFlowTheme.of(context).error,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   '30% OFF',
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: FlutterFlowTheme.of(context).tertiary,
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),

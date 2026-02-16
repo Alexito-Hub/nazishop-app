@@ -2,8 +2,12 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/upload_data.dart';
+import '/auth/nazishop_auth/nazishop_auth_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'complete_profile_model.dart';
 export 'complete_profile_model.dart';
 
@@ -543,12 +547,30 @@ class _CompleteProfileWidgetState extends State<CompleteProfileWidget> {
                                     }
                                   }
 
-                                  // TODO: Actualizar perfil del usuario en Firestore
-                                  // Aquí deberías actualizar el documento del usuario con:
-                                  // - displayName: _model.fullNameTextController.text
-                                  // - phoneNumber: '${_model.selectedCountryCode}${_model.phoneTextController.text}'
-                                  // - description: _model.descriptionTextController.text
-                                  // - photoURL: URL de la foto subida
+                                  // Actualizar perfil del usuario
+                                  final authProvider =
+                                      Provider.of<NaziShopAuthProvider>(context,
+                                          listen: false);
+                                  await authProvider.updateProfile(
+                                    displayName:
+                                        _model.fullNameTextController.text,
+                                    photoUrl: _model.uploadedFileUrl,
+                                  );
+
+                                  // Actualizar datos adicionales en Firestore
+                                  final user =
+                                      FirebaseAuth.instance.currentUser;
+                                  if (user != null) {
+                                    await FirebaseFirestore.instance
+                                        .collection('users')
+                                        .doc(user.uid)
+                                        .update({
+                                      'phoneNumber':
+                                          '${_model.selectedCountryCode}${_model.phoneTextController.text}',
+                                      'description':
+                                          _model.descriptionTextController.text,
+                                    });
+                                  }
 
                                   if (!context.mounted) return;
 
@@ -569,7 +591,8 @@ class _CompleteProfileWidgetState extends State<CompleteProfileWidget> {
                                       .titleSmall
                                       .override(
                                         font: GoogleFonts.inter(),
-                                        color: Colors.white,
+                                        color: FlutterFlowTheme.of(context)
+                                            .tertiary,
                                         letterSpacing: 0.0,
                                       ),
                                   elevation: 3.0,

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:nazi_shop/backend/api_client.dart';
 import 'package:nazi_shop/models/service_model.dart';
 // For Service parser
@@ -13,7 +14,7 @@ class FavoritesService {
       }
       return [];
     } catch (e) {
-      print('[FavoritesService] Error: $e');
+      debugPrint('[FavoritesService] Error: $e');
       return [];
     }
   }
@@ -25,7 +26,7 @@ class FavoritesService {
       });
       return response['status'] == true;
     } catch (e) {
-      print('[FavoritesService] Toggle Error: $e');
+      debugPrint('[FavoritesService] Toggle Error: $e');
       return false;
     }
   }

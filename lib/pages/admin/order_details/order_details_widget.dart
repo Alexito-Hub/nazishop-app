@@ -152,7 +152,7 @@ class _OrderDetailsWidgetState extends State<OrderDetailsWidget> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
-                    color: statusColor.withOpacity(0.1),
+                    color: statusColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12.0),
                     border: Border.all(color: statusColor, width: 2.0),
                   ),
@@ -273,7 +273,7 @@ class _OrderDetailsWidgetState extends State<OrderDetailsWidget> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20.0),
       ),
       child: Row(

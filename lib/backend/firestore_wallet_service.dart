@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 
 /// Servicio para manejar el wallet directamente desde Firestore
 class FirestoreWalletService {
@@ -28,7 +29,7 @@ class FirestoreWalletService {
         'currency': data['wallet_currency'] ?? 'USD',
       };
     } catch (e) {
-      print('❌ Error getting balance from Firestore: $e');
+      debugPrint('❌ Error getting balance from Firestore: $e');
       rethrow;
     }
   }
@@ -80,9 +81,10 @@ class FirestoreWalletService {
         });
       });
 
-      print('✅ Funds added: +\$$amount. Transaction will sync to backend.');
+      debugPrint(
+          '✅ Funds added: +\$$amount. Transaction will sync to backend.');
     } catch (e) {
-      print('❌ Error adding funds: $e');
+      debugPrint('❌ Error adding funds: $e');
       rethrow;
     }
   }
@@ -112,7 +114,7 @@ class FirestoreWalletService {
         };
       }).toList();
     } catch (e) {
-      print('❌ Error getting transactions: $e');
+      debugPrint('❌ Error getting transactions: $e');
       return [];
     }
   }
