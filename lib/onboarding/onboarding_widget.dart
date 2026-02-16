@@ -364,17 +364,20 @@ class _OnboardingWidgetState extends State<OnboardingWidget>
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(10),
+                      width: 40,
+                      height: 40,
                       decoration: BoxDecoration(
                         color: FlutterFlowTheme.of(context)
                             .primary
                             .withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      child: FaIcon(
-                        FontAwesomeIcons.bagShopping,
-                        color: FlutterFlowTheme.of(context).primary,
-                        size: 20,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.asset(
+                          'assets/images/nzteamlogo.png',
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -561,10 +564,14 @@ class _OnboardingWidgetState extends State<OnboardingWidget>
             ),
             child: isCustomIcon
                 ? customContent
-                : Icon(
-                    icon,
-                    size: isDesktop ? 100 : 80,
-                    color: color ?? FlutterFlowTheme.of(context).primary,
+                : ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.asset(
+                      'assets/images/nzteamlogo.png',
+                      width: isDesktop ? 100 : 80,
+                      height: isDesktop ? 100 : 80,
+                      fit: BoxFit.contain,
+                    ),
                   ),
           ).animateOnPageLoad(animationsMap['scaleIcon']!),
 
