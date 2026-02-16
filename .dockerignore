@@ -9,5 +9,4 @@ android/
 ios/
 test/
 .pub-cache/
-pubspec.lock
 .env
