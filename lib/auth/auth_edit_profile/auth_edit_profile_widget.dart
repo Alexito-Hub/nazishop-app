@@ -1,4 +1,4 @@
-import '/pages/profile/edit_profile_modern.dart';
+import '/pages/user/profile/edit_profile_modern_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/components/app_layout.dart';

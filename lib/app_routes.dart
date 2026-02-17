@@ -12,20 +12,20 @@ import '/pages/admin/promotions/create_promotion_page.dart';
 import '/pages/admin/coupons/create_coupon_page.dart';
 import '/pages/admin/inventory/create_inventory_page.dart';
 import '/pages/admin/orders/admin_orders_page.dart';
-import '/pages/profile/appearance/appearance_widget.dart';
+import '/pages/user/profile/appearance/appearance_widget.dart';
 
 class AppRoutes {
   // Public routes
   static const String home = '/';
-  static const String allProducts = '/products';
-  static const String serviceDetail = '/service';
-  static const String categoryPage = '/category';
+  static const String allProducts = '/shop/products';
+  static const String serviceDetail = '/shop/service';
+  static const String categoryPage = '/shop/category';
   static const String checkout = '/checkout';
   static const String purchaseSuccess = '/purchase/success';
-  static const String offers = '/offers';
-  static const String support = '/support';
+  static const String offers = '/shop/offers';
+  static const String support = '/legal/support';
   static const String terms = '/legal/terms';
-  static const String about = '/about';
+  static const String about = '/legal/about';
   static const String privacyPolicy = '/legal/privacy';
 
   // Auth routes
