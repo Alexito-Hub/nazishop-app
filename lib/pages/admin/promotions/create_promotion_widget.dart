@@ -7,15 +7,15 @@ import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 
-class CreatePromotionPage extends StatefulWidget {
+class CreatePromotionWidget extends StatefulWidget {
   final Map<String, dynamic>? promotion;
-  const CreatePromotionPage({super.key, this.promotion});
+  const CreatePromotionWidget({super.key, this.promotion});
 
   @override
-  State<CreatePromotionPage> createState() => _CreatePromotionPageState();
+  State<CreatePromotionWidget> createState() => _CreatePromotionWidgetState();
 }
 
-class _CreatePromotionPageState extends State<CreatePromotionPage> {
+class _CreatePromotionWidgetState extends State<CreatePromotionWidget> {
   final _nameCtrl = TextEditingController();
   final _descCtrl = TextEditingController();
   final _finalPriceCtrl = TextEditingController();

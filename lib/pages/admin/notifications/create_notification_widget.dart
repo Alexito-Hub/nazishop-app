@@ -5,14 +5,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:nazi_shop/backend/admin_service.dart';
 import '../../../components/smart_back_button.dart';
 
-class CreateNotificationPage extends StatefulWidget {
-  const CreateNotificationPage({super.key});
+class CreateNotificationWidget extends StatefulWidget {
+  const CreateNotificationWidget({super.key});
 
   @override
-  State<CreateNotificationPage> createState() => _CreateNotificationPageState();
+  State<CreateNotificationWidget> createState() =>
+      _CreateNotificationWidgetState();
 }
 
-class _CreateNotificationPageState extends State<CreateNotificationPage> {
+class _CreateNotificationWidgetState extends State<CreateNotificationWidget> {
   // Styles
   Color get kBgColor => FlutterFlowTheme.of(context).primaryBackground;
   Color get kSurfaceColor => FlutterFlowTheme.of(context).secondaryBackground;

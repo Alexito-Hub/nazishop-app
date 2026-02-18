@@ -8,14 +8,14 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '../../../components/smart_back_button.dart';
 
-class DomainApprovalPage extends StatefulWidget {
-  const DomainApprovalPage({super.key});
+class DomainApprovalWidget extends StatefulWidget {
+  const DomainApprovalWidget({super.key});
 
   @override
-  State<DomainApprovalPage> createState() => _DomainApprovalPageState();
+  State<DomainApprovalWidget> createState() => _DomainApprovalWidgetState();
 }
 
-class _DomainApprovalPageState extends State<DomainApprovalPage> {
+class _DomainApprovalWidgetState extends State<DomainApprovalWidget> {
   List<Domain> _domains = [];
   bool _isLoading = false;
   String _filter = 'pending';

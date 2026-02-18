@@ -76,7 +76,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
       errorBuilder: (context, state) => appStateNotifier.loggedIn
-          ? const HomePageModernWidget()
+          ? const HomePageWidget()
           : const AuthLoginWidget(),
       routes: [
         FFRoute(
@@ -118,7 +118,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
             FFRoute(
               name: 'home',
               path: '/home',
-              builder: (context, params) => const HomePageModernWidget(),
+              builder: (context, params) => const HomePageWidget(),
             ).toRoute(appStateNotifier),
             FFRoute(
               name: 'category_page',
@@ -126,7 +126,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               builder: (context, params) {
                 final category = params.state.extra as Category?;
                 if (category == null) {
-                  return const HomePageModernWidget();
+                  return const HomePageWidget();
                 }
                 return CategoryPage(category: category);
               },
@@ -149,7 +149,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
             FFRoute(
               name: 'my_purchases',
               path: '/myPurchases',
-              builder: (context, params) => const MyPurchasesModernWidget(),
+              builder: (context, params) => const MyPurchasesWidget(),
             ).toRoute(appStateNotifier),
             FFRoute(
               name: 'orders_history',
@@ -159,12 +159,12 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
             FFRoute(
               name: 'favorites',
               path: '/favorites',
-              builder: (context, params) => const FavoritesModernWidget(),
+              builder: (context, params) => const FavoritesWidget(),
             ).toRoute(appStateNotifier),
             FFRoute(
               name: 'profile',
               path: '/profile',
-              builder: (context, params) => const ProfileModernWidget(),
+              builder: (context, params) => const ProfileWidget(),
             ).toRoute(appStateNotifier),
 
             // ADMIN ROUTES
@@ -176,32 +176,32 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
             FFRoute(
               name: 'admin_categories',
               path: '/admin/categories',
-              builder: (context, params) => const AdminCategoriesPage(),
+              builder: (context, params) => const AdminCategoriesWidget(),
             ).toRoute(appStateNotifier),
             FFRoute(
               name: 'admin_services',
               path: '/admin/services',
-              builder: (context, params) => const AdminServicesPage(),
+              builder: (context, params) => const AdminServicesWidget(),
             ).toRoute(appStateNotifier),
             FFRoute(
               name: 'admin_listings',
               path: '/admin/listings',
-              builder: (context, params) => const AdminOffersPage(),
+              builder: (context, params) => const AdminListingsWidget(),
             ).toRoute(appStateNotifier),
             FFRoute(
               name: 'admin_coupons',
               path: '/admin/coupons',
-              builder: (context, params) => const AdminCouponsPage(),
+              builder: (context, params) => const AdminCouponsWidget(),
             ).toRoute(appStateNotifier),
             FFRoute(
               name: 'admin_analytics',
               path: '/admin/analytics',
-              builder: (context, params) => const AdminAnalyticsPage(),
+              builder: (context, params) => const AdminAnalyticsWidget(),
             ).toRoute(appStateNotifier),
             FFRoute(
               name: 'admin_config',
               path: '/admin/config',
-              builder: (context, params) => const AdminConfigPage(),
+              builder: (context, params) => const AdminConfigWidget(),
             ).toRoute(appStateNotifier),
             FFRoute(
               name: 'about',

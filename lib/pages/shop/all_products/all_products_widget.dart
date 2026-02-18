@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 
-class AllProductsModernWidget extends StatefulWidget {
-  const AllProductsModernWidget({super.key});
+class AllProductsWidget extends StatefulWidget {
+  const AllProductsWidget({super.key});
 
   @override
-  State<AllProductsModernWidget> createState() =>
-      _AllProductsModernWidgetState();
+  State<AllProductsWidget> createState() => _AllProductsWidgetState();
 }
 
-class _AllProductsModernWidgetState extends State<AllProductsModernWidget> {
+class _AllProductsWidgetState extends State<AllProductsWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

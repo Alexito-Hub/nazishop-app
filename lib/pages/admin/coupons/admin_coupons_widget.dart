@@ -8,14 +8,14 @@ import 'package:go_router/go_router.dart';
 import 'package:nazi_shop/models/coupon_model.dart';
 import 'package:intl/intl.dart';
 
-class AdminCouponsPage extends StatefulWidget {
-  const AdminCouponsPage({super.key});
+class AdminCouponsWidget extends StatefulWidget {
+  const AdminCouponsWidget({super.key});
 
   @override
-  State<AdminCouponsPage> createState() => _AdminCouponsPageState();
+  State<AdminCouponsWidget> createState() => _AdminCouponsWidgetState();
 }
 
-class _AdminCouponsPageState extends State<AdminCouponsPage> {
+class _AdminCouponsWidgetState extends State<AdminCouponsWidget> {
   bool _isLoading = false;
   List<Coupon> _coupons = [];
   String _filterStatus = 'all'; // all, active, inactive

@@ -6,14 +6,14 @@ import 'package:nazi_shop/flutter_flow/flutter_flow_theme.dart';
 import '../../../components/smart_back_button.dart';
 // For BackdropFilter if needed, but not using it extensively now to keep it clean
 
-class AdminConfigPage extends StatefulWidget {
-  const AdminConfigPage({super.key});
+class AdminConfigWidget extends StatefulWidget {
+  const AdminConfigWidget({super.key});
 
   @override
-  State<AdminConfigPage> createState() => _AdminConfigPageState();
+  State<AdminConfigWidget> createState() => _AdminConfigWidgetState();
 }
 
-class _AdminConfigPageState extends State<AdminConfigPage> {
+class _AdminConfigWidgetState extends State<AdminConfigWidget> {
   // static const Color kPrimaryColor = Color(0xFFE50914); // Removed hardcoded color
   bool _isLoading = true;
   bool _isSaving = false;

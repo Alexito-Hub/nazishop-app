@@ -8,14 +8,14 @@ import 'package:go_router/go_router.dart';
 import 'package:nazi_shop/models/promotion_model.dart';
 import 'package:intl/intl.dart';
 
-class AdminPromotionsPage extends StatefulWidget {
-  const AdminPromotionsPage({super.key});
+class AdminPromotionsWidget extends StatefulWidget {
+  const AdminPromotionsWidget({super.key});
 
   @override
-  State<AdminPromotionsPage> createState() => _AdminPromotionsPageState();
+  State<AdminPromotionsWidget> createState() => _AdminPromotionsWidgetState();
 }
 
-class _AdminPromotionsPageState extends State<AdminPromotionsPage> {
+class _AdminPromotionsWidgetState extends State<AdminPromotionsWidget> {
   // Styles
   // Removed hardcoded colors in favor of theme
 

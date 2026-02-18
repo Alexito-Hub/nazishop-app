@@ -6,21 +6,21 @@ import '/models/service_model.dart';
 import '/backend/favorites_service.dart';
 // import 'package:flutter_animate/flutter_animate.dart';
 
-class ServiceCardModern extends StatefulWidget {
+class ServiceCard extends StatefulWidget {
   final Service service;
   final Color primaryColor;
 
-  const ServiceCardModern({
+  const ServiceCard({
     super.key,
     required this.service,
     required this.primaryColor,
   });
 
   @override
-  State<ServiceCardModern> createState() => _ServiceCardModernState();
+  State<ServiceCard> createState() => _ServiceCardState();
 }
 
-class _ServiceCardModernState extends State<ServiceCardModern> {
+class _ServiceCardState extends State<ServiceCard> {
   bool _isHovered = false;
   bool _isFavorite = false;
 

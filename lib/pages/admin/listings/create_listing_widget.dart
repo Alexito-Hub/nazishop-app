@@ -7,17 +7,17 @@ import 'package:nazi_shop/models/offer_model.dart';
 import 'package:nazi_shop/models/service_model.dart';
 import '../../../components/smart_back_button.dart';
 
-class CreateListingPage extends StatefulWidget {
+class CreateListingWidget extends StatefulWidget {
   final Offer? offer;
-  const CreateListingPage({super.key, this.offer});
+  const CreateListingWidget({super.key, this.offer});
 
   static const String routeName = 'create_listing';
 
   @override
-  CreateListingPageState createState() => CreateListingPageState();
+  State<CreateListingWidget> createState() => _CreateListingWidgetState();
 }
 
-class CreateListingPageState extends State<CreateListingPage> {
+class _CreateListingWidgetState extends State<CreateListingWidget> {
   final _formKey = GlobalKey<FormState>();
 
   // --- CONTROLLERS ---

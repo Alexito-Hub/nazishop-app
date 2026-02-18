@@ -2,10 +2,11 @@ import '/backend/admin_service.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'orders_management_widget.dart' show OrdersManagementWidget;
 import 'package:flutter/material.dart';
+import 'package:nazi_shop/models/order_model.dart';
 
 class OrdersManagementModel extends FlutterFlowModel<OrdersManagementWidget> {
   Map<String, dynamic>? ordersData;
-  List<dynamic> orders = [];
+  List<Order> orders = [];
   bool isLoadingOrders = false;
   String? errorMessage;
   String? selectedStatus;
@@ -40,7 +41,8 @@ class OrdersManagementModel extends FlutterFlowModel<OrdersManagementWidget> {
       );
 
       if (ordersData != null) {
-        final newOrders = ordersData!['orders'] as List<dynamic>? ?? [];
+        final newOrdersRaw = ordersData!['orders'] as List<dynamic>? ?? [];
+        final newOrders = newOrdersRaw.map((e) => Order.fromJson(e)).toList();
         final total = ordersData!['total'] as int? ?? 0;
 
         if (refresh) {

@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
-import '/index.dart' hide AdminInventoryPage;
+import '/index.dart';
 import '/models/category_model.dart';
 import '/models/service_model.dart';
 import '/models/offer_model.dart';
 import '/components/app_layout.dart';
 import '/flutter_flow/nav/nav.dart';
-import '/pages/admin/notifications/create_notification_page.dart';
-import '/pages/admin/inventory/admin_inventory_page.dart';
-import '/pages/admin/promotions/admin_promotions_page.dart';
-import '/pages/admin/promotions/create_promotion_page.dart';
-import '/pages/admin/coupons/create_coupon_page.dart';
-import '/pages/admin/inventory/create_inventory_page.dart';
-import '/pages/admin/orders/admin_orders_page.dart';
+
 import '/pages/user/profile/appearance/appearance_widget.dart';
 
 class AppRoutes {
@@ -58,6 +52,7 @@ class AppRoutes {
   static const String createListing = '/admin/listings/create';
   static const String adminInventory = '/admin/inventory';
   static const String createInventory = '/admin/inventory/create';
+
   static const String adminPromotions = '/admin/promotions';
   static const String createPromotion = '/admin/promotions/create';
   static const String adminCoupons = '/admin/coupons';
@@ -138,28 +133,28 @@ class AppRoutes {
               path: home,
               name: 'home',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: HomePageModernWidget(),
+                child: HomePageWidget(),
               ),
             ),
             GoRoute(
               path: allProducts,
               name: 'all_products',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: AllProductsModernWidget(),
+                child: AllProductsWidget(),
               ),
             ),
             GoRoute(
               path: favorites,
               name: 'favorites',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: FavoritesModernWidget(),
+                child: FavoritesWidget(),
               ),
             ),
             GoRoute(
               path: profile,
               name: 'profile',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: ProfileModernWidget(),
+                child: ProfileWidget(),
               ),
             ),
             GoRoute(
@@ -173,14 +168,14 @@ class AppRoutes {
               path: myPurchases,
               name: 'my_purchases',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: MyPurchasesModernWidget(),
+                child: MyPurchasesWidget(),
               ),
             ),
             GoRoute(
               path: ordersHistory,
               name: 'orders_history',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: MyPurchasesModernWidget(),
+                child: MyPurchasesWidget(),
               ),
             ),
             GoRoute(
@@ -201,21 +196,21 @@ class AppRoutes {
               path: adminNotifications,
               name: 'admin_notifications',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: AdminNotificationsPage(),
+                child: AdminNotificationsWidget(),
               ),
             ),
             GoRoute(
               path: adminPromotions,
               name: 'admin_promotions',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: AdminPromotionsPage(),
+                child: AdminPromotionsWidget(),
               ),
             ),
             GoRoute(
               path: createPromotion,
               name: 'create_promotion',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: CreatePromotionPage(),
+                child: CreatePromotionWidget(),
               ),
             ),
             GoRoute(
@@ -253,9 +248,15 @@ class AppRoutes {
             GoRoute(
               path: checkout,
               name: 'checkout',
-              pageBuilder: (context, state) => const NoTransitionPage(
-                child: CheckoutModernWidget(),
-              ),
+              pageBuilder: (context, state) {
+                final extra = state.extra as Map<String, dynamic>?;
+                return NoTransitionPage(
+                  child: CheckoutWidget(
+                    service: extra?['service'] as Service,
+                    selectedOffer: extra?['selectedOffer'] as Offer,
+                  ),
+                );
+              },
             ),
             GoRoute(
               path: purchaseSuccess,
@@ -278,7 +279,7 @@ class AppRoutes {
               path: editProfile,
               name: 'auth_edit_profile',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: EditProfileModernWidget(),
+                child: EditProfileWidget(),
               ),
             ),
             GoRoute(
@@ -353,30 +354,31 @@ class AppRoutes {
               path: adminCategories,
               name: 'admin_categories',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: AdminCategoriesPage(),
+                child: AdminCategoriesWidget(),
               ),
             ),
             GoRoute(
               path: adminServices,
               name: 'admin_services',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: AdminServicesPage(),
+                child: AdminServicesWidget(),
               ),
             ),
             GoRoute(
               path: adminListings,
               name: 'admin_listings',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: AdminOffersPage(),
+                child: AdminListingsWidget(),
               ),
             ),
             GoRoute(
               path: adminInventory,
               name: 'admin_inventory',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: AdminInventoryPage(),
+                child: AdminInventoryWidget(),
               ),
             ),
+
             GoRoute(
               path: createInventory,
               name: 'create_inventory',
@@ -384,7 +386,7 @@ class AppRoutes {
                 final listingId = state.uri.queryParameters['listingId'];
                 final listingTitle = state.uri.queryParameters['listingTitle'];
                 return NoTransitionPage(
-                  child: CreateInventoryPage(
+                  child: CreateInventoryWidget(
                     listingId: (listingId == null || listingId.isEmpty)
                         ? null
                         : listingId,
@@ -399,28 +401,28 @@ class AppRoutes {
               path: adminCoupons,
               name: 'admin_coupons',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: AdminCouponsPage(),
+                child: AdminCouponsWidget(),
               ),
             ),
             GoRoute(
               path: createCoupon,
               name: 'create_coupon',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: CreateCouponPage(),
+                child: CreateCouponWidget(),
               ),
             ),
             GoRoute(
               path: adminAnalytics,
               name: 'admin_analytics',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: AdminAnalyticsPage(),
+                child: AdminAnalyticsWidget(),
               ),
             ),
             GoRoute(
               path: ordersManagement,
               name: 'orders_management',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: AdminOrdersPage(),
+                child: OrdersManagementWidget(),
               ),
             ),
             GoRoute(
@@ -434,7 +436,7 @@ class AppRoutes {
               path: adminConfig,
               name: 'admin_config',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: AdminConfigPage(),
+                child: AdminConfigWidget(),
               ),
             ),
             GoRoute(
@@ -448,28 +450,28 @@ class AppRoutes {
               path: createCategory,
               name: 'create_category',
               pageBuilder: (context, state) => NoTransitionPage(
-                child: CreateCategoryPage(category: state.extra as Category?),
+                child: CreateCategoryWidget(category: state.extra as Category?),
               ),
             ),
             GoRoute(
               path: createService,
               name: 'create_service',
               pageBuilder: (context, state) => NoTransitionPage(
-                child: CreateServicePage(service: state.extra as Service?),
+                child: CreateServiceWidget(service: state.extra as Service?),
               ),
             ),
             GoRoute(
               path: createListing,
               name: 'create_listing',
               pageBuilder: (context, state) => NoTransitionPage(
-                child: CreateListingPage(offer: state.extra as Offer?),
+                child: CreateListingWidget(offer: state.extra as Offer?),
               ),
             ),
             GoRoute(
               path: createNotification,
               name: 'create_notification',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: CreateNotificationPage(),
+                child: CreateNotificationWidget(),
               ),
             ),
 

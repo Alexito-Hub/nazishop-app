@@ -10,16 +10,16 @@ import '../../../components/smart_back_button.dart';
 // Imports del proyecto
 import '/backend/favorites_service.dart';
 import '/models/service_model.dart';
-import '../../../components/service_card_modern.dart';
+import '/components/service_card.dart';
 
-class FavoritesModernWidget extends StatefulWidget {
-  const FavoritesModernWidget({super.key});
+class FavoritesWidget extends StatefulWidget {
+  const FavoritesWidget({super.key});
 
   @override
-  State<FavoritesModernWidget> createState() => _FavoritesModernWidgetState();
+  State<FavoritesWidget> createState() => _FavoritesWidgetState();
 }
 
-class _FavoritesModernWidgetState extends State<FavoritesModernWidget> {
+class _FavoritesWidgetState extends State<FavoritesWidget> {
   // --- ESTADO ---
   List<Service> _favoriteServices = [];
   bool _isLoading = true;
@@ -149,7 +149,7 @@ class _FavoritesModernWidgetState extends State<FavoritesModernWidget> {
                         mainAxisSpacing: 12,
                       ),
                       delegate: SliverChildBuilderDelegate(
-                        (context, i) => ServiceCardModern(
+                        (context, i) => ServiceCard(
                           service: _favoriteServices[i],
                           primaryColor: _parseColor(
                                   _favoriteServices[i].branding.primaryColor) ??
@@ -222,7 +222,7 @@ class _FavoritesModernWidgetState extends State<FavoritesModernWidget> {
                               mainAxisSpacing: 24,
                             ),
                             delegate: SliverChildBuilderDelegate(
-                              (context, i) => ServiceCardModern(
+                              (context, i) => ServiceCard(
                                 service: _favoriteServices[i],
                                 primaryColor: _parseColor(_favoriteServices[i]
                                         .branding

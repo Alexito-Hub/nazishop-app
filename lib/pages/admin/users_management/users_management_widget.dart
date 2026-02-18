@@ -637,7 +637,7 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         title: Text('Cargar Saldo',
@@ -704,7 +704,7 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: Text('Cancelar',
                 style: GoogleFonts.outfit(
                     color: FlutterFlowTheme.of(context).secondaryText)),
@@ -713,21 +713,20 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
             onPressed: () async {
               final amount = double.tryParse(amountController.text);
               if (amount != null && amount > 0) {
-                final scaffoldContext = context;
-                Navigator.pop(scaffoldContext);
+                Navigator.pop(dialogContext);
                 final success = await AdminService.addUserBalance(
                   user['id'],
                   amount,
                   noteController.text.isEmpty ? null : noteController.text,
                 );
+
+                if (!mounted) return;
+
                 if (success) {
                   _loadUsers();
-                  // ignore: use_build_context_synchronously
-                  CustomSnackBar.success(scaffoldContext, 'Saldo acreditado');
+                  CustomSnackBar.success(context, 'Saldo acreditado');
                 } else {
-                  // ignore: use_build_context_synchronously
-                  CustomSnackBar.error(
-                      scaffoldContext, 'Error al cargar saldo');
+                  CustomSnackBar.error(context, 'Error al cargar saldo');
                 }
               }
             },

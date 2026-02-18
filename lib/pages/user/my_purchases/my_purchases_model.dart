@@ -1,9 +1,9 @@
 import '/flutter_flow/flutter_flow_util.dart';
 import '/backend/order_service.dart';
-import 'my_purchases_modern_widget.dart' show MyPurchasesModernWidget;
+import 'my_purchases_widget.dart' show MyPurchasesWidget;
 import 'package:flutter/material.dart';
 
-class MyPurchasesModel extends FlutterFlowModel<MyPurchasesModernWidget> {
+class MyPurchasesModel extends FlutterFlowModel<MyPurchasesWidget> {
   String selectedCategory = 'Todos'; // Filtro de categorías
 
   // Estadísticas

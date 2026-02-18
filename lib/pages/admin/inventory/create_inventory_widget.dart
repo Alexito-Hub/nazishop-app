@@ -5,21 +5,21 @@ import 'package:nazi_shop/backend/admin_service.dart';
 import '../../../components/smart_back_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 
-class CreateInventoryPage extends StatefulWidget {
+class CreateInventoryWidget extends StatefulWidget {
   final String? listingId;
   final String? listingTitle;
 
-  const CreateInventoryPage({
+  const CreateInventoryWidget({
     super.key,
     this.listingId,
     this.listingTitle,
   });
 
   @override
-  State<CreateInventoryPage> createState() => _CreateInventoryPageState();
+  State<CreateInventoryWidget> createState() => _CreateInventoryWidgetState();
 }
 
-class _CreateInventoryPageState extends State<CreateInventoryPage> {
+class _CreateInventoryWidgetState extends State<CreateInventoryWidget> {
   // Styles
   // Removed static consts to use Theme directly
   // static const Color kPrimaryColor = Color(0xFFE50914);
@@ -110,7 +110,9 @@ class _CreateInventoryPageState extends State<CreateInventoryPage> {
               height: 500,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: FlutterFlowTheme.of(context).primary.withValues(alpha: 0.05),
+                color: FlutterFlowTheme.of(context)
+                    .primary
+                    .withValues(alpha: 0.05),
               ),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),

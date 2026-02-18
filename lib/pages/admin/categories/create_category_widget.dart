@@ -7,16 +7,16 @@ import 'package:nazi_shop/models/category_model.dart'
 import 'package:google_fonts/google_fonts.dart';
 import '../../../components/smart_back_button.dart';
 
-class CreateCategoryPage extends StatefulWidget {
+class CreateCategoryWidget extends StatefulWidget {
   final model.Category? category; // If provided, edit mode
 
-  const CreateCategoryPage({super.key, this.category});
+  const CreateCategoryWidget({super.key, this.category});
 
   @override
-  CreateCategoryPageState createState() => CreateCategoryPageState();
+  CreateCategoryWidgetState createState() => CreateCategoryWidgetState();
 }
 
-class CreateCategoryPageState extends State<CreateCategoryPage> {
+class CreateCategoryWidgetState extends State<CreateCategoryWidget> {
   final _formKey = GlobalKey<FormState>();
 
   late TextEditingController _nameCtrl;

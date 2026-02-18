@@ -12,14 +12,14 @@ import '/backend/favorites_service.dart';
 // No usamos FlutterFlowTheme para mantener consistencia con HomePageModern
 // import '/flutter_flow/flutter_flow_theme.dart';
 
-class ProfileModernWidget extends StatefulWidget {
-  const ProfileModernWidget({super.key});
+class ProfileWidget extends StatefulWidget {
+  const ProfileWidget({super.key});
 
   @override
-  State<ProfileModernWidget> createState() => _ProfileModernWidgetState();
+  State<ProfileWidget> createState() => _ProfileWidgetState();
 }
 
-class _ProfileModernWidgetState extends State<ProfileModernWidget> {
+class _ProfileWidgetState extends State<ProfileWidget> {
   // --- ESTADO ---
   final ScrollController _scrollController = ScrollController();
   int _orderCount = 0;

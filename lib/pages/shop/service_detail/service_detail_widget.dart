@@ -5,11 +5,11 @@ import 'package:go_router/go_router.dart';
 
 // Necesario para ImageFilter
 
-// Mantengo tus imports originales
 import 'package:nazi_shop/models/service_model.dart';
 import 'package:nazi_shop/models/offer_model.dart';
-import 'package:nazi_shop/components/safe_image.dart';
-import 'package:nazi_shop/pages/checkout/checkout_page.dart';
+import '/flutter_flow/safe_image.dart';
+import '/flutter_flow/flutter_flow_util.dart';
+
 import 'package:nazi_shop/backend/favorites_service.dart';
 import 'package:nazi_shop/utils/color_utils.dart';
 import '../../../components/smart_back_button.dart';
@@ -71,14 +71,12 @@ class _ServiceDetailWidgetState extends State<ServiceDetailWidget> {
   }
 
   Future<void> _handlePurchase(Offer offer) async {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CheckoutPage(
-          service: widget.service,
-          selectedOffer: offer,
-        ),
-      ),
+    context.pushNamed(
+      'checkout',
+      extra: {
+        'service': widget.service,
+        'selectedOffer': offer,
+      },
     );
   }
 
@@ -157,9 +155,8 @@ class _ServiceDetailWidgetState extends State<ServiceDetailWidget> {
               children: [
                 if (widget.service.branding.bannerUrl != null)
                   SafeImage(
-                    imageUrl: widget.service.branding.bannerUrl,
+                    widget.service.branding.bannerUrl,
                     fit: BoxFit.cover,
-                    fallbackColor: primaryColor,
                   ),
                 // Gradiente para legibilidad
                 Container(
@@ -203,7 +200,7 @@ class _ServiceDetailWidgetState extends State<ServiceDetailWidget> {
                             ? ClipRRect(
                                 borderRadius: BorderRadius.circular(16),
                                 child: SafeImage(
-                                    imageUrl: widget.service.branding.logoUrl!,
+                                    widget.service.branding.logoUrl!,
                                     fit: BoxFit.cover),
                               )
                             : Icon(Icons.layers, color: primaryColor),
@@ -519,10 +516,8 @@ class _ServiceDetailWidgetState extends State<ServiceDetailWidget> {
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(24),
-                          child: SafeImage(
-                              imageUrl: widget.service.branding.bannerUrl,
-                              fit: BoxFit.cover,
-                              fallbackColor: primaryColor),
+                          child: SafeImage(widget.service.branding.bannerUrl,
+                              fit: BoxFit.cover),
                         ),
                       ),
 

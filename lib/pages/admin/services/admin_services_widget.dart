@@ -6,16 +6,16 @@ import 'package:nazi_shop/models/service_model.dart';
 import 'package:go_router/go_router.dart';
 import '../../../components/smart_back_button.dart';
 
-class AdminServicesPage extends StatefulWidget {
-  const AdminServicesPage({super.key});
+class AdminServicesWidget extends StatefulWidget {
+  const AdminServicesWidget({super.key});
 
   static String routeName = 'admin_services';
 
   @override
-  AdminServicesPageState createState() => AdminServicesPageState();
+  AdminServicesWidgetState createState() => AdminServicesWidgetState();
 }
 
-class AdminServicesPageState extends State<AdminServicesPage> {
+class AdminServicesWidgetState extends State<AdminServicesWidget> {
   List<Service> _services = [];
   bool _isLoading = true;
 

@@ -1,20 +1,17 @@
 // Export pages
-export '/pages/home_page/home_page_modern.dart' show HomePageModernWidget;
-export '/pages/user/my_purchases/my_purchases_modern_widget.dart'
-    show MyPurchasesModernWidget;
+export '/pages/home_page/home_page_widget.dart' show HomePageWidget;
+export '/pages/user/my_purchases/my_purchases_widget.dart'
+    show MyPurchasesWidget;
 export '/pages/user/orders_history/orders_history_widget.dart'
     show OrdersHistoryWidget;
-export '/pages/user/favorites/favorites_modern_widget.dart'
-    show FavoritesModernWidget;
-export '/pages/user/profile/profile_modern_widget.dart'
-    show ProfileModernWidget;
+export '/pages/user/favorites/favorites_widget.dart' show FavoritesWidget;
+export '/pages/user/profile/profile_widget.dart' show ProfileWidget;
 export '/pages/shop/service_detail/service_detail_widget.dart'
     show ServiceDetailWidget;
-export '/pages/checkout/checkout_modern_widget.dart' show CheckoutModernWidget;
-export '/pages/shop/all_products/all_products_modern_widget.dart'
-    show AllProductsModernWidget;
-export '/pages/user/profile/edit_profile_modern_widget.dart'
-    show EditProfileModernWidget;
+
+export '/pages/shop/all_products/all_products_widget.dart'
+    show AllProductsWidget;
+export '/pages/user/profile/edit_profile_widget.dart' show EditProfileWidget;
 export '/pages/order_details/view_credentials/view_credentials_widget.dart'
     show ViewCredentialsWidget;
 export '/pages/order_details/view_streaming_credentials/view_streaming_credentials_widget.dart'
@@ -35,22 +32,37 @@ export '/auth/complete_profile/complete_profile_widget.dart'
     show CompleteProfileWidget;
 
 // New Admin Pages
-export '/pages/admin/categories/admin_categories_page.dart'
-    show AdminCategoriesPage;
-export '/pages/admin/services/admin_services_page.dart' show AdminServicesPage;
-export '/pages/admin/offers/admin_offers_page.dart' show AdminOffersPage;
-export '/pages/admin/inventory/admin_inventory_page.dart'
-    show AdminInventoryPage;
-export '/pages/admin/notifications/admin_notifications_page.dart'
-    show AdminNotificationsPage;
-export '/pages/admin/analytics/admin_analytics_page.dart'
-    show AdminAnalyticsPage;
-export '/pages/admin/config/admin_config_page.dart' show AdminConfigPage;
-export '/pages/admin/coupons/admin_coupons_page.dart' show AdminCouponsPage;
-export '/pages/admin/categories/create_category_page.dart'
-    show CreateCategoryPage;
-export '/pages/admin/services/create_service_page.dart' show CreateServicePage;
-export '/pages/admin/offers/create_offer_page.dart' show CreateListingPage;
+export '/pages/admin/categories/admin_categories_widget.dart'
+    show AdminCategoriesWidget;
+export '/pages/admin/services/admin_services_widget.dart'
+    show AdminServicesWidget;
+export '/pages/admin/listings/admin_listings_widget.dart'
+    show AdminListingsWidget;
+export '/pages/admin/promotions/admin_promotions_widget.dart'
+    show AdminPromotionsWidget;
+export '/pages/admin/inventory/admin_inventory_widget.dart'
+    show AdminInventoryWidget;
+export '/pages/admin/notifications/admin_notifications_widget.dart'
+    show AdminNotificationsWidget;
+export '/pages/admin/analytics/admin_analytics_widget.dart'
+    show AdminAnalyticsWidget;
+export '/pages/admin/config/admin_config_widget.dart' show AdminConfigWidget;
+export '/pages/admin/coupons/admin_coupons_widget.dart' show AdminCouponsWidget;
+export '/pages/admin/categories/create_category_widget.dart'
+    show CreateCategoryWidget;
+export '/pages/admin/services/create_service_widget.dart'
+    show CreateServiceWidget;
+export '/pages/admin/listings/create_listing_widget.dart'
+    show CreateListingWidget;
+export '/pages/admin/promotions/create_promotion_widget.dart'
+    show CreatePromotionWidget;
+export '/pages/admin/inventory/create_inventory_widget.dart'
+    show CreateInventoryWidget;
+export '/pages/admin/coupons/create_coupon_widget.dart' show CreateCouponWidget;
+export '/pages/admin/domain_approval/domain_approval_widget.dart'
+    show DomainApprovalWidget;
+export '/pages/admin/notifications/create_notification_widget.dart'
+    show CreateNotificationWidget;
 
 // Admin Management Pages
 export '/pages/admin/orders_stats/orders_stats_widget.dart'
@@ -75,6 +87,7 @@ export '/pages/admin/order_details/order_details_widget.dart'
     show OrderDetailsWidget;
 export '/pages/checkout/purchase_success/purchase_success_widget.dart'
     show PurchaseSuccessWidget;
+export '/pages/checkout/checkout_widget.dart' show CheckoutWidget;
 export '/pages/checkout/payment_methods_user/payment_methods_user_widget.dart'
     show PaymentMethodsUserWidget;
 export '/pages/admin/add_balance_admin/add_balance_admin_widget.dart'

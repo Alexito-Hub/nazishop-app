@@ -5,18 +5,18 @@ import '../../../components/smart_back_button.dart';
 import 'package:nazi_shop/backend/admin_service.dart';
 import 'package:nazi_shop/models/offer_model.dart';
 import 'package:go_router/go_router.dart';
-import '/pages/admin/inventory/admin_inventory_page.dart';
+import '/pages/admin/inventory/admin_inventory_widget.dart';
 
-class AdminOffersPage extends StatefulWidget {
-  const AdminOffersPage({super.key});
+class AdminListingsWidget extends StatefulWidget {
+  const AdminListingsWidget({super.key});
 
   static String routeName = 'admin_listings';
 
   @override
-  AdminOffersPageState createState() => AdminOffersPageState();
+  State<AdminListingsWidget> createState() => _AdminListingsWidgetState();
 }
 
-class AdminOffersPageState extends State<AdminOffersPage> {
+class _AdminListingsWidgetState extends State<AdminListingsWidget> {
   List<Offer> _offers = [];
   bool _isLoading = true;
 
@@ -519,7 +519,7 @@ class AdminOffersPageState extends State<AdminOffersPage> {
                           () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => AdminInventoryPage(
+                              builder: (context) => AdminInventoryWidget(
                                 listingId: offer.id,
                                 listingTitle: offer.title,
                               ),

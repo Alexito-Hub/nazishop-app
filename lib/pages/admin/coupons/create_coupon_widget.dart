@@ -7,15 +7,15 @@ import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 
-class CreateCouponPage extends StatefulWidget {
+class CreateCouponWidget extends StatefulWidget {
   final Map<String, dynamic>? coupon;
-  const CreateCouponPage({super.key, this.coupon});
+  const CreateCouponWidget({super.key, this.coupon});
 
   @override
-  State<CreateCouponPage> createState() => _CreateCouponPageState();
+  State<CreateCouponWidget> createState() => _CreateCouponWidgetState();
 }
 
-class _CreateCouponPageState extends State<CreateCouponPage> {
+class _CreateCouponWidgetState extends State<CreateCouponWidget> {
   // Styles
   // Constants removed for Theme usage
 

@@ -6,14 +6,14 @@ import 'package:nazi_shop/backend/admin_service.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../../components/smart_back_button.dart';
 
-class AdminAnalyticsPage extends StatefulWidget {
-  const AdminAnalyticsPage({super.key});
+class AdminAnalyticsWidget extends StatefulWidget {
+  const AdminAnalyticsWidget({super.key});
 
   @override
-  State<AdminAnalyticsPage> createState() => _AdminAnalyticsPageState();
+  State<AdminAnalyticsWidget> createState() => _AdminAnalyticsWidgetState();
 }
 
-class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> {
+class _AdminAnalyticsWidgetState extends State<AdminAnalyticsWidget> {
   bool _isLoading = false;
   Map<String, dynamic> _stats = {};
   Map<String, dynamic> _serverStats = {};

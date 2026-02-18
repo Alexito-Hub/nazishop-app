@@ -7,16 +7,16 @@ import 'package:nazi_shop/models/category_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../components/smart_back_button.dart';
 
-class CreateServicePage extends StatefulWidget {
+class CreateServiceWidget extends StatefulWidget {
   final Service? service;
 
-  const CreateServicePage({super.key, this.service});
+  const CreateServiceWidget({super.key, this.service});
 
   @override
-  CreateServicePageState createState() => CreateServicePageState();
+  CreateServiceWidgetState createState() => CreateServiceWidgetState();
 }
 
-class CreateServicePageState extends State<CreateServicePage> {
+class CreateServiceWidgetState extends State<CreateServiceWidget> {
   final _formKey = GlobalKey<FormState>();
 
   late TextEditingController _nameCtrl;

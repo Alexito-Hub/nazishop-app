@@ -8,16 +8,16 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/backend/catalog_service.dart';
 import '/models/category_model.dart';
 import '/models/service_model.dart';
-import '../../components/service_card_modern.dart';
+import '../../components/service_card.dart';
 
-class HomePageModernWidget extends StatefulWidget {
-  const HomePageModernWidget({super.key});
+class HomePageWidget extends StatefulWidget {
+  const HomePageWidget({super.key});
 
   @override
-  State<HomePageModernWidget> createState() => _HomePageModernWidgetState();
+  State<HomePageWidget> createState() => _HomePageWidgetState();
 }
 
-class _HomePageModernWidgetState extends State<HomePageModernWidget> {
+class _HomePageWidgetState extends State<HomePageWidget> {
   // --- ESTADO ---
   List<Category> _categories = [];
   List<Service> _services = [];
@@ -208,7 +208,7 @@ class _HomePageModernWidgetState extends State<HomePageModernWidget> {
                       delegate: SliverChildBuilderDelegate(
                         (context, i) {
                           final service = _filteredServices[i];
-                          return ServiceCardModern(
+                          return ServiceCard(
                             service: service,
                             primaryColor:
                                 _parseColor(service.branding.primaryColor) ??
@@ -310,7 +310,7 @@ class _HomePageModernWidgetState extends State<HomePageModernWidget> {
                           delegate: SliverChildBuilderDelegate(
                             (context, i) {
                               final service = _filteredServices[i];
-                              return ServiceCardModern(
+                              return ServiceCard(
                                 service: service,
                                 primaryColor: _parseColor(
                                         service.branding.primaryColor) ??

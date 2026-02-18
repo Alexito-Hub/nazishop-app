@@ -5,7 +5,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:nazi_shop/models/category_model.dart';
 import 'package:nazi_shop/models/service_model.dart';
 import '../../../components/smart_back_button.dart';
-import '../../../components/service_card_modern.dart';
+import '/components/service_card.dart';
 import 'package:nazi_shop/utils/icon_utils.dart';
 import 'package:nazi_shop/utils/color_utils.dart';
 import '../../../flutter_flow/flutter_flow_theme.dart';
@@ -218,7 +218,7 @@ class _CategoryPageState extends State<CategoryPage> {
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
                         final service = services[index];
-                        return ServiceCardModern(
+                        return ServiceCard(
                           service: service,
                           primaryColor: ColorUtils.parseColor(
                               context, service.branding.primaryColor),

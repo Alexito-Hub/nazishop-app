@@ -11,17 +11,17 @@ import '../../../../backend/security_manager.dart';
 import '../components/security_check_dialog.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 
-class AdminInventoryPage extends StatefulWidget {
+class AdminInventoryWidget extends StatefulWidget {
   final String? listingId;
   final String? listingTitle;
 
-  const AdminInventoryPage({super.key, this.listingId, this.listingTitle});
+  const AdminInventoryWidget({super.key, this.listingId, this.listingTitle});
 
   @override
-  State<AdminInventoryPage> createState() => _AdminInventoryPageState();
+  State<AdminInventoryWidget> createState() => _AdminInventoryWidgetState();
 }
 
-class _AdminInventoryPageState extends State<AdminInventoryPage> {
+class _AdminInventoryWidgetState extends State<AdminInventoryWidget> {
   // Styles
   // Colores ahora gestionados por FlutterFlowTheme
 

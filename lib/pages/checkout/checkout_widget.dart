@@ -12,21 +12,21 @@ import '../../auth/nazishop_auth/auth_util.dart';
 import '../../backend/wallet_service.dart';
 import '../../components/smart_back_button.dart';
 
-class CheckoutPage extends StatefulWidget {
+class CheckoutWidget extends StatefulWidget {
   final Service service;
   final Offer selectedOffer;
 
-  const CheckoutPage({
+  const CheckoutWidget({
     super.key,
     required this.service,
     required this.selectedOffer,
   });
 
   @override
-  State<CheckoutPage> createState() => _CheckoutPageState();
+  State<CheckoutWidget> createState() => _CheckoutWidgetState();
 }
 
-class _CheckoutPageState extends State<CheckoutPage> {
+class _CheckoutWidgetState extends State<CheckoutWidget> {
   int _selectedPaymentMethod = 0;
   bool _isProcessing = false;
   bool _acceptedTerms = false;
@@ -508,7 +508,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               decoration: BoxDecoration(
-                color: FlutterFlowTheme.of(context).success.withValues(alpha: 0.15),
+                color: FlutterFlowTheme.of(context)
+                    .success
+                    .withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -604,7 +606,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: FlutterFlowTheme.of(context).alternate.withValues(alpha: 0.3),
+              color:
+                  FlutterFlowTheme.of(context).alternate.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(12),
             ),
             child: widget.service.branding.logoUrl != null
@@ -700,7 +703,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
             width: 80,
             height: 80,
             decoration: BoxDecoration(
-              color: FlutterFlowTheme.of(context).alternate.withValues(alpha: 0.3),
+              color:
+                  FlutterFlowTheme.of(context).alternate.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(16),
             ),
             child: widget.service.branding.logoUrl != null
@@ -1194,8 +1198,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
             height: 22,
             decoration: BoxDecoration(
               gradient: _acceptedTerms
-                  ? LinearGradient(
-                      colors: [_primaryColor, _primaryColor.withValues(alpha: 0.8)])
+                  ? LinearGradient(colors: [
+                      _primaryColor,
+                      _primaryColor.withValues(alpha: 0.8)
+                    ])
                   : null,
               color: _acceptedTerms
                   ? null

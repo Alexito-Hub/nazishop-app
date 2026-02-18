@@ -7,16 +7,16 @@ import 'package:nazi_shop/models/category_model.dart';
 import 'package:nazi_shop/utils/icon_utils.dart';
 import 'package:go_router/go_router.dart';
 
-class AdminCategoriesPage extends StatefulWidget {
-  const AdminCategoriesPage({super.key});
+class AdminCategoriesWidget extends StatefulWidget {
+  const AdminCategoriesWidget({super.key});
 
   static String routeName = 'admin_categories';
 
   @override
-  AdminCategoriesPageState createState() => AdminCategoriesPageState();
+  AdminCategoriesWidgetState createState() => AdminCategoriesWidgetState();
 }
 
-class AdminCategoriesPageState extends State<AdminCategoriesPage> {
+class AdminCategoriesWidgetState extends State<AdminCategoriesWidget> {
   List<Category> _categories = [];
   bool _isLoading = true;
 

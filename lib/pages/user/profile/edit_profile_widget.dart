@@ -11,8 +11,8 @@ import 'package:provider/provider.dart';
 import 'dart:ui';
 import '../../../components/smart_back_button.dart';
 
-class EditProfileModernWidget extends StatefulWidget {
-  const EditProfileModernWidget({
+class EditProfileWidget extends StatefulWidget {
+  const EditProfileWidget({
     super.key,
     this.title = 'Editar Perfil',
     this.confirmButtonText = 'Guardar Cambios',
@@ -24,11 +24,10 @@ class EditProfileModernWidget extends StatefulWidget {
   final Future Function()? navigateAction;
 
   @override
-  State<EditProfileModernWidget> createState() =>
-      _EditProfileModernWidgetState();
+  State<EditProfileWidget> createState() => _EditProfileWidgetState();
 }
 
-class _EditProfileModernWidgetState extends State<EditProfileModernWidget> {
+class _EditProfileWidgetState extends State<EditProfileWidget> {
   final _formKey = GlobalKey<FormState>();
 
   // Consistencia de Diseño Moderno

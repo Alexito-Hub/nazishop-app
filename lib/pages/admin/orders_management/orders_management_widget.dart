@@ -1,11 +1,15 @@
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/pages/admin/admin_auth_guard.dart';
-import 'package:nazi_shop/backend/currency_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+
 import '../../../components/smart_back_button.dart';
 import 'orders_management_model.dart';
+import 'package:nazi_shop/models/order_model.dart';
+import 'package:nazi_shop/backend/currency_service.dart';
+
 export 'orders_management_model.dart';
 
 class OrdersManagementWidget extends StatefulWidget {
@@ -62,7 +66,7 @@ class _OrdersManagementWidgetState extends State<OrdersManagementWidget> {
       physics: const BouncingScrollPhysics(),
       slivers: [
         SliverAppBar(
-          backgroundColor: FlutterFlowTheme.of(context).transparent,
+          backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
           surfaceTintColor: FlutterFlowTheme.of(context).transparent,
           pinned: true,
           floating: true,
@@ -95,7 +99,7 @@ class _OrdersManagementWidgetState extends State<OrdersManagementWidget> {
             ),
           ],
         ),
-        SliverToBoxAdapter(child: _buildFilters()),
+        SliverToBoxAdapter(child: _buildFilters(isDesktop: false)),
         SliverToBoxAdapter(child: _buildStats()),
         _buildOrdersList(isDesktop: false),
       ],
@@ -136,6 +140,8 @@ class _OrdersManagementWidgetState extends State<OrdersManagementWidget> {
                       ],
                     ),
                     const Spacer(),
+                    _buildFilters(isDesktop: true),
+                    const SizedBox(width: 16),
                     IconButton(
                       icon: Icon(Icons.refresh,
                           color: FlutterFlowTheme.of(context).secondaryText),
@@ -149,14 +155,7 @@ class _OrdersManagementWidgetState extends State<OrdersManagementWidget> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildFilters(),
-                    const SizedBox(height: 24),
-                    _buildStats(),
-                  ],
-                ),
+                child: _buildStats(),
               ),
             ),
             SliverPadding(
@@ -169,26 +168,30 @@ class _OrdersManagementWidgetState extends State<OrdersManagementWidget> {
     );
   }
 
-  Widget _buildFilters() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-      child: Row(
-        children: [
-          _buildFilterChip('Todas', null),
-          const SizedBox(width: 8.0),
-          _buildFilterChip('Pendientes', 'PENDING'),
-          const SizedBox(width: 8.0),
-          _buildFilterChip('Proceso', 'PROCESSING'),
-          const SizedBox(width: 8.0),
-          _buildFilterChip('Completadas', 'COMPLETED'),
-          const SizedBox(width: 8.0),
-          _buildFilterChip('Fallidas', 'FAILED'),
-          const SizedBox(width: 8.0),
-          _buildFilterChip('Canceladas', 'CANCELLED'),
-        ],
-      ),
-    );
+  Widget _buildFilters({required bool isDesktop}) {
+    // If desktop, simple row. If mobile, scrollable row.
+    final children = [
+      _buildFilterChip('Todas', null),
+      const SizedBox(width: 8.0),
+      _buildFilterChip('Pendientes', 'pending'),
+      const SizedBox(width: 8.0),
+      _buildFilterChip('Proceso', 'processing'),
+      const SizedBox(width: 8.0),
+      _buildFilterChip(
+          'Completadas', 'delivered'), // mapped to 'delivered' or 'completed'
+      const SizedBox(width: 8.0),
+      _buildFilterChip('Canceladas', 'cancelled'),
+    ];
+
+    if (isDesktop) {
+      return Row(mainAxisSize: MainAxisSize.min, children: children);
+    } else {
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+        child: Row(children: children),
+      );
+    }
   }
 
   Widget _buildStats() {
@@ -200,7 +203,9 @@ class _OrdersManagementWidgetState extends State<OrdersManagementWidget> {
           Expanded(
             child: _buildQuickStat(
               'Total',
-              '${_model.orders.length}',
+              '${_model.orders.length}', // This counts loaded orders, might need total from API?
+              // API returns total count but model page loads. For now this is fine or maybe show total from pagination?
+              // The model stores total in local logic if needed, but let's stick to loaded or add logic later.
               Icons.receipt_long,
               FlutterFlowTheme.of(context).primaryText,
             ),
@@ -209,7 +214,7 @@ class _OrdersManagementWidgetState extends State<OrdersManagementWidget> {
           Expanded(
             child: _buildQuickStat(
               'Pendientes',
-              '${_model.orders.where((o) => o['status'] == 'PENDING').length}',
+              '${_model.orders.where((o) => o.status.toLowerCase() == 'pending').length}',
               Icons.pending,
               FlutterFlowTheme.of(context).warning,
             ),
@@ -218,7 +223,10 @@ class _OrdersManagementWidgetState extends State<OrdersManagementWidget> {
           Expanded(
             child: _buildQuickStat(
               'Éxito',
-              '${_model.orders.where((o) => o['status'] == 'COMPLETED').length}',
+              '${_model.orders.where((o) => [
+                    'completed',
+                    'delivered'
+                  ].contains(o.status.toLowerCase())).length}',
               Icons.check_circle,
               FlutterFlowTheme.of(context).primary,
             ),
@@ -277,6 +285,51 @@ class _OrdersManagementWidgetState extends State<OrdersManagementWidget> {
       );
     }
 
+    if (isDesktop) {
+      return SliverGrid(
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 320,
+          childAspectRatio: 0.70,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+        ),
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            if (index == _model.orders.length) {
+              // Pagination loader/button
+              if (_model.hasMore) {
+                return Center(
+                  child: ElevatedButton(
+                    onPressed: () => _model.loadNextPage(),
+                    child: _model.isLoadingOrders
+                        ? SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                                strokeWidth: 2, color: Colors.white))
+                        : const Text('Cargar más'),
+                  ),
+                );
+              }
+              return const SizedBox.shrink();
+            }
+            return AdminOrderCard(
+              order: _model.orders[index],
+              onUpdateStatus: (id, status) =>
+                  _model.updateOrderStatus(orderId: id, status: status),
+            )
+                .animate()
+                .fadeIn(
+                    delay:
+                        (30 * (index % 10)).ms) // Modulo to prevent long delays
+                .slideY(begin: 0.1);
+          },
+          childCount: _model.orders.length + (_model.hasMore ? 1 : 0),
+        ),
+      );
+    }
+
+    // Mobile list
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
@@ -303,8 +356,12 @@ class _OrdersManagementWidgetState extends State<OrdersManagementWidget> {
             return const SizedBox(height: 100);
           }
           return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: _buildOrderCard(_model.orders[index]),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            child: AdminOrderCard(
+              order: _model.orders[index],
+              onUpdateStatus: (id, status) =>
+                  _model.updateOrderStatus(orderId: id, status: status),
+            ).animate().fadeIn(delay: (50 * (index % 10)).ms),
           );
         },
         childCount: _model.orders.length + 1,
@@ -391,286 +448,328 @@ class _OrdersManagementWidgetState extends State<OrdersManagementWidget> {
       ),
     );
   }
+}
 
-  Widget _buildOrderCard(Map<String, dynamic> order) {
-    final orderId = order['orderId'] ?? order['id'] ?? 'Sin ID';
-    final status = order['status'] ?? 'PENDING';
-    final serviceName = order['serviceName'] ?? 'Servicio desconocido';
-    final amount = (order['amount'] ?? 0.0).toDouble();
-    final userName = order['userName'] ?? 'Usuario desconocido';
-    final createdAt = order['createdAt'];
+// ===========================================================================
+// 📦 ADMIN ORDER CARD (Modern Style)
+// ===========================================================================
+class AdminOrderCard extends StatefulWidget {
+  final Order order;
+  final Function(String, String) onUpdateStatus;
 
+  const AdminOrderCard({
+    super.key,
+    required this.order,
+    required this.onUpdateStatus,
+  });
+
+  @override
+  State<AdminOrderCard> createState() => _AdminOrderCardState();
+}
+
+class _AdminOrderCardState extends State<AdminOrderCard> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    // Access data safely
+    final item =
+        widget.order.items.isNotEmpty ? widget.order.items.first : null;
+    final snapshot = item?.offerSnapshot;
+    final offerDetails = item?.offerDetails;
+
+    final status = widget.order.status.toLowerCase();
+
+    // Service Name: Try populated offer first (if service populated), then snapshot
+    // Note: offerDetails['serviceId'] is the populated Service object
+    final serviceObj =
+        (offerDetails != null && offerDetails['serviceId'] is Map)
+            ? offerDetails['serviceId']
+            : null;
+
+    final serviceName =
+        serviceObj?['name'] ?? snapshot?['title'] ?? 'Unknown Service';
+
+    final branding = serviceObj?['branding'];
+    final String? logoUrl = branding?['logoUrl'];
+
+    // Attempt to parse primary color from branding
+    Color primaryColor = FlutterFlowTheme.of(context).primary;
+    if (branding?['primaryColor'] != null) {
+      try {
+        String hex = branding!['primaryColor'].toString().replaceAll('#', '');
+        if (hex.length == 6) hex = 'FF$hex';
+        primaryColor = Color(int.parse(hex, radix: 16));
+      } catch (_) {}
+    }
+
+    final price = widget.order.totalAmount;
+    final orderId = widget.order.id;
+    final date = widget.order.createdAt;
+    final formattedDate = DateFormat('dd MMM HH:mm').format(date);
+
+    // Status Logic
     Color statusColor;
     IconData statusIcon;
+    String statusText;
+
     switch (status) {
-      case 'COMPLETED':
+      case 'paid':
         statusColor = FlutterFlowTheme.of(context).success;
-        statusIcon = Icons.check_circle_rounded;
+        statusText = 'PAGADO';
+        statusIcon = Icons.attach_money;
         break;
-      case 'PROCESSING':
+      case 'processing':
+        statusColor = FlutterFlowTheme.of(context).warning;
+        statusText = 'PROCESO';
+        statusIcon = Icons.sync;
+        break;
+      case 'delivered':
+      case 'completed':
+        statusColor = FlutterFlowTheme.of(context).success;
+        statusText = 'COMPLETADO';
+        statusIcon = Icons.check_circle;
+        break;
+      case 'pending':
         statusColor = FlutterFlowTheme.of(context).info;
-        statusIcon = Icons.sync_rounded;
+        statusText = 'PENDIENTE';
+        statusIcon = Icons.pending;
         break;
-      case 'FAILED':
+      case 'cancelled':
+      case 'failed':
         statusColor = FlutterFlowTheme.of(context).error;
-        statusIcon = Icons.error_rounded;
-        break;
-      case 'CANCELLED':
-        statusColor = FlutterFlowTheme.of(context).secondaryText;
-        statusIcon = Icons.cancel_rounded;
+        statusText = status == 'failed' ? 'FALLIDO' : 'CANCELADO';
+        statusIcon = Icons.cancel;
         break;
       default:
         statusColor = FlutterFlowTheme.of(context).secondaryText;
-        statusIcon = Icons.pending_rounded;
+        statusText = status.toUpperCase();
+        statusIcon = Icons.help_outline;
     }
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12.0),
-      decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).secondaryBackground,
-        borderRadius: BorderRadius.circular(20.0),
-        border: Border.all(
-          color: FlutterFlowTheme.of(context).alternate,
-          width: 1,
+    final borderColor = _isHovered
+        ? primaryColor.withValues(alpha: 0.5)
+        : FlutterFlowTheme.of(context).alternate;
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOut,
+        transform: Matrix4.identity()
+          ..translateByDouble(0.0, _isHovered ? -8.0 : 0.0, 0.0, 1.0),
+        decoration: BoxDecoration(
+          color: FlutterFlowTheme.of(context).secondaryBackground,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: borderColor, width: 1.5),
+          boxShadow: _isHovered
+              ? [
+                  BoxShadow(
+                    color: primaryColor.withValues(alpha: 0.15),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  )
+                ]
+              : [],
         ),
-      ),
-      child: Theme(
-        data: Theme.of(context)
-            .copyWith(dividerColor: FlutterFlowTheme.of(context).transparent),
-        child: ExpansionTile(
-          collapsedIconColor: FlutterFlowTheme.of(context).secondaryText,
-          iconColor: FlutterFlowTheme.of(context).primary,
-          tilePadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-          leading: Container(
-            width: 48.0,
-            height: 48.0,
-            decoration: BoxDecoration(
-              color: statusColor.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(14.0),
-            ),
-            child: Icon(statusIcon, color: statusColor, size: 24),
-          ),
-          title: Text(
-            serviceName,
-            style: GoogleFonts.outfit(
-              fontWeight: FontWeight.bold,
-              color: FlutterFlowTheme.of(context).primaryText,
-              fontSize: 16,
-            ),
-          ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(22),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                'Usuario: $userName',
-                style: GoogleFonts.outfit(
-                    color: FlutterFlowTheme.of(context).secondaryText,
-                    fontSize: 13),
-              ),
-              const SizedBox(height: 8.0),
-              Row(
-                children: [
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: statusColor.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: statusColor.withValues(alpha: 0.1)),
+              // 1. HEADER (45%)
+              Expanded(
+                flex: 4,
+                child: Stack(
+                  children: [
+                    // Background Image or Pattern
+                    Container(
+                      decoration: BoxDecoration(
+                        color: FlutterFlowTheme.of(context).primaryBackground,
+                        image: DecorationImage(
+                            image: logoUrl != null
+                                ? NetworkImage(logoUrl)
+                                : const NetworkImage(
+                                    "https://www.transparenttextures.com/patterns/cubes.png"),
+                            colorFilter: logoUrl != null
+                                ? null
+                                : ColorFilter.mode(
+                                    Colors.black.withValues(alpha: 0.5),
+                                    BlendMode.dstATop),
+                            fit: logoUrl != null ? BoxFit.cover : BoxFit.cover),
+                      ),
+                      child: logoUrl == null
+                          ? Center(
+                              child: Icon(Icons.shopping_bag_outlined,
+                                  color: Colors.white24, size: 40))
+                          : null,
                     ),
-                    child: Text(
-                      status,
-                      style: GoogleFonts.outfit(
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                        color: statusColor,
-                        letterSpacing: 0.5,
+
+                    // Gradient Overlay
+                    Positioned.fill(
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.transparent,
+                              Colors.black.withValues(alpha: 0.7)
+                            ],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    CurrencyService.formatFromUSD(amount),
-                    style: GoogleFonts.outfit(
-                      fontWeight: FontWeight.bold,
-                      color: FlutterFlowTheme.of(context).primaryText,
-                      fontSize: 14,
+
+                    // Status Badge
+                    Positioned(
+                      top: 8,
+                      left: 8,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: statusColor,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(statusIcon, color: Colors.white, size: 10),
+                            const SizedBox(width: 4),
+                            Text(statusText,
+                                style: GoogleFonts.outfit(
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white)),
+                          ],
+                        ),
+                      ),
                     ),
+
+                    // Date Badge
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: Colors.black45,
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: Colors.white10),
+                        ),
+                        child: Text(formattedDate,
+                            style: GoogleFonts.outfit(
+                                fontSize: 9, color: Colors.white70)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // 2. BODY (55%)
+              Expanded(
+                flex: 6,
+                child: Container(
+                  color: FlutterFlowTheme.of(context).secondaryBackground,
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(serviceName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.outfit(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                              color: FlutterFlowTheme.of(context).primaryText)),
+                      const SizedBox(height: 2),
+                      Text(
+                          'User: ${widget.order.userName ?? widget.order.userEmail ?? 'Usuario'}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.outfit(
+                              fontSize: 12,
+                              color:
+                                  FlutterFlowTheme.of(context).secondaryText)),
+
+                      const Spacer(),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(CurrencyService.formatFromUSD(price),
+                              style: GoogleFonts.outfit(
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 18,
+                                  color: FlutterFlowTheme.of(context)
+                                      .primaryText)),
+                        ],
+                      ),
+
+                      const SizedBox(height: 12),
+
+                      // ADMIN ACTIONS ROW
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 4, horizontal: 8),
+                        decoration: BoxDecoration(
+                          color: FlutterFlowTheme.of(context).primaryBackground,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                              color: FlutterFlowTheme.of(context).alternate),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            // Process
+                            _actionBtn(
+                                Icons.sync,
+                                FlutterFlowTheme.of(context).warning,
+                                'Process',
+                                () => widget.onUpdateStatus(
+                                    orderId, 'PROCESSING')),
+                            // Complete
+                            _actionBtn(
+                                Icons.check_circle,
+                                FlutterFlowTheme.of(context).success,
+                                'Done',
+                                () => widget.onUpdateStatus(
+                                    orderId, 'COMPLETED')),
+                            // Cancel
+                            _actionBtn(
+                                Icons.cancel,
+                                FlutterFlowTheme.of(context).error,
+                                'Cancel',
+                                () => widget.onUpdateStatus(
+                                    orderId, 'CANCELLED')),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ],
           ),
-          children: [
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20.0),
-              decoration: BoxDecoration(
-                color: FlutterFlowTheme.of(context).secondaryBackground,
-                border: Border(
-                    top: BorderSide(
-                        color: FlutterFlowTheme.of(context).alternate)),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('ID DE PEDIDO',
-                              style: GoogleFonts.outfit(
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryText,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold)),
-                          Text(orderId,
-                              style: GoogleFonts.outfit(
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryText,
-                                  fontSize: 12)),
-                        ],
-                      ),
-                      if (createdAt != null)
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text('FECHA',
-                                style: GoogleFonts.outfit(
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold)),
-                            Text(_formatDate(createdAt),
-                                style: GoogleFonts.outfit(
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                    fontSize: 12)),
-                          ],
-                        ),
-                    ],
-                  ),
-                  const SizedBox(height: 24.0),
-                  Text('ACCIONES DE GESTIÓN',
-                      style: GoogleFonts.outfit(
-                          color: FlutterFlowTheme.of(context).secondaryText,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 12.0),
-                  Wrap(
-                    spacing: 12.0,
-                    runSpacing: 12.0,
-                    children: [
-                      if (status == 'PENDING')
-                        _buildActionButton(
-                          'Procesar',
-                          Icons.sync_rounded,
-                          FlutterFlowTheme.of(context).warning,
-                          () => _updateStatus(orderId, 'PROCESSING'),
-                        ),
-                      if (status == 'PROCESSING')
-                        _buildActionButton(
-                          'Completar',
-                          Icons.check_circle_rounded,
-                          FlutterFlowTheme.of(context).success,
-                          () => _updateStatus(orderId, 'COMPLETED'),
-                        ),
-                      if (status != 'CANCELLED' && status != 'COMPLETED')
-                        _buildActionButton(
-                          'Cancelar',
-                          Icons.cancel_rounded,
-                          FlutterFlowTheme.of(context).secondaryText,
-                          () => _updateStatus(orderId, 'CANCELLED'),
-                        ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
         ),
       ),
     );
   }
 
-  Widget _buildActionButton(
-    String label,
-    IconData icon,
-    Color color,
-    VoidCallback onPressed,
-  ) {
-    return InkWell(
-      onTap: onPressed,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withValues(alpha: 0.1)),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, color: color, size: 16),
-            const SizedBox(width: 8),
-            Text(
-              label,
-              style: GoogleFonts.outfit(
-                color: color,
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
+  Widget _actionBtn(
+      IconData icon, Color color, String tooltip, VoidCallback onTap) {
+    return Tooltip(
+      message: tooltip,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(20),
+        child: Padding(
+          padding: const EdgeInsets.all(6.0),
+          child: Icon(icon, color: color, size: 20),
         ),
       ),
     );
-  }
-
-  Future<void> _updateStatus(String orderId, String status) async {
-    try {
-      await _model.updateOrderStatus(orderId: orderId, status: status);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Estado actualizado a $status',
-              style:
-                  GoogleFonts.outfit(color: FlutterFlowTheme.of(context).info),
-            ),
-            backgroundColor: FlutterFlowTheme.of(context).primary,
-          ),
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Error: $e',
-              style:
-                  GoogleFonts.outfit(color: FlutterFlowTheme.of(context).info),
-            ),
-            backgroundColor: FlutterFlowTheme.of(context).primary,
-          ),
-        );
-      }
-    }
-  }
-
-  String _formatDate(dynamic date) {
-    if (date == null) return 'N/A';
-    try {
-      if (date is String) {
-        final dt = DateTime.parse(date);
-        return '${dt.day}/${dt.month}/${dt.year} ${dt.hour}:${dt.minute.toString().padLeft(2, '0')}';
-      }
-      return date.toString();
-    } catch (e) {
-      return date.toString();
-    }
   }
 }

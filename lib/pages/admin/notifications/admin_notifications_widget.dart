@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:nazi_shop/backend/api_client.dart';
-import '../../../components/smart_back_button.dart';
-import 'package:nazi_shop/backend/notification_service.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:nazi_shop/backend/admin_service.dart';
+import '../../../components/smart_back_button.dart';
+import 'package:nazi_shop/models/notification_model.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
 
 class AdminNotificationsWidget extends StatefulWidget {
   const AdminNotificationsWidget({super.key});
-
-  static const String routeName = 'admin_notifications';
 
   @override
   State<AdminNotificationsWidget> createState() =>
@@ -16,354 +17,313 @@ class AdminNotificationsWidget extends StatefulWidget {
 }
 
 class _AdminNotificationsWidgetState extends State<AdminNotificationsWidget> {
-  final _formKey = GlobalKey<FormState>();
+  List<NotificationModel> _notifications = [];
+  bool _isLoading = false;
 
-  // Colors
-
-  // Form Controllers
-  final _titleController = TextEditingController();
-  final _messageController = TextEditingController();
-  final _userIdController = TextEditingController();
-
-  String _selectedTarget = 'ALL'; // ALL or SPECIFIC
-  String _selectedType = 'system';
-  String? _selectedIcon = 'notifications';
-
-  bool _isSending = false;
-
-  final List<String> _types = [
-    'system',
-    'welcome',
-    'offer',
-    'order',
-    'security'
-  ];
-  final List<String> _icons = [
-    'notifications',
-    'stars_rounded',
-    'local_offer_rounded',
-    'check_circle_rounded',
-    'security_rounded',
-    'warning',
-    'info'
-  ];
-
-  Future<void> _sendNotification() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    setState(() => _isSending = true);
-
-    try {
-      final targetId =
-          _selectedTarget == 'ALL' ? 'ALL' : _userIdController.text.trim();
-
-      final response = await ApiClient.post('/api/notifications', body: {
-        'action': 'send',
-        'targetUserId': targetId,
-        'title': _titleController.text.trim(),
-        'message': _messageController.text.trim(),
-        'type': _selectedType,
-        'icon': _selectedIcon,
-      });
-
-      if (response['status'] == true) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Notificación enviada correctamente'),
-              backgroundColor: Colors.green,
-            ),
-          );
-          _clearForm();
-        }
-      } else {
-        throw Exception(response['msg'] ?? 'Error desconocido');
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } finally {
-      setState(() => _isSending = false);
-    }
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
   }
 
-  void _clearForm() {
-    _titleController.clear();
-    _messageController.clear();
-    _userIdController.clear();
-    setState(() {
-      _selectedTarget = 'ALL';
-      _selectedType = 'system';
-    });
+  Future<void> _loadData() async {
+    setState(() => _isLoading = true);
+    try {
+      final res = await AdminService.getNotifications();
+      if (mounted) {
+        setState(() {
+          _notifications =
+              res.map((e) => NotificationModel.fromJson(e)).toList();
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = FlutterFlowTheme.of(context);
-    final kPrimaryColor = theme.primary;
-    return Scaffold(
-      backgroundColor: theme.primaryBackground,
-      appBar: AppBar(
-        backgroundColor: theme.primaryBackground,
-        title: Text('Admin Notificaciones',
-            style: GoogleFonts.outfit(color: Colors.white)),
-        leading: const SmartBackButton(color: Colors.white),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 800),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildHeader(theme, kPrimaryColor),
-                const SizedBox(height: 32),
+    final isDesktop = MediaQuery.of(context).size.width >= 900;
 
-                // Target Selection
-                _buildSectionLabel('Destinatario'),
-                ToggleButtons(
-                  isSelected: [
-                    _selectedTarget == 'ALL',
-                    _selectedTarget == 'SPECIFIC'
+    return Scaffold(
+      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+      body: Stack(
+        children: [
+          // Removed background blur bubbles for cleaner look
+          if (isDesktop) _buildDesktopLayout() else _buildMobileLayout(),
+        ],
+      ),
+      floatingActionButton: isDesktop
+          ? null
+          : Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    FlutterFlowTheme.of(context).primary,
+                    FlutterFlowTheme.of(context).secondary
                   ],
-                  onPressed: (index) => setState(
-                      () => _selectedTarget = index == 0 ? 'ALL' : 'SPECIFIC'),
-                  borderRadius: BorderRadius.circular(8),
-                  selectedColor: Colors.white,
-                  fillColor: kPrimaryColor.withValues(alpha: 0.2),
-                  color: Colors.white70,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
-                      child: Text('Todos (Broadcast)',
-                          style: GoogleFonts.outfit()),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
-                      child: Text('Usuario Específico',
-                          style: GoogleFonts.outfit()),
-                    ),
-                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-                if (_selectedTarget == 'SPECIFIC') ...[
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _userIdController,
-                    style: GoogleFonts.outfit(color: Colors.white),
-                    decoration: _inputDecoration(
-                        'User ID (Firebase UID)', theme, kPrimaryColor),
-                    validator: (v) =>
-                        v!.isEmpty && _selectedTarget == 'SPECIFIC'
-                            ? 'Requerido'
-                            : null,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: FlutterFlowTheme.of(context)
+                        .primary
+                        .withValues(alpha: 0.4),
+                    blurRadius: 12,
+                    offset: const Offset(0, 6),
                   ),
                 ],
-
-                const SizedBox(height: 24),
-
-                // Content
-                _buildSectionLabel('Contenido'),
-                TextFormField(
-                  controller: _titleController,
-                  style: GoogleFonts.outfit(color: Colors.white),
-                  decoration: _inputDecoration('Título', theme, kPrimaryColor),
-                  validator: (v) => v!.isEmpty ? 'Requerido' : null,
+              ),
+              child: FloatingActionButton.extended(
+                onPressed: _goToCreatePage,
+                backgroundColor: FlutterFlowTheme.of(context).transparent,
+                elevation: 0,
+                highlightElevation: 0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
+                icon: Icon(Icons.add,
+                    color: FlutterFlowTheme.of(context).primaryText),
+                label: Text(
+                  'Nueva',
+                  style: GoogleFonts.outfit(
+                      color: FlutterFlowTheme.of(context).primaryText,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1),
                 ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _messageController,
-                  style: GoogleFonts.outfit(color: Colors.white),
-                  decoration: _inputDecoration('Mensaje', theme, kPrimaryColor),
-                  maxLines: 3,
-                  validator: (v) => v!.isEmpty ? 'Requerido' : null,
-                ),
-
-                const SizedBox(height: 24),
-
-                // Type & Icon
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildSectionLabel('Tipo'),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            decoration: BoxDecoration(
-                              color: theme.secondaryBackground,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: Colors.white12),
-                            ),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                                value: _selectedType,
-                                dropdownColor: theme.secondaryBackground,
-                                isExpanded: true,
-                                style: GoogleFonts.outfit(color: Colors.white),
-                                items: _types
-                                    .map((t) => DropdownMenuItem(
-                                        value: t, child: Text(t.toUpperCase())))
-                                    .toList(),
-                                onChanged: (v) =>
-                                    setState(() => _selectedType = v!),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 24),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildSectionLabel('Icono'),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            decoration: BoxDecoration(
-                              color: theme.secondaryBackground,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: Colors.white12),
-                            ),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                                value: _selectedIcon,
-                                dropdownColor: theme.secondaryBackground,
-                                isExpanded: true,
-                                style: GoogleFonts.outfit(color: Colors.white),
-                                items: _icons
-                                    .map((t) => DropdownMenuItem(
-                                        value: t,
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                                NotificationService.getIconData(
-                                                    t),
-                                                color: Colors.white70,
-                                                size: 20),
-                                            const SizedBox(width: 8),
-                                            Text(t),
-                                          ],
-                                        )))
-                                    .toList(),
-                                onChanged: (v) =>
-                                    setState(() => _selectedIcon = v!),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 40),
-
-                // Submit Button
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: _isSending ? null : _sendNotification,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: kPrimaryColor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                    ),
-                    child: _isSending
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : Text('ENVIAR NOTIFICACIÓN',
-                            style: GoogleFonts.outfit(
-                                fontSize: 16, fontWeight: FontWeight.bold)),
-                  ),
-                ),
-              ],
+              ),
             ),
+    );
+  }
+
+  Widget _buildDesktopLayout() {
+    return Align(
+      alignment: Alignment.topCenter,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 1200),
+        child: Padding(
+          padding: const EdgeInsets.all(40),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Notificaciones',
+                          style: GoogleFonts.outfit(
+                              color: FlutterFlowTheme.of(context).primaryText,
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold)),
+                      Text('Envía mensajes push a los usuarios',
+                          style: GoogleFonts.outfit(
+                              color: FlutterFlowTheme.of(context).secondaryText,
+                              fontSize: 16)),
+                    ],
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          FlutterFlowTheme.of(context).primary,
+                          FlutterFlowTheme.of(context).secondary
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: FlutterFlowTheme.of(context)
+                              .primary
+                              .withValues(alpha: 0.4),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        )
+                      ],
+                    ),
+                    child: ElevatedButton.icon(
+                      onPressed: _goToCreatePage,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 16),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                      icon: const Icon(Icons.send, color: Colors.white),
+                      label: Text('Nueva Notificación',
+                          style: GoogleFonts.outfit(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                  )
+                ],
+              ),
+              const SizedBox(height: 40),
+              Expanded(child: _buildList()),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildHeader(FlutterFlowTheme theme, Color kPrimaryColor) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: theme.secondaryBackground,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: theme.primary.withValues(alpha: 0.3)),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: kPrimaryColor.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(Icons.admin_panel_settings,
-                color: kPrimaryColor, size: 32),
-          ),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Panel de Envíos Push',
-                    style: GoogleFonts.outfit(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold)),
-                const SizedBox(height: 4),
-                Text(
-                    'Envía notificaciones push a usuarios o a toda la base de datos.',
-                    style: GoogleFonts.outfit(
-                        color: Colors.white54, fontSize: 14)),
-              ],
-            ),
-          ),
-        ],
-      ),
+  Widget _buildMobileLayout() {
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          backgroundColor: Colors.transparent,
+          pinned: true,
+          title: Text('Notificaciones',
+              style: GoogleFonts.outfit(
+                  color: FlutterFlowTheme.of(context).primaryText,
+                  fontWeight: FontWeight.bold)),
+          leading:
+              SmartBackButton(color: FlutterFlowTheme.of(context).primaryText),
+        ),
+        SliverFillRemaining(child: _buildList()),
+      ],
     );
   }
 
-  Widget _buildSectionLabel(String label) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Text(label,
-          style: GoogleFonts.outfit(
-              color: Colors.white70,
-              fontSize: 14,
-              fontWeight: FontWeight.w600)),
+  Widget _buildList() {
+    if (_isLoading) {
+      return Center(
+          child: CircularProgressIndicator(
+              color: FlutterFlowTheme.of(context).primary));
+    }
+    if (_notifications.isEmpty) {
+      return Center(
+          child: Text('No hay historial',
+              style: TextStyle(
+                  color: FlutterFlowTheme.of(context).secondaryText)));
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: _notifications.length,
+      itemBuilder: (context, index) {
+        final n = _notifications[index];
+        return Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: FlutterFlowTheme.of(context).secondaryBackground,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: FlutterFlowTheme.of(context).alternate),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: FlutterFlowTheme.of(context)
+                      .primary
+                      .withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: n.imageUrl != null
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(n.imageUrl!, fit: BoxFit.cover))
+                    : Icon(
+                        n.type == 'offer'
+                            ? Icons.local_offer
+                            : (n.type == 'security'
+                                ? Icons.security
+                                : Icons.notifications),
+                        color: FlutterFlowTheme.of(context).primary,
+                        size: 20),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        if (n.priority == 'high')
+                          Container(
+                            margin: const EdgeInsets.only(right: 8),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                                color: FlutterFlowTheme.of(context)
+                                    .error
+                                    .withValues(alpha: 0.2),
+                                borderRadius: BorderRadius.circular(4)),
+                            child: Text('URGENTE',
+                                style: GoogleFonts.outfit(
+                                    color: FlutterFlowTheme.of(context).error,
+                                    fontSize: 10)),
+                          ),
+                        Expanded(
+                          child: Text(n.title,
+                              style: GoogleFonts.outfit(
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryText,
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(n.message,
+                        style: GoogleFonts.outfit(
+                            color: FlutterFlowTheme.of(context).secondaryText,
+                            fontSize: 13)),
+                    if (n.route != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text('Redirige a: ${n.route}',
+                            style: GoogleFonts.outfit(
+                                color: FlutterFlowTheme.of(context).primary,
+                                fontSize: 11)),
+                      ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Icon(Icons.person,
+                            size: 12,
+                            color: FlutterFlowTheme.of(context).secondaryText),
+                        const SizedBox(width: 4),
+                        Text(
+                            n.userId == 'ALL'
+                                ? 'Todos los usuarios'
+                                : 'Usuario: ${n.userId}',
+                            style: GoogleFonts.outfit(
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                                fontSize: 11)),
+                        const Spacer(),
+                        Text(DateFormat('dd MMM HH:mm').format(n.createdAt),
+                            style: GoogleFonts.outfit(
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                                fontSize: 11)),
+                      ],
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        ).animate().fadeIn(delay: (50 * index).ms).slideX();
+      },
     );
   }
 
-  InputDecoration _inputDecoration(
-      String label, FlutterFlowTheme theme, Color kPrimaryColor) {
-    return InputDecoration(
-      labelText: label,
-      labelStyle: TextStyle(color: Colors.white54),
-      filled: true,
-      fillColor: theme.secondaryBackground,
-      border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-      enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.white12)),
-      focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: theme.primary)),
-    );
+  void _goToCreatePage() async {
+    final res = await context.pushNamed('create_notification');
+    if (res == true) {
+      _loadData();
+    }
   }
 }
