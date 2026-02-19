@@ -1,12 +1,13 @@
 import 'package:nazi_shop/backend/api_client.dart';
 import 'package:nazi_shop/models/category_model.dart';
 import 'package:nazi_shop/models/service_model.dart';
-import 'package:nazi_shop/models/offer_model.dart';
 import 'package:nazi_shop/models/user_model.dart';
 import 'package:nazi_shop/models/admin_models.dart';
 import 'package:nazi_shop/models/coupon_model.dart';
 import 'package:nazi_shop/models/order.dart';
 import 'package:nazi_shop/models/notification_model.dart';
+import 'package:nazi_shop/models/listing_model.dart';
+import 'package:nazi_shop/models/promotion_model.dart';
 import 'package:nazi_shop/models/domain.dart';
 
 class AdminService {
@@ -78,13 +79,14 @@ class AdminService {
     return await ApiClient.adminAction('/api/admin/listing', 'create', data);
   }
 
-  static Future<List<Offer>> getListings(
+  static Future<List<Listing>> getListings(
       {String? serviceId, String? categoryId}) async {
     final res = await ApiClient.adminAction('/api/admin/listing', 'list', {
       if (serviceId != null) 'serviceId': serviceId,
       if (categoryId != null) 'categoryId': categoryId
     });
-    return (res['data'] as List?)?.map((e) => Offer.fromJson(e)).toList() ?? [];
+    return (res['data'] as List?)?.map((e) => Listing.fromJson(e)).toList() ??
+        [];
   }
 
   static Future<Map<String, dynamic>> updateListing(
@@ -104,9 +106,10 @@ class AdminService {
     return await ApiClient.adminAction('/api/admin/offer', 'create', data);
   }
 
-  static Future<List<Offer>> getPromotions() async {
+  static Future<List<Promotion>> getPromotions() async {
     final res = await ApiClient.adminAction('/api/admin/offer', 'list', {});
-    return (res['data'] as List?)?.map((e) => Offer.fromJson(e)).toList() ?? [];
+    return (res['data'] as List?)?.map((e) => Promotion.fromJson(e)).toList() ??
+        [];
   }
 
   static Future<Map<String, dynamic>> updatePromotion(
@@ -122,17 +125,16 @@ class AdminService {
   // --- INVENTORY ---
 
   static Future<int> addInventory(
-      {required String listingId, // Renamed param for clarity
+      {required String listingId,
       required List<Map<String, dynamic>> items}) async {
-    // Backend still expects 'offerId' for now due to DB Schema
     final res = await ApiClient.adminAction('/api/admin/inventory', 'add_bulk',
-        {'offerId': listingId, 'items': items});
+        {'listingId': listingId, 'items': items});
     return res['count'] ?? 0;
   }
 
   static Future<List<dynamic>> getInventory({String? listingId}) async {
     final res = await ApiClient.adminAction('/api/admin/inventory', 'list',
-        {if (listingId != null) 'offerId': listingId});
+        {if (listingId != null) 'listingId': listingId});
     return res['data'] ?? [];
   }
 

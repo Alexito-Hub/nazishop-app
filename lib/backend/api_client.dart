@@ -70,8 +70,26 @@ class ApiClient {
 
   static Map<String, dynamic> _handleResponse(http.Response response) {
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      return json.decode(response.body);
+      try {
+        return json.decode(response.body);
+      } catch (_) {
+        return {'status': true, 'data': response.body};
+      }
     } else {
+      // Retornar un mapa de error en lugar de lanzar una excepción ruidosa
+      // para códigos comunes. Esto evita llenar la consola de errores "DartError".
+      if (response.statusCode == 401 ||
+          response.statusCode == 403 ||
+          response.statusCode == 404) {
+        return {
+          'status': false,
+          'success': false,
+          'statusCode': response.statusCode,
+          'message': 'Petición fallida: ${response.statusCode}',
+          'data': null,
+        };
+      }
+
       try {
         final error = json.decode(response.body);
         throw Exception(

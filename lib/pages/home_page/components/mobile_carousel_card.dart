@@ -4,6 +4,8 @@ import 'package:nazi_shop/models/service_model.dart';
 import '../../../flutter_flow/flutter_flow_theme.dart';
 import '../../../flutter_flow/safe_image.dart';
 
+import 'package:nazi_shop/backend/currency_service.dart';
+
 class MobileCarouselCard extends StatelessWidget {
   final Service service;
   final Color categoryColor;
@@ -65,52 +67,81 @@ class MobileCarouselCard extends StatelessWidget {
                     topRight: Radius.circular(20),
                   ),
                 ),
-                child: service.branding.logoUrl != null &&
-                        service.branding.logoUrl!.isNotEmpty
-                    ? Stack(
-                        children: [
-                          ClipRRect(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(20),
-                            ),
-                            child:
-                                (service.branding.logoUrl?.startsWith('http') ??
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    service.branding.logoUrl != null &&
+                            service.branding.logoUrl!.isNotEmpty
+                        ? Stack(
+                            children: [
+                              ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20),
+                                ),
+                                child: (service.branding.logoUrl
+                                            ?.startsWith('http') ??
                                         false)
                                     ? SafeImage(
                                         service.branding.logoUrl!,
                                         fit: BoxFit.cover,
                                         width: double.infinity,
                                         height: double.infinity,
-                                        allowRemoteDownload: false,
+                                        allowRemoteDownload: true,
                                         placeholder: _buildServiceIcon(context),
                                       )
                                     : _buildServiceIcon(context),
-                          ),
-                          // Overlay with price
-                          Positioned(
-                            top: 12,
-                            right: 12,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(12),
                               ),
-                              child: Text(
-                                'S/ ${service.price.toStringAsFixed(0)}',
-                                style: GoogleFonts.outfit(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
+                              // Overlay with price
+                              Positioned(
+                                top: 12,
+                                right: 12,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Text(
+                                    CurrencyService.formatFromUSD(
+                                        service.price),
+                                    style: GoogleFonts.outfit(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
+                          )
+                        : _buildServiceIcon(context),
+                    // Status Badge (Corner)
+                    Positioned(
+                      top: 12,
+                      right: 12,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: service.isInStock
+                              ? FlutterFlowTheme.of(context).accent3
+                              : FlutterFlowTheme.of(context).error, // Red
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          service.isInStock ? 'DISPONIBLE' : 'AGOTADO',
+                          style: GoogleFonts.outfit(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
                           ),
-                        ],
-                      )
-                    : _buildServiceIcon(context),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             // Service Information
@@ -133,50 +164,13 @@ class MobileCarouselCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    Row(
-                      children: [
-                        if (service.branding.logoUrl != null &&
-                            service.branding.logoUrl!.isNotEmpty)
-                          Expanded(
-                            child: Text(
-                              'S/ ${service.price.toStringAsFixed(0)}',
-                              style: FlutterFlowTheme.of(context)
-                                  .titleMedium
-                                  .override(
-                                    color: categoryColor,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                  ),
-                            ),
+                    Text(
+                      CurrencyService.formatFromUSD(service.price),
+                      style: FlutterFlowTheme.of(context).titleMedium.override(
+                            color: categoryColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
                           ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 6, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: Colors.green.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.check_circle,
-                                size: 10,
-                                color: Colors.green.shade600,
-                              ),
-                              const SizedBox(width: 2),
-                              Text(
-                                'Activo',
-                                style: TextStyle(
-                                  color: Colors.green.shade600,
-                                  fontSize: 8,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
                     ),
                   ],
                 ),
@@ -243,7 +237,7 @@ class MobileCarouselCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                'S/ ${service.price.toStringAsFixed(0)}',
+                CurrencyService.formatFromUSD(service.price),
                 style: GoogleFonts.outfit(
                   color: categoryColor,
                   fontSize: 12,

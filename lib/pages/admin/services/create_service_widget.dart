@@ -524,36 +524,44 @@ class CreateServiceWidgetState extends State<CreateServiceWidget> {
       {bool isNumber = false}) {
     Color bgColor = FlutterFlowTheme.of(context).primaryBackground;
     Color primaryColor = FlutterFlowTheme.of(context).primary;
+    Color errorColor = FlutterFlowTheme.of(context).error;
+    Color borderColor = FlutterFlowTheme.of(context).alternate;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: FlutterFlowTheme.of(context).alternate),
+    return TextFormField(
+      controller: ctrl,
+      keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+      style:
+          GoogleFonts.outfit(color: FlutterFlowTheme.of(context).primaryText),
+      cursorColor: primaryColor,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: GoogleFonts.outfit(
+            color: FlutterFlowTheme.of(context).secondaryText),
+        prefixIcon:
+            Icon(icon, color: FlutterFlowTheme.of(context).secondaryText),
+        filled: true,
+        fillColor: bgColor,
+        enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: borderColor)),
+        focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: primaryColor)),
+        errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: errorColor)),
+        focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: errorColor)),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
-      child: TextFormField(
-        controller: ctrl,
-        keyboardType: isNumber ? TextInputType.number : TextInputType.text,
-        style:
-            GoogleFonts.outfit(color: FlutterFlowTheme.of(context).primaryText),
-        cursorColor: primaryColor,
-        decoration: InputDecoration(
-          labelText: label,
-          labelStyle: GoogleFonts.outfit(
-              color: FlutterFlowTheme.of(context).secondaryText),
-          prefixIcon:
-              Icon(icon, color: FlutterFlowTheme.of(context).secondaryText),
-          border: InputBorder.none,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        ),
-        validator: (v) {
-          if (!isNumber && (v == null || v.isEmpty)) {
-            return 'Requerido'; // Basic validation
-          }
-          return null;
-        },
-      ),
+      validator: (v) {
+        if (!isNumber && (v == null || v.isEmpty)) {
+          return 'Requerido'; // Basic validation
+        }
+        return null;
+      },
     );
   }
 }

@@ -666,7 +666,11 @@ class _InventoryRowItemState extends State<InventoryRowItem> {
     final item = widget.item;
     final theme = FlutterFlowTheme.of(context);
     // Try to get listing/offer title primarily
-    final listing = item['offerId'] is Map ? item['offerId'] : {};
+    final listing = item['listingId'] is Map
+        ? item['listingId']
+        : item['offerId'] is Map
+            ? item['offerId']
+            : {};
 
     String fullTitle = 'Producto Desconocido';
     if (listing.isNotEmpty) {

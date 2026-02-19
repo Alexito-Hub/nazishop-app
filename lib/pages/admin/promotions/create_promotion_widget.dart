@@ -5,6 +5,7 @@ import '../../../components/smart_back_button.dart';
 import 'package:nazi_shop/backend/admin_service.dart';
 import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
+import 'package:nazi_shop/models/listing_model.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 
 class CreatePromotionWidget extends StatefulWidget {
@@ -20,7 +21,7 @@ class _CreatePromotionWidgetState extends State<CreatePromotionWidget> {
   final _descCtrl = TextEditingController();
   final _finalPriceCtrl = TextEditingController();
 
-  List<dynamic> _availableListings = [];
+  List<Listing> _availableListings = [];
   final List<String> _selectedListingIds = [];
   bool _isLoadingListings = false;
   bool _isSubmitting = false;
@@ -351,13 +352,9 @@ class _CreatePromotionWidgetState extends State<CreatePromotionWidget> {
                     Divider(height: 1, color: theme.alternate),
                 itemBuilder: (context, index) {
                   final item = _availableListings[index];
-                  final id = item['_id'] ?? '';
-                  // Construct title same as in listing model logic
-                  final svcName = item['serviceId']?['name'] ?? 'Servicio';
-                  final plan = item['commercial']?['plan'] ?? 'Plan';
-                  final title = '$svcName ($plan)';
-
-                  final originalPrice = item['price'] ?? 0;
+                  final id = item.id;
+                  final title = item.title;
+                  final originalPrice = item.price;
                   final isSelected = _selectedListingIds.contains(id);
 
                   return CheckboxListTile(

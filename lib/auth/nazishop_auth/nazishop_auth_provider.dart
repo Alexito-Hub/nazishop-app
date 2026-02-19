@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../backend/auth_service.dart';
+import '../../backend/user_service.dart';
 
 class NaziShopUser {
   final String id;
@@ -144,7 +145,11 @@ class NaziShopAuthProvider with ChangeNotifier {
           try {
             await _loadUserFromFirestore(
                 firebaseUser.uid, firebaseUser.email ?? '', firebaseUser);
+            // Registrar sesión del dispositivo de forma asíncrona
+            UserService.registerCurrentSession();
           } catch (e) {
+            _errorMessage = e.toString();
+          } finally {
             _isLoading = false;
             notifyListeners();
           }
@@ -290,7 +295,7 @@ class NaziShopAuthProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> loginWithGoogle() async {
+  Future<Map<String, dynamic>> loginWithGoogle() async {
     try {
       _isLoading = true;
       _errorMessage = null;
@@ -299,25 +304,27 @@ class NaziShopAuthProvider with ChangeNotifier {
       final result = await AuthService.signInWithGoogle();
 
       if (result['success'] == true) {
+        bool isNewUser = result['isNewUser'] ?? false;
         try {
           final User user = result['user'];
-          // Explicitly load user to ensure state is ready before returning
           await _loadUserFromFirestore(user.uid, user.email ?? '', user);
         } catch (e) {
           // Listener should handle it eventually
         }
-        return true;
+        _isLoading = false;
+        notifyListeners();
+        return {'success': true, 'isNewUser': isNewUser};
       } else {
         _errorMessage = result['message'];
         _isLoading = false;
         notifyListeners();
-        return false;
+        return {'success': false, 'message': _errorMessage};
       }
     } catch (e) {
       _errorMessage = e.toString();
       _isLoading = false;
       notifyListeners();
-      return false;
+      return {'success': false, 'message': _errorMessage};
     }
   }
 

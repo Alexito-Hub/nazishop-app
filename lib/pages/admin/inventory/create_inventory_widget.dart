@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui'; // Add for ImageFilter
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nazi_shop/backend/admin_service.dart';
+import 'package:nazi_shop/models/listing_model.dart';
 import '../../../components/smart_back_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 
@@ -36,7 +37,7 @@ class _CreateInventoryWidgetState extends State<CreateInventoryWidget> {
   // New Selection Logic
   String? _selectedListingId;
   String? _selectedListingTitle;
-  List<dynamic> _availableListings = [];
+  List<Listing> _availableListings = [];
   bool _isLoadingListings = false;
 
   @override
@@ -332,31 +333,32 @@ class _CreateInventoryWidgetState extends State<CreateInventoryWidget> {
 
   Widget _buildInput(TextEditingController ctrl, String label, IconData icon,
       {int maxLines = 1}) {
-    return Container(
-      decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).primaryBackground,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: FlutterFlowTheme.of(context).alternate),
-      ),
-      child: TextField(
-        controller: ctrl,
-        maxLines: maxLines,
-        style:
-            GoogleFonts.outfit(color: FlutterFlowTheme.of(context).primaryText),
-        cursorColor: FlutterFlowTheme.of(context).primary,
-        decoration: InputDecoration(
-          hintText: label,
-          hintStyle: GoogleFonts.outfit(
-              color: FlutterFlowTheme.of(context).secondaryText),
-          prefixIcon: Padding(
-            padding: const EdgeInsets.only(bottom: 0),
-            child:
-                Icon(icon, color: FlutterFlowTheme.of(context).secondaryText),
-          ),
-          border: InputBorder.none,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+    return TextField(
+      controller: ctrl,
+      maxLines: maxLines,
+      style:
+          GoogleFonts.outfit(color: FlutterFlowTheme.of(context).primaryText),
+      cursorColor: FlutterFlowTheme.of(context).primary,
+      decoration: InputDecoration(
+        hintText: label,
+        hintStyle: GoogleFonts.outfit(
+            color: FlutterFlowTheme.of(context).secondaryText),
+        prefixIcon: Padding(
+          padding: const EdgeInsets.only(bottom: 0),
+          child: Icon(icon, color: FlutterFlowTheme.of(context).secondaryText),
         ),
+        filled: true,
+        fillColor: FlutterFlowTheme.of(context).primaryBackground,
+        enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide:
+                BorderSide(color: FlutterFlowTheme.of(context).alternate)),
+        focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide:
+                BorderSide(color: FlutterFlowTheme.of(context).primary)),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       ),
     );
   }
@@ -453,18 +455,17 @@ class _CreateInventoryWidgetState extends State<CreateInventoryWidget> {
           style: GoogleFonts.outfit(
               color: FlutterFlowTheme.of(context).primaryText),
           items: _availableListings.map<DropdownMenuItem<String>>((listing) {
-            final title = listing['title'] ?? 'Sin Título';
+            final title = listing.title;
             return DropdownMenuItem(
-              value: listing['_id'],
+              value: listing.id,
               child: Text(title, overflow: TextOverflow.ellipsis),
             );
           }).toList(),
           onChanged: (val) {
-            final listing = _availableListings
-                .firstWhere((e) => e['_id'] == val, orElse: () => {});
+            final listing = _availableListings.firstWhere((e) => e.id == val);
             setState(() {
               _selectedListingId = val;
-              _selectedListingTitle = listing['title'];
+              _selectedListingTitle = listing.title;
             });
           },
         ),

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
-import '/models/offer_model.dart';
+import '/models/listing_model.dart';
 
 class DeliveryInfoCard extends StatelessWidget {
-  final Offer selectedOffer;
+  final Listing selectedListing;
 
-  const DeliveryInfoCard({super.key, required this.selectedOffer});
+  const DeliveryInfoCard({super.key, required this.selectedListing});
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +35,12 @@ class DeliveryInfoCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            selectedOffer.dataDeliveryType == 'full_account'
+            selectedListing.delivery?.type == 'full_account'
                 ? 'Recibirás un correo electrónico con las credenciales de acceso (usuario y contraseña) inmediatamente después del pago.'
-                : selectedOffer.dataDeliveryType == 'profile_access'
+                : selectedListing.delivery?.type == 'profile_access'
                     ? 'Recibirás los datos de acceso a tu perfil asignado. Es importante respetar el perfil asignado.'
-                    : selectedOffer.dataDeliveryType == 'domain'
-                        ? (selectedOffer.domainType == 'own_domain'
+                    : selectedListing.delivery?.type == 'domain'
+                        ? (selectedListing.delivery?.domainType == 'own_domain'
                             ? 'Se solicitarán las credenciales de tu dominio al finalizar la compra para realizar la activación.'
                             : 'Recibirás una cuenta con el producto activado lista para usar.')
                         : 'Recibirás tu código de licencia inmediatamente en tu correo y en el historial de compras.',

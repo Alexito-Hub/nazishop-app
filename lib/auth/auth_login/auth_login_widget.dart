@@ -242,10 +242,20 @@ class _AuthLoginWidgetState extends State<AuthLoginWidget>
                               // Google Auth
                               OutlinedButton.icon(
                                 onPressed: () async {
-                                  final user = await authManager
+                                  final result = await getAuthManager(context)
                                       .signInWithGoogle(context);
+                                  final user = result['user'];
+                                  final isNewUser =
+                                      result['isNewUser'] ?? false;
+
                                   if (user == null || !context.mounted) return;
-                                  context.goNamedAuth('home', context.mounted);
+
+                                  if (isNewUser) {
+                                    context.goNamed('complete_profile');
+                                  } else {
+                                    context.goNamedAuth(
+                                        'home', context.mounted);
+                                  }
                                 },
                                 icon: FaIcon(FontAwesomeIcons.google,
                                     size: 18, color: theme.primaryText),

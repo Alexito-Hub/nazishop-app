@@ -1,12 +1,15 @@
-import 'package:flutter/material.dart';
 import '/index.dart';
 import '/models/category_model.dart';
 import '/models/service_model.dart';
 import '/models/offer_model.dart';
+import '/models/listing_model.dart';
 import '/components/app_layout.dart';
 import '/flutter_flow/nav/nav.dart';
 
 import '/pages/user/profile/appearance/appearance_widget.dart';
+import '/pages/admin/admin_auth_guard.dart';
+import '/pages/error_page/error_page_widget.dart';
+import '/pages/user/security/security_widget.dart';
 
 class AppRoutes {
   // Public routes
@@ -69,7 +72,7 @@ class AppRoutes {
     return GoRouter(
       initialLocation: home,
       refreshListenable: appStateNotifier,
-      debugLogDiagnostics: true,
+      debugLogDiagnostics: false,
       redirect: (context, state) {
         final bool loggedIn = appStateNotifier.loggedIn;
 
@@ -196,21 +199,21 @@ class AppRoutes {
               path: adminNotifications,
               name: 'admin_notifications',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: AdminNotificationsWidget(),
+                child: AdminAuthGuard(child: AdminNotificationsWidget()),
               ),
             ),
             GoRoute(
               path: adminPromotions,
               name: 'admin_promotions',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: AdminPromotionsWidget(),
+                child: AdminAuthGuard(child: AdminPromotionsWidget()),
               ),
             ),
             GoRoute(
               path: createPromotion,
               name: 'create_promotion',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: CreatePromotionWidget(),
+                child: AdminAuthGuard(child: CreatePromotionWidget()),
               ),
             ),
             GoRoute(
@@ -253,7 +256,7 @@ class AppRoutes {
                 return NoTransitionPage(
                   child: CheckoutWidget(
                     service: extra?['service'] as Service,
-                    selectedOffer: extra?['selectedOffer'] as Offer,
+                    selectedListing: extra?['selectedListing'] as Listing,
                   ),
                 );
               },
@@ -286,7 +289,7 @@ class AppRoutes {
               path: security,
               name: 'security',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: AuthForgotPasswordWidget(),
+                child: SecurityWidget(),
               ),
             ),
             GoRoute(
@@ -347,35 +350,35 @@ class AppRoutes {
               path: admin,
               name: 'admin',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: AdminWidget(),
+                child: AdminAuthGuard(child: AdminWidget()),
               ),
             ),
             GoRoute(
               path: adminCategories,
               name: 'admin_categories',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: AdminCategoriesWidget(),
+                child: AdminAuthGuard(child: AdminCategoriesWidget()),
               ),
             ),
             GoRoute(
               path: adminServices,
               name: 'admin_services',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: AdminServicesWidget(),
+                child: AdminAuthGuard(child: AdminServicesWidget()),
               ),
             ),
             GoRoute(
               path: adminListings,
               name: 'admin_listings',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: AdminListingsWidget(),
+                child: AdminAuthGuard(child: AdminListingsWidget()),
               ),
             ),
             GoRoute(
               path: adminInventory,
               name: 'admin_inventory',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: AdminInventoryWidget(),
+                child: AdminAuthGuard(child: AdminInventoryWidget()),
               ),
             ),
 
@@ -386,13 +389,16 @@ class AppRoutes {
                 final listingId = state.uri.queryParameters['listingId'];
                 final listingTitle = state.uri.queryParameters['listingTitle'];
                 return NoTransitionPage(
-                  child: CreateInventoryWidget(
-                    listingId: (listingId == null || listingId.isEmpty)
-                        ? null
-                        : listingId,
-                    listingTitle: (listingTitle == null || listingTitle.isEmpty)
-                        ? null
-                        : listingTitle,
+                  child: AdminAuthGuard(
+                    child: CreateInventoryWidget(
+                      listingId: (listingId == null || listingId.isEmpty)
+                          ? null
+                          : listingId,
+                      listingTitle:
+                          (listingTitle == null || listingTitle.isEmpty)
+                              ? null
+                              : listingTitle,
+                    ),
                   ),
                 );
               },
@@ -401,77 +407,82 @@ class AppRoutes {
               path: adminCoupons,
               name: 'admin_coupons',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: AdminCouponsWidget(),
+                child: AdminAuthGuard(child: AdminCouponsWidget()),
               ),
             ),
             GoRoute(
               path: createCoupon,
               name: 'create_coupon',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: CreateCouponWidget(),
+                child: AdminAuthGuard(child: CreateCouponWidget()),
               ),
             ),
             GoRoute(
               path: adminAnalytics,
               name: 'admin_analytics',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: AdminAnalyticsWidget(),
+                child: AdminAuthGuard(child: AdminAnalyticsWidget()),
               ),
             ),
             GoRoute(
               path: ordersManagement,
               name: 'orders_management',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: OrdersManagementWidget(),
+                child: AdminAuthGuard(child: OrdersManagementWidget()),
               ),
             ),
             GoRoute(
               path: usersManagement,
               name: 'users_management',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: UsersManagementWidget(),
+                child: AdminAuthGuard(child: UsersManagementWidget()),
               ),
             ),
             GoRoute(
               path: adminConfig,
               name: 'admin_config',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: AdminConfigWidget(),
+                child: AdminAuthGuard(child: AdminConfigWidget()),
               ),
             ),
             GoRoute(
               path: currencyManagement,
               name: 'currency_management',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: CurrencyManagementWidget(),
+                child: AdminAuthGuard(child: CurrencyManagementWidget()),
               ),
             ),
             GoRoute(
               path: createCategory,
               name: 'create_category',
               pageBuilder: (context, state) => NoTransitionPage(
-                child: CreateCategoryWidget(category: state.extra as Category?),
+                child: AdminAuthGuard(
+                    child: CreateCategoryWidget(
+                        category: state.extra as Category?)),
               ),
             ),
             GoRoute(
               path: createService,
               name: 'create_service',
               pageBuilder: (context, state) => NoTransitionPage(
-                child: CreateServiceWidget(service: state.extra as Service?),
+                child: AdminAuthGuard(
+                    child:
+                        CreateServiceWidget(service: state.extra as Service?)),
               ),
             ),
             GoRoute(
               path: createListing,
               name: 'create_listing',
               pageBuilder: (context, state) => NoTransitionPage(
-                child: CreateListingWidget(offer: state.extra as Offer?),
+                child: AdminAuthGuard(
+                    child: CreateListingWidget(offer: state.extra as Offer?)),
               ),
             ),
             GoRoute(
               path: createNotification,
               name: 'create_notification',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: CreateNotificationWidget(),
+                child: AdminAuthGuard(child: CreateNotificationWidget()),
               ),
             ),
 
@@ -507,7 +518,8 @@ class AppRoutes {
           ],
         ),
       ],
-      errorBuilder: (context, state) => const _NotFoundPage(),
+      errorBuilder: (context, state) =>
+          const ErrorPageWidget(type: ErrorType.notFound),
     );
   }
 
@@ -546,60 +558,3 @@ class AppRoutes {
 
 // Página temporal para funcionalidades no implementadas
 // _ComingSoonPage removed
-
-// Página de error 404
-class _NotFoundPage extends StatelessWidget {
-  const _NotFoundPage();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Página no encontrada'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline,
-              size: 100,
-              color: Colors.red[400],
-            ),
-            const SizedBox(height: 24),
-            Text(
-              '404',
-              style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red[600],
-                  ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Página no encontrada',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey[700],
-                  ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'La página que buscas no existe o ha sido movida.',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Colors.grey[600],
-                  ),
-            ),
-            const SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: () => context.go(AppRoutes.home),
-              child: const Text('Ir al Inicio'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

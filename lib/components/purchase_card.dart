@@ -30,8 +30,8 @@ class _PurchaseCardState extends State<PurchaseCard> {
     // Extract logo from order items
     final items = widget.order['items'] as List<dynamic>? ?? [];
     final firstItem = items.isNotEmpty ? items[0] : null;
-    final offerSnapshot = firstItem?['offerSnapshot'];
-    final branding = offerSnapshot?['branding'];
+    final listingSnapshot = firstItem?['listingSnapshot'];
+    final branding = listingSnapshot?['branding'];
     final logoUrl = branding?['logoUrl'];
     // Try to get primary color from branding
     final String? colorString = branding?['primaryColor'];

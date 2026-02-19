@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../flutter_flow/flutter_flow_theme.dart';
-import '../../../../models/offer_model.dart';
-import '../../../../components/offer_card.dart';
+import '../../../../models/listing_model.dart';
+import '../../../../components/listing_card.dart';
 
 class ServicePricing extends StatelessWidget {
-  final List<Offer> offers;
+  final List<Listing> listings;
   final int selectedIndex;
   final Color primaryColor;
   final Function(int) onSelect;
-  final Function(Offer) onPurchase;
+  final Function(Listing) onPurchase;
 
   const ServicePricing({
     super.key,
-    required this.offers,
+    required this.listings,
     required this.selectedIndex,
     required this.primaryColor,
     required this.onSelect,
@@ -22,7 +22,7 @@ class ServicePricing extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (offers.isEmpty) {
+    if (listings.isEmpty) {
       return _NoStockWidget();
     }
 
@@ -30,24 +30,24 @@ class ServicePricing extends StatelessWidget {
       padding: EdgeInsets.zero,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: offers.length,
+      itemCount: listings.length,
       separatorBuilder: (_, __) => const SizedBox(height: 12),
       itemBuilder: (ctx, index) {
-        final offer = offers[index];
-        return OfferCard(
-          offer: offer,
+        final listing = listings[index];
+        return ListingCard(
+          listing: listing,
           isSelected: selectedIndex == index,
           primaryColor: primaryColor,
           onTap: () => onSelect(index),
-          onPurchase: () => onPurchase(offer),
-          durationText: _getOfferDuration(offer),
+          onPurchase: () => onPurchase(listing),
+          durationText: _getListingDuration(listing),
         );
       },
     );
   }
 
-  String _getOfferDuration(Offer offer) {
-    final commercial = offer.commercialData;
+  String _getListingDuration(Listing listing) {
+    final commercial = listing.commercial;
     if (commercial == null || commercial.duration == null) return '';
     final unit = commercial.timeUnit ?? 'mes';
     // Handle simplified plural logic if needed or keep existing

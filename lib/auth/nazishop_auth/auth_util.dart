@@ -78,13 +78,17 @@ class NaziShopAuthManager {
     return Future.value();
   }
 
-  Future<NaziShopUser?> signInWithGoogle(BuildContext context) async {
-    await _provider.loginWithGoogle();
-    if (_provider.isLoggedIn) {
-      setCurrentUser(_provider.currentUser);
-      return _provider.currentUser;
+  Future<Map<String, dynamic>> signInWithGoogle(BuildContext context) async {
+    final provider = _provider;
+    final result = await provider.loginWithGoogle();
+    if (result['success'] == true && provider.isLoggedIn) {
+      setCurrentUser(provider.currentUser);
+      return {
+        'user': provider.currentUser,
+        'isNewUser': result['isNewUser'] ?? false,
+      };
     }
-    return null;
+    return {'user': null, 'isNewUser': false};
   }
 
   Future<NaziShopUser?> signInWithApple(BuildContext context) async {

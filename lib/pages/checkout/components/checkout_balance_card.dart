@@ -27,7 +27,7 @@ class CheckoutBalanceCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: FlutterFlowTheme.of(context).primary.withOpacity(0.1),
+              color: FlutterFlowTheme.of(context).primary.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(

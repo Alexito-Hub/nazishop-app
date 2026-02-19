@@ -5,7 +5,6 @@ import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '/auth/nazishop_auth/auth_util.dart';
 
 import 'components/profile_header.dart';
 import 'components/profile_option_card.dart';

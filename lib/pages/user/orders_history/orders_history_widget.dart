@@ -758,7 +758,7 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    item.offerSnapshot.title,
+                                    item.listingSnapshot.title,
                                     style: GoogleFonts.outfit(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
@@ -768,10 +768,10 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  if (item.offerSnapshot.dataDeliveryType !=
+                                  if (item.listingSnapshot.dataDeliveryType !=
                                       null)
                                     Text(
-                                      item.offerSnapshot.dataDeliveryType!,
+                                      item.listingSnapshot.dataDeliveryType!,
                                       style: GoogleFonts.outfit(
                                         fontSize: 11,
                                         color: FlutterFlowTheme.of(context)

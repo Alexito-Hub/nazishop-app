@@ -33,6 +33,9 @@ class _AuthCreateWidgetState extends State<AuthCreateWidget>
     super.initState();
     _model = createModel(context, () => AuthCreateModel());
 
+    _model.fullNameTextController ??= TextEditingController();
+    _model.fullNameFocusNode ??= FocusNode();
+
     _model.emailAddressTextController ??= TextEditingController();
     _model.emailAddressFocusNode ??= FocusNode();
 
@@ -170,6 +173,21 @@ class _AuthCreateWidgetState extends State<AuthCreateWidget>
 
                                 // Inputs
                                 _buildInput(
+                                  controller: _model.fullNameTextController,
+                                  focusNode: _model.fullNameFocusNode,
+                                  hint: 'Nombre Completo',
+                                  icon: Icons.person_outline,
+                                  autofillHints: const [AutofillHints.name],
+                                  textInputAction: TextInputAction.next,
+                                  validator: (val) {
+                                    if (val == null || val.isEmpty) {
+                                      return 'El nombre es requerido';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: 16),
+                                _buildInput(
                                   controller: _model.emailAddressTextController,
                                   focusNode: _model.emailAddressFocusNode,
                                   hint: 'Correo Electrónico',
@@ -236,6 +254,17 @@ class _AuthCreateWidgetState extends State<AuthCreateWidget>
                                     TextInput.finishAutofillContext();
 
                                     // Validations
+                                    if (_model
+                                        .fullNameTextController.text.isEmpty) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                            content: Text(
+                                                'El nombre completo es requerido')),
+                                      );
+                                      return;
+                                    }
+
                                     if (_model.emailAddressTextController.text
                                         .isEmpty) {
                                       ScaffoldMessenger.of(context)
@@ -289,6 +318,8 @@ class _AuthCreateWidgetState extends State<AuthCreateWidget>
                                       context,
                                       _model.emailAddressTextController.text,
                                       _model.passwordTextController.text,
+                                      displayName:
+                                          _model.fullNameTextController.text,
                                     );
 
                                     if (!context.mounted) return;
@@ -318,13 +349,22 @@ class _AuthCreateWidgetState extends State<AuthCreateWidget>
                                 // Google Auth
                                 OutlinedButton.icon(
                                   onPressed: () async {
-                                    final user = await authManager
+                                    final result = await getAuthManager(context)
                                         .signInWithGoogle(context);
+                                    final user = result['user'];
+                                    final isNewUser =
+                                        result['isNewUser'] ?? false;
+
                                     if (user == null || !context.mounted) {
                                       return;
                                     }
-                                    context.goNamedAuth(
-                                        'home', context.mounted);
+
+                                    if (isNewUser) {
+                                      context.goNamed('complete_profile');
+                                    } else {
+                                      context.goNamedAuth(
+                                          'home', context.mounted);
+                                    }
                                   },
                                   icon: FaIcon(FontAwesomeIcons.google,
                                       size: 18, color: theme.primaryText),

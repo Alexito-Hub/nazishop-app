@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:nazi_shop/backend/admin_service.dart';
 import 'package:nazi_shop/models/admin_models.dart';
 
-import 'package:flutter_animate/flutter_animate.dart';
 import '../../../components/smart_back_button.dart';
 import 'components/analytics_stat_card.dart';
 import 'components/server_info_card.dart';

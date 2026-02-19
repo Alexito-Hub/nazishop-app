@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
-import 'package:nazi_shop/models/offer_model.dart';
+import 'package:nazi_shop/models/promotion_model.dart';
 
 class PromotionCard extends StatelessWidget {
-  final Offer item;
+  final Promotion item;
   final VoidCallback? onTap;
 
   const PromotionCard({
@@ -68,7 +68,7 @@ class PromotionCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  item.title,
+                  item.name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.outfit(
@@ -92,7 +92,7 @@ class PromotionCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '\$${item.discountPrice.toStringAsFixed(2)}',
+                      '\$${item.finalPrice.toStringAsFixed(2)}',
                       style: GoogleFonts.outfit(
                         color: theme.primaryText,
                         fontSize: 20,

@@ -54,7 +54,7 @@ class CheckoutPaymentMethods extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? FlutterFlowTheme.of(context).primary.withOpacity(0.05)
+                      ? FlutterFlowTheme.of(context).primary.withValues(alpha: 0.05)
                       : FlutterFlowTheme.of(context).secondaryBackground,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
@@ -69,7 +69,7 @@ class CheckoutPaymentMethods extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: method.color.withOpacity(0.1),
+                        color: method.color.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(method.icon, color: method.color, size: 20),

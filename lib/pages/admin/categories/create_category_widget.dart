@@ -368,30 +368,38 @@ class CreateCategoryWidgetState extends State<CreateCategoryWidget> {
   Widget _buildInput(TextEditingController ctrl, String label, IconData icon) {
     final kBgColor = FlutterFlowTheme.of(context).primaryBackground;
     final kPrimaryColor = FlutterFlowTheme.of(context).primary;
+    final kErrorColor = FlutterFlowTheme.of(context).error;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: kBgColor,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: FlutterFlowTheme.of(context).alternate),
+    return TextFormField(
+      controller: ctrl,
+      style:
+          GoogleFonts.outfit(color: FlutterFlowTheme.of(context).primaryText),
+      cursorColor: kPrimaryColor,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: GoogleFonts.outfit(
+            color: FlutterFlowTheme.of(context).secondaryText),
+        prefixIcon:
+            Icon(icon, color: FlutterFlowTheme.of(context).secondaryText),
+        filled: true,
+        fillColor: kBgColor,
+        enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide:
+                BorderSide(color: FlutterFlowTheme.of(context).alternate)),
+        focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: kPrimaryColor)),
+        errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: kErrorColor)),
+        focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: kErrorColor)),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
-      child: TextFormField(
-        controller: ctrl,
-        style:
-            GoogleFonts.outfit(color: FlutterFlowTheme.of(context).primaryText),
-        cursorColor: kPrimaryColor,
-        decoration: InputDecoration(
-          labelText: label,
-          labelStyle: GoogleFonts.outfit(
-              color: FlutterFlowTheme.of(context).secondaryText),
-          prefixIcon:
-              Icon(icon, color: FlutterFlowTheme.of(context).secondaryText),
-          border: InputBorder.none,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        ),
-        validator: (v) => (v == null || v.isEmpty) ? 'Requerido' : null,
-      ),
+      validator: (v) => (v == null || v.isEmpty) ? 'Requerido' : null,
     );
   }
 }

@@ -1,16 +1,16 @@
 import 'package:nazi_shop/backend/api_client.dart';
 
 class OrderService {
-  /// Create a new order (purchase an offer)
+  /// Create a new order (purchase a listing)
   /// El userId se obtiene automáticamente del token de Firebase
   static Future<Map<String, dynamic>> createOrder(
-    String offerId, {
+    String listingId, {
     String paymentMethod = 'wallet',
   }) async {
     try {
       final response = await ApiClient.post('/api/orders', body: {
         'action': 'create',
-        'offerId': offerId,
+        'listingId': listingId,
         'paymentMethod': paymentMethod,
       });
 

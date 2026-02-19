@@ -2,7 +2,7 @@ class Domain {
   final String id;
   final String orderId;
   final String userId;
-  final String offerId;
+  final String listingId;
 
   // Credenciales que el cliente desea usar para su servicio
   final DesiredCredentials desiredCredentials;
@@ -21,7 +21,7 @@ class Domain {
     required this.id,
     required this.orderId,
     required this.userId,
-    required this.offerId,
+    required this.listingId,
     required this.desiredCredentials,
     this.productSnapshot,
     required this.status,
@@ -39,7 +39,12 @@ class Domain {
       id: json['_id'] ?? json['id'] ?? '',
       orderId: json['orderId'] ?? '',
       userId: json['userId'] ?? '',
-      offerId: json['offerId'] ?? '',
+      listingId: json['listingId'] is String
+          ? json['listingId']
+          : (json['listingId']?['_id'] ??
+              json['offerId']?['_id'] ??
+              json['offerId'] ??
+              ''),
       desiredCredentials:
           DesiredCredentials.fromJson(json['desiredCredentials'] ?? {}),
       productSnapshot: json['productSnapshot'] != null
@@ -65,7 +70,7 @@ class Domain {
       '_id': id,
       'orderId': orderId,
       'userId': userId,
-      'offerId': offerId,
+      'listingId': listingId,
       'desiredCredentials': desiredCredentials.toJson(),
       'productSnapshot': productSnapshot?.toJson(),
       'status': status,

@@ -2,23 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/models/service_model.dart';
-import '/models/offer_model.dart';
+import '/models/listing_model.dart';
 import '/utils/color_utils.dart';
 
 class CheckoutProductCard extends StatelessWidget {
   final Service service;
-  final Offer selectedOffer;
+  final Listing selectedListing;
   final bool isDesktop;
 
   const CheckoutProductCard({
     super.key,
     required this.service,
-    required this.selectedOffer,
+    required this.selectedListing,
     this.isDesktop = false,
   });
 
-  String _getOfferDuration() {
-    final commercial = selectedOffer.commercialData;
+  String _getListingDuration() {
+    final commercial = selectedListing.commercial;
     if (commercial == null || commercial.duration == null) return '';
     final unit = commercial.timeUnit ?? 'mes';
     return '${commercial.duration} $unit${commercial.duration! > 1 ? 'es' : ''}';
@@ -35,8 +35,7 @@ class CheckoutProductCard extends StatelessWidget {
   Widget _buildMobileLayout(BuildContext context) {
     final primaryColor =
         ColorUtils.parseColor(context, service.branding.primaryColor);
-    final duration = _getOfferDuration();
-    final hasDiscount = selectedOffer.discountPercent > 0;
+    final duration = _getListingDuration();
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -51,7 +50,8 @@ class CheckoutProductCard extends StatelessWidget {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: FlutterFlowTheme.of(context).alternate.withOpacity(0.3),
+              color:
+                  FlutterFlowTheme.of(context).alternate.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(12),
             ),
             child: service.branding.logoUrl != null
@@ -72,7 +72,7 @@ class CheckoutProductCard extends StatelessWidget {
                         color: FlutterFlowTheme.of(context).primaryText,
                         fontSize: 15 * FlutterFlowTheme.fontSizeFactor,
                         fontWeight: FontWeight.w600)),
-                Text(selectedOffer.title,
+                Text(selectedListing.commercial?.plan ?? 'Standard',
                     style: GoogleFonts.outfit(
                         color: FlutterFlowTheme.of(context).secondaryText,
                         fontSize: 12 * FlutterFlowTheme.fontSizeFactor)),
@@ -82,7 +82,7 @@ class CheckoutProductCard extends StatelessWidget {
                           color: primaryColor,
                           fontSize: 11 * FlutterFlowTheme.fontSizeFactor,
                           fontWeight: FontWeight.w600)),
-                if (selectedOffer.dataDeliveryType != null)
+                if (selectedListing.delivery?.type != null)
                   Container(
                     margin: const EdgeInsets.only(top: 4),
                     padding:
@@ -90,11 +90,11 @@ class CheckoutProductCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: FlutterFlowTheme.of(context)
                           .alternate
-                          .withOpacity(0.3),
+                          .withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
-                      _getDeliveryLabel(selectedOffer.dataDeliveryType),
+                      _getDeliveryLabel(selectedListing.delivery?.type),
                       style: GoogleFonts.outfit(
                           color: FlutterFlowTheme.of(context).secondaryText,
                           fontSize: 10 * FlutterFlowTheme.fontSizeFactor),
@@ -106,13 +106,8 @@ class CheckoutProductCard extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              if (hasDiscount)
-                Text('\$${selectedOffer.originalPrice.toStringAsFixed(2)}',
-                    style: GoogleFonts.outfit(
-                        color: FlutterFlowTheme.of(context).secondaryText,
-                        fontSize: 12 * FlutterFlowTheme.fontSizeFactor,
-                        decoration: TextDecoration.lineThrough)),
-              Text('\$${selectedOffer.discountPrice.toStringAsFixed(2)}',
+              // No discount logic for now
+              Text('\$${selectedListing.price.toStringAsFixed(2)}',
                   style: GoogleFonts.outfit(
                       color: FlutterFlowTheme.of(context).primaryText,
                       fontSize: 18 * FlutterFlowTheme.fontSizeFactor,
@@ -127,8 +122,8 @@ class CheckoutProductCard extends StatelessWidget {
   Widget _buildDesktopLayout(BuildContext context) {
     final primaryColor =
         ColorUtils.parseColor(context, service.branding.primaryColor);
-    final duration = _getOfferDuration();
-    final hasDiscount = selectedOffer.discountPercent > 0;
+    final duration = _getListingDuration();
+    // final hasDiscount = false; // logic removed for now
 
     return Container(
       padding: const EdgeInsets.all(24),
@@ -143,7 +138,8 @@ class CheckoutProductCard extends StatelessWidget {
             width: 80,
             height: 80,
             decoration: BoxDecoration(
-              color: FlutterFlowTheme.of(context).alternate.withOpacity(0.3),
+              color:
+                  FlutterFlowTheme.of(context).alternate.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(16),
             ),
             child: service.branding.logoUrl != null
@@ -165,7 +161,7 @@ class CheckoutProductCard extends StatelessWidget {
                         fontSize: 22,
                         fontWeight: FontWeight.bold)),
                 const SizedBox(height: 4),
-                Text(selectedOffer.title,
+                Text(selectedListing.commercial?.plan ?? 'Standard',
                     style: GoogleFonts.outfit(
                         color: FlutterFlowTheme.of(context).secondaryText,
                         fontSize: 14)),
@@ -179,7 +175,7 @@ class CheckoutProductCard extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: FlutterFlowTheme.of(context)
                               .alternate
-                              .withOpacity(0.3),
+                              .withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(6),
                           border: Border.all(
                               color: FlutterFlowTheme.of(context).alternate),
@@ -191,7 +187,7 @@ class CheckoutProductCard extends StatelessWidget {
                                 fontSize: 11,
                                 fontWeight: FontWeight.w600)),
                       ),
-                      if (selectedOffer.dataDeliveryType != null) ...[
+                      if (selectedListing.delivery?.type != null) ...[
                         const SizedBox(width: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(
@@ -199,15 +195,15 @@ class CheckoutProductCard extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: FlutterFlowTheme.of(context)
                                 .info
-                                .withOpacity(0.1),
+                                .withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(6),
                             border: Border.all(
                                 color: FlutterFlowTheme.of(context)
                                     .info
-                                    .withOpacity(0.3)),
+                                    .withValues(alpha: 0.3)),
                           ),
                           child: Text(
-                              _getDeliveryLabel(selectedOffer.dataDeliveryType),
+                              _getDeliveryLabel(selectedListing.delivery?.type),
                               style: GoogleFonts.outfit(
                                   color: FlutterFlowTheme.of(context).info,
                                   fontSize: 11,
@@ -223,36 +219,8 @@ class CheckoutProductCard extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              if (hasDiscount) ...[
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text('\$${selectedOffer.originalPrice.toStringAsFixed(2)}',
-                        style: GoogleFonts.outfit(
-                            color: FlutterFlowTheme.of(context).secondaryText,
-                            fontSize: 16,
-                            decoration: TextDecoration.lineThrough)),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).error,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        '-${selectedOffer.discountPercent}%',
-                        style: GoogleFonts.outfit(
-                            color: FlutterFlowTheme.of(context).info,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-              ],
-              Text('\$${selectedOffer.discountPrice.toStringAsFixed(2)}',
+              // No discount logic
+              Text('\$${selectedListing.price.toStringAsFixed(2)}',
                   style: GoogleFonts.outfit(
                       color: FlutterFlowTheme.of(context).primaryText,
                       fontSize: 28,

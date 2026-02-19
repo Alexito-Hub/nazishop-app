@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
-import 'package:nazi_shop/models/offer_model.dart';
+import 'package:nazi_shop/models/listing_model.dart';
 import 'service_pricing.dart';
 
 class PurchaseSidebar extends StatelessWidget {
-  final List<Offer> offers;
+  final List<Listing> listings;
   final int selectedIndex;
   final Color primaryColor;
   final Function(int) onSelect;
-  final Function(Offer) onPurchase;
+  final Function(Listing) onPurchase;
 
   const PurchaseSidebar({
     super.key,
-    required this.offers,
+    required this.listings,
     required this.selectedIndex,
     required this.primaryColor,
     required this.onSelect,
@@ -35,14 +35,16 @@ class PurchaseSidebar extends StatelessWidget {
               border: Border.all(
                 color: Theme.of(context).brightness == Brightness.dark
                     ? FlutterFlowTheme.of(context).alternate
-                    : FlutterFlowTheme.of(context).alternate.withOpacity(0.4),
+                    : FlutterFlowTheme.of(context)
+                        .alternate
+                        .withValues(alpha: 0.4),
               ),
               boxShadow: [
                 if (Theme.of(context).brightness == Brightness.light)
                   BoxShadow(
                     color: FlutterFlowTheme.of(context)
                         .primaryText
-                        .withOpacity(0.04),
+                        .withValues(alpha: 0.04),
                     blurRadius: 24,
                     offset: const Offset(0, 12),
                   ),
@@ -57,7 +59,7 @@ class PurchaseSidebar extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                          color: primaryColor.withOpacity(0.1),
+                          color: primaryColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8)),
                       child: Icon(Icons.verified_outlined,
                           color: primaryColor, size: 20),
@@ -72,7 +74,7 @@ class PurchaseSidebar extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 ServicePricing(
-                  offers: offers,
+                  listings: listings,
                   selectedIndex: selectedIndex,
                   primaryColor: primaryColor,
                   onSelect: onSelect,
@@ -84,7 +86,7 @@ class PurchaseSidebar extends StatelessWidget {
                         ? FlutterFlowTheme.of(context).alternate
                         : FlutterFlowTheme.of(context)
                             .alternate
-                            .withOpacity(0.4)),
+                            .withValues(alpha: 0.4)),
                 const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

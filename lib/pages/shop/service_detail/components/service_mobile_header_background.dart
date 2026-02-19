@@ -32,9 +32,9 @@ class ServiceMobileHeaderBackground extends StatelessWidget {
               colors: [
                 FlutterFlowTheme.of(context).transparent,
                 (FlutterFlowTheme.of(context).primaryBackground)
-                    .withOpacity(0.0),
+                    .withValues(alpha: 0.0),
                 (FlutterFlowTheme.of(context).primaryBackground)
-                    .withOpacity(0.8),
+                    .withValues(alpha: 0.8),
                 FlutterFlowTheme.of(context).primaryBackground,
               ],
               stops: const [0.0, 0.3, 0.75, 1.0],
@@ -59,7 +59,7 @@ class ServiceMobileHeaderBackground extends StatelessWidget {
                         color: FlutterFlowTheme.of(context).alternate),
                     boxShadow: [
                       BoxShadow(
-                          color: primaryColor.withOpacity(0.2), blurRadius: 15)
+                          color: primaryColor.withValues(alpha: 0.2), blurRadius: 15)
                     ]),
                 child: service.branding.logoUrl != null
                     ? ClipRRect(
@@ -121,13 +121,13 @@ class _StatusBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
         color: isOpen
-            ? FlutterFlowTheme.of(context).success.withOpacity(0.2)
-            : FlutterFlowTheme.of(context).error.withOpacity(0.2),
+            ? FlutterFlowTheme.of(context).success.withValues(alpha: 0.2)
+            : FlutterFlowTheme.of(context).error.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(6),
         border: Border.all(
           color: isOpen
-              ? FlutterFlowTheme.of(context).success.withOpacity(0.5)
-              : FlutterFlowTheme.of(context).error.withOpacity(0.5),
+              ? FlutterFlowTheme.of(context).success.withValues(alpha: 0.5)
+              : FlutterFlowTheme.of(context).error.withValues(alpha: 0.5),
         ),
       ),
       child: Text(

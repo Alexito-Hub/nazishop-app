@@ -35,7 +35,7 @@ class CheckoutHeader extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               decoration: BoxDecoration(
-                color: FlutterFlowTheme.of(context).success.withOpacity(0.15),
+                color: FlutterFlowTheme.of(context).success.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(

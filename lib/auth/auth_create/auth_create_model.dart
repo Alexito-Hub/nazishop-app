@@ -5,6 +5,11 @@ import 'package:flutter/material.dart';
 class AuthCreateModel extends FlutterFlowModel<AuthCreateWidget> {
   ///  State fields for stateful widgets in this page.
 
+  // State field(s) for fullName widget.
+  FocusNode? fullNameFocusNode;
+  TextEditingController? fullNameTextController;
+  String? Function(BuildContext, String?)? fullNameTextControllerValidator;
+
   // State field(s) for emailAddress widget.
   FocusNode? emailAddressFocusNode;
   TextEditingController? emailAddressTextController;
@@ -31,6 +36,9 @@ class AuthCreateModel extends FlutterFlowModel<AuthCreateWidget> {
 
   @override
   void dispose() {
+    fullNameFocusNode?.dispose();
+    fullNameTextController?.dispose();
+
     emailAddressFocusNode?.dispose();
     emailAddressTextController?.dispose();
 

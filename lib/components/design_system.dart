@@ -61,8 +61,8 @@ class DSButton extends StatelessWidget {
 
     // Disable state
     if (onPressed == null || isLoading) {
-      backgroundColor = theme.alternate.withOpacity(0.5);
-      foregroundColor = theme.secondaryText.withOpacity(0.8);
+      backgroundColor = theme.alternate.withValues(alpha: 0.5);
+      foregroundColor = theme.secondaryText.withValues(alpha: 0.8);
       border = null;
     }
 
@@ -141,12 +141,12 @@ class DSCard extends StatelessWidget {
           color: backgroundColor ?? theme.secondaryBackground,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: theme.alternate.withOpacity(0.5),
+            color: theme.alternate.withValues(alpha: 0.5),
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               offset: const Offset(0, 4),
               blurRadius: 12,
             ),
@@ -285,7 +285,7 @@ class DSBadge extends StatelessWidget {
     final theme = FlutterFlowTheme.of(context);
     return DSBadge(
       text: text,
-      color: theme.success.withOpacity(0.2),
+      color: theme.success.withValues(alpha: 0.2),
       textColor: theme.success,
       isOutlined: true,
     );
@@ -295,7 +295,7 @@ class DSBadge extends StatelessWidget {
     final theme = FlutterFlowTheme.of(context);
     return DSBadge(
       text: text,
-      color: theme.error.withOpacity(0.2),
+      color: theme.error.withValues(alpha: 0.2),
       textColor: theme.error,
       isOutlined: true,
     );
@@ -305,7 +305,7 @@ class DSBadge extends StatelessWidget {
     final theme = FlutterFlowTheme.of(context);
     return DSBadge(
       text: text,
-      color: theme.warning.withOpacity(0.2),
+      color: theme.warning.withValues(alpha: 0.2),
       textColor: theme.warning,
       isOutlined: true,
     );
@@ -314,7 +314,7 @@ class DSBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = FlutterFlowTheme.of(context);
-    final bgColor = color ?? theme.primary.withOpacity(0.2);
+    final bgColor = color ?? theme.primary.withValues(alpha: 0.2);
     final txtColor = textColor ?? theme.primary;
 
     return Container(
@@ -323,7 +323,7 @@ class DSBadge extends StatelessWidget {
         color: isOutlined ? bgColor : (color ?? theme.primary),
         borderRadius: BorderRadius.circular(20),
         border:
-            isOutlined ? Border.all(color: txtColor.withOpacity(0.5)) : null,
+            isOutlined ? Border.all(color: txtColor.withValues(alpha: 0.5)) : null,
       ),
       child: Text(
         text,

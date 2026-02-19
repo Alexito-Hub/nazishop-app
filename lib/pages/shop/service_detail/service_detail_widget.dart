@@ -5,13 +5,14 @@ import 'package:go_router/go_router.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 
 import 'package:nazi_shop/models/service_model.dart';
-import 'package:nazi_shop/models/offer_model.dart';
+import 'package:nazi_shop/models/listing_model.dart';
 import 'package:nazi_shop/backend/favorites_service.dart';
 import 'package:nazi_shop/utils/color_utils.dart';
 import '../../../components/smart_back_button.dart';
 
 // Modular Components
 import 'components/service_info.dart';
+import 'components/service_reviews.dart';
 import 'components/service_pricing.dart';
 import 'components/service_header_desktop.dart';
 import 'components/service_mobile_header_background.dart';
@@ -27,23 +28,10 @@ class ServiceDetailWidget extends StatefulWidget {
 }
 
 class _ServiceDetailWidgetState extends State<ServiceDetailWidget> {
-  int _selectedOfferIndex = 0;
+  int _selectedListingIndex = 0;
   bool _isFavorite = false;
 
-  List<Offer> get _allOffers => [
-        ...(widget.service.individualOffers ?? []),
-        ...(widget.service.packageOffers ?? []),
-      ];
-
-  // Get visual tags from the first available offer or fallback
-  List<DisplayTag> get _bestTags {
-    if (_allOffers.isEmpty) return [];
-    // Prioritize offers with defined displayTags
-    final withTags =
-        _allOffers.where((o) => o.uiData?.displayTags?.isNotEmpty ?? false);
-    if (withTags.isNotEmpty) return withTags.first.uiData!.displayTags!;
-    return [];
-  }
+  List<Listing> get _allListings => widget.service.listings ?? [];
 
   // Punto de quiebre responsivo estándar
   bool get _isDesktop => MediaQuery.of(context).size.width >= 900;
@@ -70,12 +58,12 @@ class _ServiceDetailWidgetState extends State<ServiceDetailWidget> {
     }
   }
 
-  Future<void> _handlePurchase(Offer offer) async {
+  Future<void> _handlePurchase(Listing listing) async {
     context.pushNamed(
       'checkout',
       extra: {
         'service': widget.service,
-        'selectedOffer': offer,
+        'selectedListing': listing,
       },
     );
   }
@@ -116,7 +104,7 @@ class _ServiceDetailWidgetState extends State<ServiceDetailWidget> {
             decoration: BoxDecoration(
               color: FlutterFlowTheme.of(context)
                   .secondaryBackground
-                  .withOpacity(0.45),
+                  .withValues(alpha: 0.45),
               shape: BoxShape.circle,
             ),
             child:
@@ -128,7 +116,7 @@ class _ServiceDetailWidgetState extends State<ServiceDetailWidget> {
               decoration: BoxDecoration(
                 color: FlutterFlowTheme.of(context)
                     .secondaryBackground
-                    .withOpacity(0.45),
+                    .withValues(alpha: 0.45),
                 shape: BoxShape.circle,
               ),
               child: IconButton(
@@ -157,7 +145,7 @@ class _ServiceDetailWidgetState extends State<ServiceDetailWidget> {
               children: [
                 ServiceInfo(
                   service: widget.service,
-                  tags: _bestTags,
+                  tags: [], // Tags handling updated
                 ),
                 Text(
                   'Planes Disponibles',
@@ -169,12 +157,17 @@ class _ServiceDetailWidgetState extends State<ServiceDetailWidget> {
                 ),
                 const SizedBox(height: 16),
                 ServicePricing(
-                  offers: _allOffers,
-                  selectedIndex: _selectedOfferIndex,
+                  listings: _allListings,
+                  selectedIndex: _selectedListingIndex,
                   primaryColor: primaryColor,
                   onSelect: (index) =>
-                      setState(() => _selectedOfferIndex = index),
+                      setState(() => _selectedListingIndex = index),
                   onPurchase: _handlePurchase,
+                ),
+                const SizedBox(height: 40),
+                ServiceReviews(
+                  serviceId: widget.service.id,
+                  primaryColor: primaryColor,
                 ),
                 const SizedBox(height: 50),
               ],
@@ -235,14 +228,21 @@ class _ServiceDetailWidgetState extends State<ServiceDetailWidget> {
                       isFavorite: _isFavorite,
                       onToggleFavorite: _toggleFavorite,
                       primaryColor: primaryColor,
-                      tags: _bestTags,
+                      tags: [], // Tags handling updated
                     ),
 
                     const SizedBox(height: 40),
 
                     ServiceInfo(
                       service: widget.service,
-                      tags: [], // Tags already shown in header for desktop
+                      tags: [],
+                    ),
+
+                    const SizedBox(height: 40),
+
+                    ServiceReviews(
+                      serviceId: widget.service.id,
+                      primaryColor: primaryColor,
                     ),
 
                     const SizedBox(height: 100),
@@ -254,11 +254,11 @@ class _ServiceDetailWidgetState extends State<ServiceDetailWidget> {
 
               // COLUMNA DERECHA: SIDEBAR FLOTANTE
               PurchaseSidebar(
-                offers: _allOffers,
-                selectedIndex: _selectedOfferIndex,
+                listings: _allListings,
+                selectedIndex: _selectedListingIndex,
                 primaryColor: primaryColor,
                 onSelect: (index) =>
-                    setState(() => _selectedOfferIndex = index),
+                    setState(() => _selectedListingIndex = index),
                 onPurchase: _handlePurchase,
               ),
             ],

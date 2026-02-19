@@ -109,15 +109,15 @@ class UserCard extends StatelessWidget {
                       horizontal: 8.0, vertical: 4.0),
                   decoration: BoxDecoration(
                     color: isActive
-                        ? FlutterFlowTheme.of(context).success.withOpacity(0.1)
-                        : FlutterFlowTheme.of(context).error.withOpacity(0.1),
+                        ? FlutterFlowTheme.of(context).success.withValues(alpha: 0.1)
+                        : FlutterFlowTheme.of(context).error.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8.0),
                     border: Border.all(
                       color: isActive
                           ? FlutterFlowTheme.of(context)
                               .success
-                              .withOpacity(0.2)
-                          : FlutterFlowTheme.of(context).error.withOpacity(0.2),
+                              .withValues(alpha: 0.2)
+                          : FlutterFlowTheme.of(context).error.withValues(alpha: 0.2),
                     ),
                   ),
                   child: Text(
@@ -277,9 +277,9 @@ class UserCard extends StatelessWidget {
         padding:
             width == null ? const EdgeInsets.symmetric(horizontal: 12) : null,
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withOpacity(0.1)),
+          border: Border.all(color: color.withValues(alpha: 0.1)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

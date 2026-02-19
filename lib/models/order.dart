@@ -1,62 +1,66 @@
 class OrderItem {
-  final String offerId;
+  final String listingId;
   final String? inventoryId;
   final double price;
   final String currency;
   final double exchangeRate;
-  final OrderItemSnapshot offerSnapshot;
+  final OrderItemListingSnapshot listingSnapshot;
   final Map<String, dynamic>? offerDetails;
 
   OrderItem({
-    required this.offerId,
+    required this.listingId,
     this.inventoryId,
     required this.price,
     required this.currency,
     this.exchangeRate = 1.0,
-    required this.offerSnapshot,
+    required this.listingSnapshot,
     this.offerDetails,
   });
 
   factory OrderItem.fromJson(Map<String, dynamic> json) {
     return OrderItem(
-      offerId: json['offerId'] is String
-          ? json['offerId']
-          : (json['offerId']?['_id'] ?? ''),
+      listingId: json['listingId'] is String
+          ? json['listingId']
+          : (json['listingId']?['_id'] ??
+              json['offerId']?['_id'] ??
+              json['offerId'] ??
+              ''), // Fallback for old records if any
       inventoryId: json['inventoryId'] is String
           ? json['inventoryId']
           : (json['inventoryId']?['_id'] ?? ''),
       price: (json['price'] ?? 0).toDouble(),
       currency: json['currency'] ?? 'USD',
       exchangeRate: (json['exchangeRate'] ?? 1.0).toDouble(),
-      offerSnapshot: OrderItemSnapshot.fromJson(json['offerSnapshot'] ?? {}),
+      listingSnapshot: OrderItemListingSnapshot.fromJson(
+          json['listingSnapshot'] ?? json['offerSnapshot'] ?? {}),
       offerDetails: json['offerDetails'],
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'offerId': offerId,
+        'listingId': listingId,
         'inventoryId': inventoryId,
         'price': price,
         'currency': currency,
         'exchangeRate': exchangeRate,
-        'offerSnapshot': offerSnapshot.toJson(),
+        'listingSnapshot': listingSnapshot.toJson(),
         'offerDetails': offerDetails,
       };
 }
 
-class OrderItemSnapshot {
+class OrderItemListingSnapshot {
   final String title;
   final String? serviceId;
   final String? dataDeliveryType;
 
-  OrderItemSnapshot({
+  OrderItemListingSnapshot({
     required this.title,
     this.serviceId,
     this.dataDeliveryType,
   });
 
-  factory OrderItemSnapshot.fromJson(Map<String, dynamic> json) {
-    return OrderItemSnapshot(
+  factory OrderItemListingSnapshot.fromJson(Map<String, dynamic> json) {
+    return OrderItemListingSnapshot(
       title: json['title'] ?? 'Unknown',
       serviceId: json['serviceId']?.toString(),
       dataDeliveryType: json['dataDeliveryType'],
@@ -161,7 +165,7 @@ class Order {
 
   // Check if order contains domain products
   bool get hasDomainProducts =>
-      items.any((item) => item.offerSnapshot.dataDeliveryType == 'domain');
+      items.any((item) => item.listingSnapshot.dataDeliveryType == 'domain');
 
   String get statusDisplayName {
     switch (status) {

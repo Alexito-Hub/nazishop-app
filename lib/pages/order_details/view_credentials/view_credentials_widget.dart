@@ -301,13 +301,14 @@ class _ViewCredentialsWidgetState extends State<ViewCredentialsWidget> {
   Widget _buildServiceInfoCard(
       {required FlutterFlowTheme theme, required bool isDark}) {
     final serviceName = widget.serviceName ??
-        _orderData?['items']?[0]?['offerSnapshot']?['title'] ??
+        _orderData?['items']?[0]?['listingSnapshot']?['title'] ??
         'Servicio Digital';
 
-    // Try to get plan from offerSnapshot if not provided
-    final offerSnapshot = _orderData?['items']?[0]?['offerSnapshot'];
+    // Try to get plan from listingSnapshot if not provided
+    final listingSnapshot = _orderData?['items']?[0]?['listingSnapshot'];
     final plan = widget.plan ??
-        (offerSnapshot?['commercial'] == 'family'
+        (listingSnapshot?['commercial'] == 'family' ||
+                listingSnapshot?['commercial']?['plan'] == 'family'
             ? 'Plan Familiar'
             : 'Plan Personal');
 

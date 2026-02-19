@@ -21,7 +21,7 @@ class OffersBanner extends StatelessWidget {
         borderRadius: BorderRadius.circular(16.0),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF4B39EF).withOpacity(0.1),
+            color: const Color(0xFF4B39EF).withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),

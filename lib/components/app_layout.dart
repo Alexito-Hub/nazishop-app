@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import '/auth/nazishop_auth/nazishop_auth_provider.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 
 import '../backend/catalog_cache.dart';
@@ -301,10 +303,9 @@ class _AppLayoutState extends State<AppLayout> {
 
   bool _shouldShowAdminSection() {
     try {
-      // No hay forma de acceder al usuario sin BuildContext
-      // La sección de admin se mostrará siempre y el guard de cada página
-      // se encargará de verificar permisos
-      return true; // Temporalmente mostrar siempre
+      final authProvider =
+          Provider.of<NaziShopAuthProvider>(context, listen: false);
+      return authProvider.currentUser?.isAdmin ?? false;
     } catch (e) {
       return false;
     }

@@ -18,7 +18,7 @@ class NaziShopBackend {
   }
 
   // ==================== PAYMENT / ORDER METHODS ====================
-  // (To be refactored to use OfferID instead of ProductID)
+  // (To be refactored to use ListingID instead of ProductID)
 
   static Future<Map<String, dynamic>> createPaymentIntent({
     required String orderId,

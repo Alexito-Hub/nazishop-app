@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
-import '/models/offer_model.dart';
+import '../../flutter_flow/flutter_flow_theme.dart';
+import '../../models/listing_model.dart';
+import '../../backend/currency_service.dart';
 
-class OfferCard extends StatelessWidget {
-  final Offer offer;
+class ListingCard extends StatelessWidget {
+  final Listing listing;
   final bool isSelected;
   final Color primaryColor;
   final VoidCallback onTap;
   final VoidCallback onPurchase;
   final String durationText;
 
-  const OfferCard({
+  const ListingCard({
     super.key,
-    required this.offer,
+    required this.listing,
     required this.isSelected,
     required this.primaryColor,
     required this.onTap,
@@ -24,7 +25,9 @@ class OfferCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = FlutterFlowTheme.of(context);
-    final hasDiscount = offer.discountPercent > 0;
+    // Listings don't have discount logic for now
+
+    final title = listing.commercial?.plan ?? listing.description ?? 'Standard';
 
     return GestureDetector(
       onTap: onTap,
@@ -33,18 +36,19 @@ class OfferCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isSelected
-              ? primaryColor.withOpacity(0.04)
+              ? primaryColor.withValues(alpha: 0.04)
               : theme.secondaryBackground,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color:
-                isSelected ? primaryColor.withOpacity(0.25) : theme.alternate,
+            color: isSelected
+                ? primaryColor.withValues(alpha: 0.25)
+                : theme.alternate,
             width: 1,
           ),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                      color: primaryColor.withOpacity(0.1),
+                      color: primaryColor.withValues(alpha: 0.1),
                       blurRadius: 8,
                       offset: const Offset(0, 4))
                 ]
@@ -58,7 +62,7 @@ class OfferCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    offer.title,
+                    title,
                     style: GoogleFonts.outfit(
                       fontSize: 16 * FlutterFlowTheme.fontSizeFactor,
                       fontWeight: FontWeight.bold,
@@ -66,29 +70,13 @@ class OfferCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (hasDiscount)
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: theme.error.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      '-${offer.discountPercent}%',
-                      style: GoogleFonts.outfit(
-                        color: theme.error,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
               ],
             ),
             const SizedBox(height: 8),
-            if (offer.description != null && offer.description!.isNotEmpty) ...[
+            if (listing.description != null &&
+                listing.description!.isNotEmpty) ...[
               Text(
-                offer.description!,
+                listing.description!,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.outfit(
@@ -104,17 +92,8 @@ class OfferCard extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (hasDiscount)
-                      Text(
-                        '\$${offer.originalPrice.toStringAsFixed(2)}',
-                        style: GoogleFonts.outfit(
-                          color: theme.secondaryText,
-                          decoration: TextDecoration.lineThrough,
-                          fontSize: 13 * FlutterFlowTheme.fontSizeFactor,
-                        ),
-                      ),
                     Text(
-                      '\$${offer.discountPrice.toStringAsFixed(2)}',
+                      CurrencyService.formatFromUSD(listing.price),
                       style: GoogleFonts.outfit(
                         color: theme.primaryText,
                         fontWeight: FontWeight.w900,
@@ -139,7 +118,7 @@ class OfferCard extends StatelessWidget {
                     "Comprar",
                     style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
                   ),
-                )
+                ),
               ],
             ),
             if (durationText.isNotEmpty) ...[

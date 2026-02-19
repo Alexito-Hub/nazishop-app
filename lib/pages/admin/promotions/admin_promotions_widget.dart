@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../components/smart_back_button.dart';
 import 'package:nazi_shop/backend/admin_service.dart';
 import 'package:go_router/go_router.dart';
-import 'package:nazi_shop/models/offer_model.dart';
+import 'package:nazi_shop/models/promotion_model.dart';
 
 import 'components/promotion_card.dart';
 
@@ -20,7 +20,7 @@ class _AdminPromotionsWidgetState extends State<AdminPromotionsWidget> {
   // Removed hardcoded colors in favor of theme
 
   bool _isLoading = false;
-  List<Offer> _promotions = [];
+  List<Promotion> _promotions = [];
   String _filterStatus = 'all'; // all, active, inactive
 
   @override
@@ -52,7 +52,7 @@ class _AdminPromotionsWidgetState extends State<AdminPromotionsWidget> {
     }
   }
 
-  List<Offer> get _filteredPromotions {
+  List<Promotion> get _filteredPromotions {
     final now = DateTime.now();
     return _promotions.where((p) {
       bool matchesFilter = true;
@@ -125,7 +125,7 @@ class _AdminPromotionsWidgetState extends State<AdminPromotionsWidget> {
     _loadPromotions();
   }
 
-  Future<void> _editPromotion(Offer item) async {
+  Future<void> _editPromotion(Promotion item) async {
     await context.pushNamed('create_promotion', extra: item.toJson());
     _loadPromotions();
   }

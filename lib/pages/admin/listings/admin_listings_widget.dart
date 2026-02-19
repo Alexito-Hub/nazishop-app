@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../components/smart_back_button.dart';
 import 'package:nazi_shop/backend/admin_service.dart';
-import 'package:nazi_shop/models/offer_model.dart';
+import 'package:nazi_shop/models/listing_model.dart';
 import 'package:go_router/go_router.dart';
 import '/pages/admin/inventory/admin_inventory_widget.dart';
 
@@ -17,7 +17,7 @@ class AdminListingsWidget extends StatefulWidget {
 }
 
 class _AdminListingsWidgetState extends State<AdminListingsWidget> {
-  List<Offer> _offers = [];
+  List<Listing> _listings = [];
   bool _isLoading = true;
 
   @override
@@ -32,7 +32,7 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
       final data = await AdminService.getListings();
       if (mounted) {
         setState(() {
-          _offers = data;
+          _listings = data;
           _isLoading = false;
         });
       }
@@ -202,7 +202,7 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
                   child: Center(
                       child: CircularProgressIndicator(
                           color: FlutterFlowTheme.of(context).primary)))
-              : _buildOffersGrid(isDesktop: false),
+              : _buildListingsGrid(isDesktop: false),
         ),
       ],
     );
@@ -298,7 +298,7 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
                       child: Center(
                           child: CircularProgressIndicator(
                               color: FlutterFlowTheme.of(context).primary)))
-                  : _buildOffersGrid(isDesktop: true),
+                  : _buildListingsGrid(isDesktop: true),
             ),
           ],
         ),
@@ -306,14 +306,14 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
     );
   }
 
-  Widget _buildOffersGrid({required bool isDesktop}) {
-    if (_offers.isEmpty) {
+  Widget _buildListingsGrid({required bool isDesktop}) {
+    if (_listings.isEmpty) {
       return SliverToBoxAdapter(
         child: Center(
           child: Column(
             children: [
               const SizedBox(height: 50),
-              Icon(Icons.local_offer_outlined,
+              Icon(Icons.layers_outlined,
                   size: 64, color: FlutterFlowTheme.of(context).secondaryText),
               const SizedBox(height: 16),
               Text(
@@ -331,21 +331,21 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
     return SliverGrid(
       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 350,
-        mainAxisExtent: 310,
+        mainAxisExtent: 280,
         mainAxisSpacing: 16,
         crossAxisSpacing: 16,
       ),
       delegate: SliverChildBuilderDelegate(
         (context, index) {
-          final offer = _offers[index];
-          return _buildOfferCard(offer);
+          final listing = _listings[index];
+          return _buildListingCard(listing);
         },
-        childCount: _offers.length,
+        childCount: _listings.length,
       ),
     );
   }
 
-  Widget _buildOfferCard(Offer offer) {
+  Widget _buildListingCard(Listing listing) {
     final primaryColor = FlutterFlowTheme.of(context).primary;
 
     return Container(
@@ -356,39 +356,22 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
           color: primaryColor.withValues(alpha: 0.1),
           width: 1.5,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
       ),
       clipBehavior: Clip.antiAlias,
       child: Stack(
         children: [
-          // Background flair
-          Positioned(
-            right: -10,
-            top: -10,
-            child: Icon(
-              Icons.local_offer_rounded,
-              size: 80,
-              color: primaryColor.withValues(alpha: 0.1),
-            ),
-          ),
           Material(
             color: Colors.transparent,
             child: InkWell(
               onTap: () async {
                 await context.pushNamed(
                   'create_listing',
-                  extra: offer,
+                  extra: listing,
                 );
                 _loadOffers();
               },
               child: Padding(
-                padding: const EdgeInsets.all(24),
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -396,19 +379,10 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: primaryColor.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Icon(Icons.flash_on_rounded,
-                              color: primaryColor, size: 20),
-                        ),
-                        Container(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: 5),
                           decoration: BoxDecoration(
-                            color: offer.isActive
+                            color: listing.isActive
                                 ? FlutterFlowTheme.of(context)
                                     .success
                                     .withValues(alpha: 0.1)
@@ -416,103 +390,48 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
                                     .secondaryText
                                     .withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: offer.isActive
-                                  ? FlutterFlowTheme.of(context)
-                                      .success
-                                      .withValues(alpha: 0.1)
-                                  : FlutterFlowTheme.of(context)
-                                      .secondaryText
-                                      .withValues(alpha: 0.2),
-                            ),
                           ),
                           child: Text(
-                            offer.isActive ? 'ACTIVO' : 'INACTIVO',
+                            listing.isActive ? 'ACTIVO' : 'INACTIVO',
                             style: GoogleFonts.outfit(
-                              color: offer.isActive
+                              color: listing.isActive
                                   ? FlutterFlowTheme.of(context).success
                                   : FlutterFlowTheme.of(context).secondaryText,
                               fontSize: 9,
                               fontWeight: FontWeight.bold,
-                              letterSpacing: 0.5,
                             ),
                           ),
                         ),
+                        if (listing.isFeatured)
+                          Icon(Icons.star_rounded,
+                              color: FlutterFlowTheme.of(context).warning,
+                              size: 18),
                       ],
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      offer.title,
-                      style: GoogleFonts.outfit(
-                        color: FlutterFlowTheme.of(context).primaryText,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: -0.5,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          '\$${offer.discountPrice}',
-                          style: GoogleFonts.outfit(
-                            color: FlutterFlowTheme.of(context).primaryText,
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        if (offer.originalPrice > offer.discountPrice)
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 4),
-                            child: Text(
-                              '\$${offer.originalPrice}',
-                              style: GoogleFonts.outfit(
-                                color:
-                                    FlutterFlowTheme.of(context).secondaryText,
-                                fontSize: 16,
-                                decoration: TextDecoration.lineThrough,
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                    const Spacer(),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: primaryColor,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        '${offer.discountPercent}% OFF',
-                        style: GoogleFonts.outfit(
-                          color: FlutterFlowTheme.of(context).info,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
                     ),
                     const SizedBox(height: 16),
+                    Text(
+                      listing.title,
+                      style: GoogleFonts.outfit(
+                        color: FlutterFlowTheme.of(context).primaryText,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      '\$${listing.price} ${listing.currency}',
+                      style: GoogleFonts.outfit(
+                        color: FlutterFlowTheme.of(context).primaryText,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    const Spacer(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        _buildIconButton(
-                          Icons.edit_outlined,
-                          FlutterFlowTheme.of(context).secondaryText,
-                          () async {
-                            await context.pushNamed(
-                              'create_listing',
-                              extra: offer,
-                            );
-                            _loadOffers();
-                          },
-                        ),
-                        const SizedBox(width: 8),
                         _buildIconButton(
                           Icons.inventory_2_rounded,
                           FlutterFlowTheme.of(context).info,
@@ -520,8 +439,8 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => AdminInventoryWidget(
-                                listingId: offer.id,
-                                listingTitle: offer.title,
+                                listingId: listing.id,
+                                listingTitle: listing.title,
                               ),
                             ),
                           ),
@@ -530,7 +449,7 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
                         _buildIconButton(
                           Icons.delete_outline_rounded,
                           primaryColor,
-                          () => _deleteOffer(offer.id),
+                          () => _deleteOffer(listing.id),
                         ),
                       ],
                     ),

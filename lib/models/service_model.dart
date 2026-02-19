@@ -1,4 +1,4 @@
-import 'offer_model.dart';
+import 'listing_model.dart';
 
 class Service {
   final String id;
@@ -9,16 +9,16 @@ class Service {
   final String? categoryName; // Added for UI display
   final ServiceBranding branding;
   final bool isActive;
-  final List<Offer>? offers; // Legacy compatibility
-  final List<Offer>? individualOffers; // New: Individual plans (0% discount)
-  final List<Offer>? packageOffers; // New: Package deals with discounts
-  final bool? hasStock; // New: Has any stock available
-  final double? lowestPrice; // New: Lowest price available
-  final List<String>? features; // New: Detailed features
-  final String? duration; // New: Validity period
-  final int? rawStock; // New: Physical stock count from DB
-  final String? image; // New: Service image URL
-  final ServiceTechnicalInfo? technicalInfo; // New: Technical details
+  final List<Listing>? listings;
+  final bool? hasStock;
+  final double? lowestPrice;
+  final List<String>? features;
+  final String? duration;
+  final int? rawStock;
+  final String? image;
+  final ServiceTechnicalInfo? technicalInfo;
+  final ServiceStats stats;
+  bool isFavorite;
 
   Service({
     required this.id,
@@ -29,9 +29,7 @@ class Service {
     this.categoryName,
     required this.branding,
     this.isActive = true,
-    this.offers,
-    this.individualOffers,
-    this.packageOffers,
+    this.listings,
     this.hasStock,
     this.lowestPrice,
     this.features,
@@ -39,57 +37,15 @@ class Service {
     this.rawStock,
     this.image,
     this.technicalInfo,
+    this.stats = const ServiceStats(),
+    this.isFavorite = false,
   });
 
   String get category => categoryName ?? 'Otros';
-
-  // Getters to calculate price from offers (prioritize individual offers)
-  String get currency {
-    if (individualOffers != null && individualOffers!.isNotEmpty) {
-      return individualOffers!.first.currency;
-    }
-    if (offers != null && offers!.isNotEmpty) {
-      return offers!.first.currency;
-    }
-    return 'USD'; // Default currency
-  }
-
-  double get price {
-    // First try individual offers (these are the base prices)
-    if (individualOffers != null && individualOffers!.isNotEmpty) {
-      final prices = individualOffers!
-          .where((offer) => offer.discountPrice > 0 && offer.inStock)
-          .map((offer) => offer.discountPrice)
-          .toList();
-      if (prices.isNotEmpty) {
-        prices.sort();
-        return prices.first; // Return lowest individual price
-      }
-    }
-
-    // Fallback to legacy offers
-    if (offers != null && offers!.isNotEmpty) {
-      // First try to find individual offer (0% discount)
-      final individualOffer = offers!.firstWhere(
-        (offer) => offer.discountPercent == 0,
-        orElse: () => offers!.first,
-      );
-
-      if (individualOffer.discountPrice > 0) {
-        return individualOffer.discountPrice;
-      }
-
-      // Fallback to lowest price from any offer
-      final prices = offers!
-          .where((offer) => offer.discountPrice > 0)
-          .map((offer) => offer.discountPrice)
-          .toList();
-      if (prices.isNotEmpty) {
-        prices.sort();
-        return prices.first;
-      }
-    }
-    return 0.0; // Default price
+// ... (keep existing getters)
+  // Get image URL for display
+  String? get imageUrl {
+    return image ?? branding.logoUrl;
   }
 
   // Check if service has available stock
@@ -97,53 +53,42 @@ class Service {
     if (hasStock != null) {
       return hasStock!;
     }
-
-    // Legacy compatibility: check offers
-    if (offers != null && offers!.isNotEmpty) {
-      return offers!.any((offer) => offer.inStock);
+    // Check if any listing has stock (domainStock or assumption)
+    // For now, if listing exists and is active, we assume stock unless specified otherwise
+    if (listings != null && listings!.isNotEmpty) {
+      return listings!.any((l) => l.isActive);
     }
-
     return false;
   }
 
   // Get stock count - simplified version for UI display
   int get stock {
     if (rawStock != null) return rawStock!;
-    if (offers != null && offers!.isNotEmpty) {
-      // Sum up stock from all offers (simplified)
-      return offers!.fold(0, (sum, offer) => sum + (offer.inStock ? 5 : 0));
-    }
     return isInStock ? 5 : 0; // Default stock display
   }
 
-  // Get image URL for display
-  String? get imageUrl {
-    return image ??
-        branding.logoUrl; // Using image or branding.logoUrl as imageUrl
+  // Base price for compatibility
+  double get price {
+    if (lowestPrice != null && lowestPrice! > 0) return lowestPrice!;
+
+    if (listings != null && listings!.isNotEmpty) {
+      final prices = listings!
+          .where((l) => l.price > 0 && l.isActive)
+          .map((l) => l.price)
+          .toList();
+      if (prices.isNotEmpty) {
+        prices.sort();
+        return prices.first; // Return lowest price
+      }
+    }
+    return 0.0; // Default price
   }
 
-  // Base price for compatibility
-  double get basePrice => price;
-
   factory Service.fromJson(Map<String, dynamic> json) {
-    List<Offer>? offersList;
-    if (json['offers'] != null) {
-      offersList =
-          (json['offers'] as List).map((i) => Offer.fromJson(i)).toList();
-    }
-
-    List<Offer>? individualOffersList;
-    if (json['individualOffers'] != null) {
-      individualOffersList = (json['individualOffers'] as List)
-          .map((i) => Offer.fromJson(i))
-          .toList();
-    }
-
-    List<Offer>? packageOffersList;
-    if (json['packageOffers'] != null) {
-      packageOffersList = (json['packageOffers'] as List)
-          .map((i) => Offer.fromJson(i))
-          .toList();
+    List<Listing>? listingsList;
+    if (json['listings'] != null) {
+      listingsList =
+          (json['listings'] as List).map((i) => Listing.fromJson(i)).toList();
     }
 
     String catId = '';
@@ -165,9 +110,7 @@ class Service {
       categoryName: catName,
       branding: ServiceBranding.fromJson(json['branding'] ?? {}),
       isActive: json['isActive'] ?? true,
-      offers: offersList,
-      individualOffers: individualOffersList,
-      packageOffers: packageOffersList,
+      listings: listingsList,
       hasStock: json['hasStock'],
       lowestPrice: json['lowestPrice']?.toDouble(),
       features:
@@ -178,6 +121,10 @@ class Service {
       technicalInfo: json['technicalInfo'] != null
           ? ServiceTechnicalInfo.fromJson(json['technicalInfo'])
           : null,
+      stats: json['stats'] != null
+          ? ServiceStats.fromJson(json['stats'])
+          : const ServiceStats(),
+      isFavorite: json['isFavorite'] ?? false,
     );
   }
 
@@ -189,11 +136,8 @@ class Service {
         'categoryId': categoryId,
         'branding': branding.toJson(),
         'isActive': isActive,
-        if (offers != null) 'offers': offers!.map((o) => o.toJson()).toList(),
-        if (individualOffers != null)
-          'individualOffers': individualOffers!.map((o) => o.toJson()).toList(),
-        if (packageOffers != null)
-          'packageOffers': packageOffers!.map((o) => o.toJson()).toList(),
+        if (listings != null)
+          'listings': listings!.map((l) => l.toJson()).toList(),
         if (hasStock != null) 'hasStock': hasStock,
         if (lowestPrice != null) 'lowestPrice': lowestPrice,
       };
@@ -253,6 +197,26 @@ class ServiceTechnicalInfo {
           (json['requirements'] as List?)?.map((e) => e.toString()).toList() ??
               [],
       deviceLimit: json['deviceLimit'],
+    );
+  }
+}
+
+class ServiceStats {
+  final double averageRating;
+  final int totalReviews;
+  final int totalFavorites;
+
+  const ServiceStats({
+    this.averageRating = 0.0,
+    this.totalReviews = 0,
+    this.totalFavorites = 0,
+  });
+
+  factory ServiceStats.fromJson(Map<String, dynamic> json) {
+    return ServiceStats(
+      averageRating: (json['averageRating'] as num?)?.toDouble() ?? 0.0,
+      totalReviews: json['totalReviews'] ?? 0,
+      totalFavorites: json['totalFavorites'] ?? 0,
     );
   }
 }

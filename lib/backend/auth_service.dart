@@ -54,7 +54,9 @@ class AuthService {
             .doc(user.uid)
             .get();
 
+        bool isNewUser = false;
         if (!userDoc.exists) {
+          isNewUser = true;
           await FirebaseFirestore.instance
               .collection('users')
               .doc(user.uid)
@@ -74,12 +76,20 @@ class AuthService {
             'wallet_balance': 0.0,
           });
         }
+
+        return {
+          'success': true,
+          'message': 'Google login successful',
+          'user': user,
+          'isNewUser': isNewUser,
+        };
       }
 
       return {
         'success': true,
         'message': 'Google login successful',
         'user': user,
+        'isNewUser': false,
       };
     } catch (e) {
       return {

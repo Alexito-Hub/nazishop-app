@@ -34,11 +34,11 @@ class AdminHeader extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           decoration: BoxDecoration(
-            color: FlutterFlowTheme.of(context).primaryText.withOpacity(0.05),
+            color: FlutterFlowTheme.of(context).primaryText.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
                 color:
-                    FlutterFlowTheme.of(context).primaryText.withOpacity(0.1)),
+                    FlutterFlowTheme.of(context).primaryText.withValues(alpha: 0.1)),
           ),
           child: Row(
             children: [

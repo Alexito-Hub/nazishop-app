@@ -475,7 +475,7 @@ class _AdminOrderCardState extends State<AdminOrderCard> {
     // Access data safely
     final item =
         widget.order.items.isNotEmpty ? widget.order.items.first : null;
-    final snapshot = item?.offerSnapshot;
+    final snapshot = item?.listingSnapshot;
     final offerDetails = item?.offerDetails;
 
     final status = widget.order.status.toLowerCase();

@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/models/service_model.dart';
-import '/models/offer_model.dart';
+import '/models/listing_model.dart';
 import '/utils/color_utils.dart';
 import '../../components/safe_image.dart';
 import '../../backend/order_service.dart';
@@ -23,12 +23,12 @@ import 'components/pay_button.dart';
 
 class CheckoutWidget extends StatefulWidget {
   final Service service;
-  final Offer selectedOffer;
+  final Listing selectedListing;
 
   const CheckoutWidget({
     super.key,
     required this.service,
-    required this.selectedOffer,
+    required this.selectedListing,
   });
 
   @override
@@ -82,9 +82,6 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
   Color get _primaryColor =>
       ColorUtils.parseColor(context, widget.service.branding.primaryColor);
 
-  bool get _hasEnoughBalance =>
-      _accountBalance >= widget.selectedOffer.discountPrice;
-
   Future<void> _processPayment() async {
     if (!_acceptedTerms) {
       _showErrorSnackbar('Debes aceptar los términos y condiciones');
@@ -100,7 +97,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
 
     try {
       final response = await OrderService.createOrder(
-        widget.selectedOffer.id,
+        widget.selectedListing.id,
         paymentMethod: 'wallet',
       );
 
@@ -111,7 +108,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
           final orderData = response['data'];
           final orderId = orderData['_id'] ?? 'UNKNOWN';
 
-          if (widget.selectedOffer.domainType == 'own_domain') {
+          if (widget.selectedListing.delivery?.domainType == 'own_domain') {
             context.go('/customer_info?orderId=$orderId');
           } else {
             context.go(
@@ -176,7 +173,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                 decoration: BoxDecoration(
                   color: FlutterFlowTheme.of(context)
                       .primaryBackground
-                      .withOpacity(0.5),
+                      .withValues(alpha: 0.5),
                   shape: BoxShape.circle,
                 ),
                 child: SmartBackButton(
@@ -191,12 +188,12 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                     decoration: BoxDecoration(
                       color: FlutterFlowTheme.of(context)
                           .success
-                          .withOpacity(0.15),
+                          .withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
                           color: FlutterFlowTheme.of(context)
                               .success
-                              .withOpacity(0.5)),
+                              .withValues(alpha: 0.5)),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -230,8 +227,8 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              _primaryColor.withOpacity(0.3),
-                              _primaryColor.withOpacity(0.1)
+                              _primaryColor.withValues(alpha: 0.3),
+                              _primaryColor.withValues(alpha: 0.1)
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -245,10 +242,10 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                             FlutterFlowTheme.of(context).primaryBackground,
                             FlutterFlowTheme.of(context)
                                 .primaryBackground
-                                .withOpacity(0.0),
+                                .withValues(alpha: 0.0),
                             FlutterFlowTheme.of(context)
                                 .primaryBackground
-                                .withOpacity(0.8),
+                                .withValues(alpha: 0.8),
                             FlutterFlowTheme.of(context).primaryBackground,
                           ],
                           stops: const [0.0, 0.2, 0.7, 1.0],
@@ -275,7 +272,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                                       FlutterFlowTheme.of(context).alternate),
                               boxShadow: [
                                 BoxShadow(
-                                  color: _primaryColor.withOpacity(0.2),
+                                  color: _primaryColor.withValues(alpha: 0.2),
                                   blurRadius: 15,
                                 ),
                               ],
@@ -338,9 +335,9 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                   children: [
                     CheckoutProductCard(
                         service: widget.service,
-                        selectedOffer: widget.selectedOffer),
+                        selectedListing: widget.selectedListing),
                     const SizedBox(height: 16),
-                    DeliveryInfoCard(selectedOffer: widget.selectedOffer),
+                    DeliveryInfoCard(selectedListing: widget.selectedListing),
                     const SizedBox(height: 32),
                     CheckoutPaymentMethods(
                       methods: _paymentMethods,
@@ -392,11 +389,11 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                     const SizedBox(height: 40),
                     CheckoutProductCard(
                       service: widget.service,
-                      selectedOffer: widget.selectedOffer,
+                      selectedListing: widget.selectedListing,
                       isDesktop: true,
                     ),
                     const SizedBox(height: 24),
-                    DeliveryInfoCard(selectedOffer: widget.selectedOffer),
+                    DeliveryInfoCard(selectedListing: widget.selectedListing),
                     const SizedBox(height: 40),
                     CheckoutPaymentMethods(
                       methods: _paymentMethods,
@@ -423,7 +420,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                             color: FlutterFlowTheme.of(context).alternate),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.5),
+                            color: Colors.black.withValues(alpha: 0.5),
                             blurRadius: 30,
                             offset: const Offset(0, 10),
                           ),
@@ -444,10 +441,9 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                               isLoading: _isLoadingBalance),
                           const SizedBox(height: 32),
                           CheckoutPriceSummary(
-                            originalPrice: widget.selectedOffer.originalPrice,
-                            discountPrice: widget.selectedOffer.discountPrice,
-                            discountPercent:
-                                widget.selectedOffer.discountPercent.toDouble(),
+                            originalPrice: widget.selectedListing.price,
+                            discountPrice: widget.selectedListing.price,
+                            discountPercent: 0,
                           ),
                           const SizedBox(height: 24),
                           Divider(
@@ -501,7 +497,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
         color: FlutterFlowTheme.of(context).secondaryBackground,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, -5),
           ),
@@ -513,9 +509,9 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
           mainAxisSize: MainAxisSize.min,
           children: [
             CheckoutPriceSummary(
-              originalPrice: widget.selectedOffer.originalPrice,
-              discountPrice: widget.selectedOffer.discountPrice,
-              discountPercent: widget.selectedOffer.discountPercent.toDouble(),
+              originalPrice: widget.selectedListing.price,
+              discountPrice: widget.selectedListing.price,
+              discountPercent: 0,
             ),
             const SizedBox(height: 20),
             PayButton(

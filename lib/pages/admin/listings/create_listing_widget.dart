@@ -567,7 +567,8 @@ class _CreateListingWidgetState extends State<CreateListingWidget> {
                 const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   initialValue: _domainType,
-                  dropdownColor: const Color(0xFF1F1F1F),
+                  dropdownColor:
+                      FlutterFlowTheme.of(context).secondaryBackground,
                   style: GoogleFonts.outfit(
                       color: FlutterFlowTheme.of(context).primaryText),
                   decoration: _inputDeco('Tipo de Dominio', Icons.dns),
@@ -648,41 +649,44 @@ class _CreateListingWidgetState extends State<CreateListingWidget> {
     final kt =
         keyboardType ?? (isNumber ? TextInputType.number : TextInputType.text);
 
-    return Container(
-      decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).secondaryBackground,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: FlutterFlowTheme.of(context).alternate),
+    final theme = FlutterFlowTheme.of(context);
+
+    return TextFormField(
+      controller: ctrl,
+      maxLines: maxLines,
+      keyboardType: kt,
+      style: GoogleFonts.outfit(color: theme.primaryText),
+      cursorColor: theme.primary,
+      decoration: InputDecoration(
+        labelText: label,
+        hintText: hint,
+        prefixText: prefixText,
+        prefixStyle: GoogleFonts.outfit(color: theme.secondaryText),
+        labelStyle: GoogleFonts.outfit(color: theme.secondaryText),
+        hintStyle: GoogleFonts.outfit(color: theme.secondaryText),
+        prefixIcon:
+            icon != null ? Icon(icon, color: theme.secondaryText) : null,
+        filled: true,
+        fillColor: theme.primaryBackground,
+        enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: theme.alternate)),
+        focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: theme.primary)),
+        errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: theme.error)),
+        focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: theme.error)),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
-      child: TextFormField(
-        controller: ctrl,
-        maxLines: maxLines,
-        keyboardType: kt,
-        style:
-            GoogleFonts.outfit(color: FlutterFlowTheme.of(context).primaryText),
-        cursorColor: FlutterFlowTheme.of(context).primary,
-        decoration: InputDecoration(
-          labelText: label,
-          hintText: hint,
-          prefixText: prefixText,
-          prefixStyle: GoogleFonts.outfit(
-              color: FlutterFlowTheme.of(context).secondaryText),
-          labelStyle: GoogleFonts.outfit(
-              color: FlutterFlowTheme.of(context).secondaryText),
-          hintStyle: GoogleFonts.outfit(
-              color: FlutterFlowTheme.of(context).secondaryText),
-          prefixIcon: icon != null
-              ? Icon(icon, color: FlutterFlowTheme.of(context).secondaryText)
-              : null,
-          border: InputBorder.none,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        ),
-        validator: (v) {
-          if (!isNumber && (v == null || v.isEmpty)) return 'Requerido';
-          return null;
-        },
-      ),
+      validator: (v) {
+        if (!isNumber && (v == null || v.isEmpty)) return 'Requerido';
+        return null;
+      },
     );
   }
 }

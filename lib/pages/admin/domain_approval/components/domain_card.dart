@@ -25,7 +25,7 @@ class DomainCard extends StatelessWidget {
         border: Border.all(color: FlutterFlowTheme.of(context).alternate),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withValues(alpha: 0.2),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -64,7 +64,7 @@ class DomainCard extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: _statusColor(context, domain.status).withOpacity(0.2),
+                  color: _statusColor(context, domain.status).withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
