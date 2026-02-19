@@ -4,8 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../components/smart_back_button.dart';
 import 'package:nazi_shop/backend/admin_service.dart';
 import 'package:nazi_shop/models/category_model.dart';
-import 'package:nazi_shop/utils/icon_utils.dart';
 import 'package:go_router/go_router.dart';
+import 'components/category_grid.dart';
 
 class AdminCategoriesWidget extends StatefulWidget {
   const AdminCategoriesWidget({super.key});
@@ -32,7 +32,7 @@ class AdminCategoriesWidgetState extends State<AdminCategoriesWidget> {
       final data = await AdminService.getCategories();
       if (mounted) {
         setState(() {
-          _categories = data.map((d) => Category.fromJson(d)).toList();
+          _categories = data;
           _isLoading = false;
         });
       }
@@ -200,7 +200,12 @@ class AdminCategoriesWidgetState extends State<AdminCategoriesWidget> {
                   child: Center(
                       child: CircularProgressIndicator(
                           color: FlutterFlowTheme.of(context).primary)))
-              : _buildCategoriesGrid(isDesktop: false),
+              : CategoryGrid(
+                  categories: _categories,
+                  onDelete: _deleteCategory,
+                  onRefresh: _loadCategories,
+                  isDesktop: false,
+                ),
         ),
       ],
     );
@@ -297,228 +302,15 @@ class AdminCategoriesWidgetState extends State<AdminCategoriesWidget> {
                       child: Center(
                           child: CircularProgressIndicator(
                               color: FlutterFlowTheme.of(context).primary)))
-                  : _buildCategoriesGrid(isDesktop: true),
+                  : CategoryGrid(
+                      categories: _categories,
+                      onDelete: _deleteCategory,
+                      onRefresh: _loadCategories,
+                      isDesktop: true,
+                    ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildCategoriesGrid({required bool isDesktop}) {
-    if (_categories.isEmpty) {
-      return SliverToBoxAdapter(
-        child: Center(
-          child: Column(
-            children: [
-              const SizedBox(height: 50),
-              Icon(Icons.category_outlined,
-                  size: 64,
-                  color: FlutterFlowTheme.of(context)
-                      .primaryText
-                      .withValues(alpha: 0.2)),
-              const SizedBox(height: 16),
-              Text(
-                'No hay categorías creadas',
-                style: GoogleFonts.outfit(
-                    color: FlutterFlowTheme.of(context).secondaryText,
-                    fontSize: 18),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    return SliverGrid(
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 350,
-        mainAxisExtent: 240,
-        mainAxisSpacing: 16,
-        crossAxisSpacing: 16,
-      ),
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          final category = _categories[index];
-          return _buildCategoryCard(category);
-        },
-        childCount: _categories.length,
-      ),
-    );
-  }
-
-  Widget _buildCategoryCard(Category cat) {
-    final primaryColor = FlutterFlowTheme.of(context).primary;
-
-    return Container(
-      decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context)
-            .secondaryBackground
-            .withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: primaryColor.withValues(alpha: 0.1),
-          width: 1.5,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.transparent,
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Stack(
-        children: [
-          // Background icon flair
-          Positioned(
-            right: -20,
-            bottom: -20,
-            child: Icon(
-              IconUtils.parseIcon(cat.ui.icon),
-              size: 120,
-              color: primaryColor.withValues(alpha: 0.1),
-            ),
-          ),
-          Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () async {
-                await context.pushNamed(
-                  'create_category',
-                  extra: cat,
-                );
-                _loadCategories();
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: primaryColor.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                                color: primaryColor.withValues(alpha: 0.1)),
-                          ),
-                          child: Icon(
-                            IconUtils.parseIcon(cat.ui.icon),
-                            color: primaryColor,
-                            size: 24,
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: cat.isActive
-                                ? FlutterFlowTheme.of(context)
-                                    .success
-                                    .withValues(alpha: 0.1)
-                                : FlutterFlowTheme.of(context).alternate,
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: cat.isActive
-                                  ? FlutterFlowTheme.of(context)
-                                      .success
-                                      .withValues(alpha: 0.1)
-                                  : FlutterFlowTheme.of(context).alternate,
-                            ),
-                          ),
-                          child: Text(
-                            cat.isActive ? 'ACTIVO' : 'INACTIVO',
-                            style: GoogleFonts.outfit(
-                              color: cat.isActive
-                                  ? FlutterFlowTheme.of(context).success
-                                  : FlutterFlowTheme.of(context).secondaryText,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
-                    Text(
-                      cat.name,
-                      style: GoogleFonts.outfit(
-                        color: FlutterFlowTheme.of(context).primaryText,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: -0.5,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      cat.description,
-                      style: GoogleFonts.outfit(
-                        color: FlutterFlowTheme.of(context).secondaryText,
-                        fontSize: 14,
-                        height: 1.4,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const Spacer(),
-                    Row(
-                      children: [
-                        Text(
-                          'ID: ...${cat.id.substring(cat.id.length - 6)}',
-                          style: GoogleFonts.robotoMono(
-                            color: FlutterFlowTheme.of(context).secondaryText,
-                            fontSize: 11,
-                          ),
-                        ),
-                        const Spacer(),
-                        _buildIconButton(
-                          Icons.edit_outlined,
-                          FlutterFlowTheme.of(context).secondaryText,
-                          () async {
-                            await context.pushNamed(
-                              'create_category',
-                              extra: cat,
-                            );
-                            _loadCategories();
-                          },
-                        ),
-                        const SizedBox(width: 8),
-                        _buildIconButton(
-                          Icons.delete_outline_rounded,
-                          primaryColor,
-                          () => _deleteCategory(cat.id),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildIconButton(IconData icon, Color color, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(icon, color: color, size: 18),
       ),
     );
   }

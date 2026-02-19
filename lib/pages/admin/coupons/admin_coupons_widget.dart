@@ -16,7 +16,7 @@ class AdminCouponsWidget extends StatefulWidget {
 }
 
 class _AdminCouponsWidgetState extends State<AdminCouponsWidget> {
-  bool _isLoading = false;
+  bool _isLoading = true;
   List<Coupon> _coupons = [];
   String _filterStatus = 'all'; // all, active, inactive
 
@@ -32,7 +32,7 @@ class _AdminCouponsWidgetState extends State<AdminCouponsWidget> {
       final data = await AdminService.getCoupons();
       if (mounted) {
         setState(() {
-          _coupons = data.map((d) => Coupon.fromJson(d)).toList();
+          _coupons = data;
           _isLoading = false;
         });
       }

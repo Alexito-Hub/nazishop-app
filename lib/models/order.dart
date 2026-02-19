@@ -5,6 +5,7 @@ class OrderItem {
   final String currency;
   final double exchangeRate;
   final OrderItemSnapshot offerSnapshot;
+  final Map<String, dynamic>? offerDetails;
 
   OrderItem({
     required this.offerId,
@@ -13,6 +14,7 @@ class OrderItem {
     required this.currency,
     this.exchangeRate = 1.0,
     required this.offerSnapshot,
+    this.offerDetails,
   });
 
   factory OrderItem.fromJson(Map<String, dynamic> json) {
@@ -27,6 +29,7 @@ class OrderItem {
       currency: json['currency'] ?? 'USD',
       exchangeRate: (json['exchangeRate'] ?? 1.0).toDouble(),
       offerSnapshot: OrderItemSnapshot.fromJson(json['offerSnapshot'] ?? {}),
+      offerDetails: json['offerDetails'],
     );
   }
 
@@ -37,6 +40,7 @@ class OrderItem {
         'currency': currency,
         'exchangeRate': exchangeRate,
         'offerSnapshot': offerSnapshot.toJson(),
+        'offerDetails': offerDetails,
       };
 }
 
@@ -69,6 +73,8 @@ class OrderItemSnapshot {
 class Order {
   final String id;
   final String userId;
+  final String? userName; // Added for Admin/Display
+  final String? userEmail; // Added for Admin/Display
   final List<OrderItem> items;
   final double totalAmount;
   final String currency;
@@ -81,6 +87,8 @@ class Order {
   Order({
     required this.id,
     required this.userId,
+    this.userName,
+    this.userEmail,
     required this.items,
     required this.totalAmount,
     this.currency = 'USD',
@@ -92,11 +100,27 @@ class Order {
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
+    // Parsing User Info if available (populated)
+    String? uName;
+    String? uEmail;
+
+    if (json['userId'] is Map) {
+      final u = json['userId'];
+      uName = u['displayName'] ?? u['display_name'];
+      uEmail = u['email'];
+    } else if (json['userInfo'] is Map) {
+      final u = json['userInfo'];
+      uName = u['displayName'] ?? u['name'];
+      uEmail = u['email'];
+    }
+
     return Order(
       id: json['_id'] ?? json['id'] ?? '',
       userId: json['userId'] is String
           ? json['userId']
           : (json['userId']?['_id'] ?? ''),
+      userName: uName,
+      userEmail: uEmail,
       items: json['items'] != null
           ? (json['items'] as List)
               .map((item) => OrderItem.fromJson(item))

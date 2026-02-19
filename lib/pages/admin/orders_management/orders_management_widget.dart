@@ -7,7 +7,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../../components/smart_back_button.dart';
 import 'orders_management_model.dart';
-import 'package:nazi_shop/models/order_model.dart';
+import 'package:nazi_shop/models/order.dart';
 import 'package:nazi_shop/backend/currency_service.dart';
 
 export 'orders_management_model.dart';
@@ -488,7 +488,7 @@ class _AdminOrderCardState extends State<AdminOrderCard> {
             : null;
 
     final serviceName =
-        serviceObj?['name'] ?? snapshot?['title'] ?? 'Unknown Service';
+        serviceObj?['name'] ?? snapshot?.title ?? 'Unknown Service';
 
     final branding = serviceObj?['branding'];
     final String? logoUrl = branding?['logoUrl'];

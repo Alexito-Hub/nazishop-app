@@ -4,7 +4,8 @@ import 'package:nazi_shop/backend/admin_service.dart';
 import 'package:nazi_shop/models/app_config_model.dart';
 import 'package:nazi_shop/flutter_flow/flutter_flow_theme.dart';
 import '../../../components/smart_back_button.dart';
-// For BackdropFilter if needed, but not using it extensively now to keep it clean
+import 'components/config_section_card.dart';
+import 'components/config_inputs.dart';
 
 class AdminConfigWidget extends StatefulWidget {
   const AdminConfigWidget({super.key});
@@ -100,18 +101,14 @@ class _AdminConfigWidgetState extends State<AdminConfigWidget> {
     final isDesktop = MediaQuery.of(context).size.width >= 900;
     final theme = FlutterFlowTheme.of(context);
 
-    final cardColor = theme.secondaryBackground;
-    final borderColor = theme.alternate;
+    // Reuse colors for potential future use or consistency logic
     final textSecondary = theme.secondaryText;
-    final inputFillColor = theme.primaryBackground;
 
     return Scaffold(
       backgroundColor: theme.primaryBackground,
       body: isDesktop
-          ? _buildDesktopLayout(
-              theme, cardColor, borderColor, textSecondary, inputFillColor)
-          : _buildMobileLayout(
-              theme, cardColor, borderColor, textSecondary, inputFillColor),
+          ? _buildDesktopLayout(theme, textSecondary)
+          : _buildMobileLayout(theme, textSecondary),
       floatingActionButton: isDesktop
           ? null
           : FloatingActionButton(
@@ -124,8 +121,7 @@ class _AdminConfigWidgetState extends State<AdminConfigWidget> {
     );
   }
 
-  Widget _buildDesktopLayout(FlutterFlowTheme theme, Color cardColor,
-      Color borderColor, Color textSecondary, Color inputFillColor) {
+  Widget _buildDesktopLayout(FlutterFlowTheme theme, Color textSecondary) {
     return Align(
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
@@ -200,9 +196,7 @@ class _AdminConfigWidgetState extends State<AdminConfigWidget> {
             ),
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
-              sliver: SliverToBoxAdapter(
-                  child: _buildDesktopContent(theme, cardColor, borderColor,
-                      textSecondary, inputFillColor)),
+              sliver: SliverToBoxAdapter(child: _buildDesktopContent(theme)),
             ),
           ],
         ),
@@ -210,8 +204,7 @@ class _AdminConfigWidgetState extends State<AdminConfigWidget> {
     );
   }
 
-  Widget _buildMobileLayout(FlutterFlowTheme theme, Color cardColor,
-      Color borderColor, Color textSecondary, Color inputFillColor) {
+  Widget _buildMobileLayout(FlutterFlowTheme theme, Color textSecondary) {
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
@@ -227,17 +220,14 @@ class _AdminConfigWidgetState extends State<AdminConfigWidget> {
         ),
         SliverPadding(
           padding: const EdgeInsets.all(16),
-          sliver: SliverToBoxAdapter(
-              child: _buildMobileContent(theme, cardColor, borderColor,
-                  textSecondary, inputFillColor)),
+          sliver: SliverToBoxAdapter(child: _buildMobileContent(theme)),
         ),
         const SliverPadding(padding: EdgeInsets.only(bottom: 80)),
       ],
     );
   }
 
-  Widget _buildDesktopContent(FlutterFlowTheme theme, Color cardColor,
-      Color borderColor, Color textSecondary, Color inputFillColor) {
+  Widget _buildDesktopContent(FlutterFlowTheme theme) {
     if (_isLoading || _config == null) {
       return Center(
           child: CircularProgressIndicator(
@@ -248,245 +238,160 @@ class _AdminConfigWidgetState extends State<AdminConfigWidget> {
       spacing: 24,
       runSpacing: 24,
       children: [
-        _buildConfigCard(
-          'Identidad del Sitio',
-          Icons.web,
-          [
-            _buildTextField(_appNameCtrl, 'Nombre de la App', theme,
-                borderColor, textSecondary, inputFillColor),
-            const SizedBox(height: 16),
-            _buildSwitchTile(
-                'Modo Mantenimiento', _config!.site.maintenanceMode, (v) {
-              setState(() => _config!.site.maintenanceMode = v);
-            }, theme, borderColor, inputFillColor),
-          ],
-          theme,
-          cardColor,
-          borderColor,
+        ConfigSectionCard(
+          title: 'Identidad del Sitio',
+          icon: Icons.web,
           width: 400,
-        ),
-        _buildConfigCard(
-          'Soporte y Contacto',
-          Icons.support_agent,
-          [
-            _buildTextField(_supportEmailCtrl, 'Email de Soporte', theme,
-                borderColor, textSecondary, inputFillColor),
+          children: [
+            ConfigTextField(
+              controller: _appNameCtrl,
+              label: 'Nombre de la App',
+            ),
             const SizedBox(height: 16),
-            _buildTextField(_whatsappCtrl, 'WhatsApp Soporte', theme,
-                borderColor, textSecondary, inputFillColor),
+            ConfigSwitchTile(
+              title: 'Modo Mantenimiento',
+              value: _config!.site.maintenanceMode,
+              onChanged: (v) {
+                setState(() => _config!.site.maintenanceMode = v);
+              },
+            ),
           ],
-          theme,
-          cardColor,
-          borderColor,
+        ),
+        ConfigSectionCard(
+          title: 'Soporte y Contacto',
+          icon: Icons.support_agent,
           width: 400,
-        ),
-        _buildConfigCard(
-          'Control de Versiones',
-          Icons.system_update,
-          [
-            _buildTextField(_minVersionCtrl, 'Versión Mínima', theme,
-                borderColor, textSecondary, inputFillColor),
+          children: [
+            ConfigTextField(
+              controller: _supportEmailCtrl,
+              label: 'Email de Soporte',
+            ),
             const SizedBox(height: 16),
-            _buildTextField(_latestVersionCtrl, 'Última Versión', theme,
-                borderColor, textSecondary, inputFillColor),
+            ConfigTextField(
+              controller: _whatsappCtrl,
+              label: 'WhatsApp Soporte',
+            ),
           ],
-          theme,
-          cardColor,
-          borderColor,
+        ),
+        ConfigSectionCard(
+          title: 'Control de Versiones',
+          icon: Icons.system_update,
           width: 400,
-        ),
-        _buildConfigCard(
-          'Anuncios Globales',
-          Icons.campaign,
-          [
-            _buildSwitchTile('Mostrar Anuncio', _config!.site.showAnnouncement,
-                (v) {
-              setState(() => _config!.site.showAnnouncement = v);
-            }, theme, borderColor, inputFillColor),
+          children: [
+            ConfigTextField(
+              controller: _minVersionCtrl,
+              label: 'Versión Mínima',
+            ),
             const SizedBox(height: 16),
-            _buildTextField(_announcementCtrl, 'Mensaje del Anuncio', theme,
-                borderColor, textSecondary, inputFillColor,
-                maxLines: 3),
+            ConfigTextField(
+              controller: _latestVersionCtrl,
+              label: 'Última Versión',
+            ),
           ],
-          theme,
-          cardColor,
-          borderColor,
-          width: 824, // Wider card for announcements
+        ),
+        ConfigSectionCard(
+          title: 'Anuncios Globales',
+          icon: Icons.campaign,
+          width: 824,
           maxWidth: 824,
+          children: [
+            ConfigSwitchTile(
+              title: 'Mostrar Anuncio',
+              value: _config!.site.showAnnouncement,
+              onChanged: (v) {
+                setState(() => _config!.site.showAnnouncement = v);
+              },
+            ),
+            const SizedBox(height: 16),
+            ConfigTextField(
+              controller: _announcementCtrl,
+              label: 'Mensaje del Anuncio',
+              maxLines: 3,
+            ),
+          ],
         ),
       ],
     );
   }
 
-  Widget _buildMobileContent(FlutterFlowTheme theme, Color cardColor,
-      Color borderColor, Color textSecondary, Color inputFillColor) {
+  Widget _buildMobileContent(FlutterFlowTheme theme) {
     if (_isLoading || _config == null) {
       return Center(child: CircularProgressIndicator(color: theme.primary));
     }
 
     return Column(
       children: [
-        _buildConfigCard(
-          'Identidad del Sitio',
-          Icons.web,
-          [
-            _buildTextField(_appNameCtrl, 'Nombre de la App', theme,
-                borderColor, textSecondary, inputFillColor),
+        ConfigSectionCard(
+          title: 'Identidad del Sitio',
+          icon: Icons.web,
+          children: [
+            ConfigTextField(
+              controller: _appNameCtrl,
+              label: 'Nombre de la App',
+            ),
             const SizedBox(height: 16),
-            _buildSwitchTile(
-                'Modo Mantenimiento', _config!.site.maintenanceMode, (v) {
-              setState(() => _config!.site.maintenanceMode = v);
-            }, theme, borderColor, inputFillColor),
+            ConfigSwitchTile(
+              title: 'Modo Mantenimiento',
+              value: _config!.site.maintenanceMode,
+              onChanged: (v) {
+                setState(() => _config!.site.maintenanceMode = v);
+              },
+            ),
           ],
-          theme,
-          cardColor,
-          borderColor,
         ),
         const SizedBox(height: 24),
-        _buildConfigCard(
-          'Soporte y Contacto',
-          Icons.support_agent,
-          [
-            _buildTextField(_supportEmailCtrl, 'Email de Soporte', theme,
-                borderColor, textSecondary, inputFillColor),
+        ConfigSectionCard(
+          title: 'Soporte y Contacto',
+          icon: Icons.support_agent,
+          children: [
+            ConfigTextField(
+              controller: _supportEmailCtrl,
+              label: 'Email de Soporte',
+            ),
             const SizedBox(height: 16),
-            _buildTextField(_whatsappCtrl, 'WhatsApp Soporte', theme,
-                borderColor, textSecondary, inputFillColor),
+            ConfigTextField(
+              controller: _whatsappCtrl,
+              label: 'WhatsApp Soporte',
+            ),
           ],
-          theme,
-          cardColor,
-          borderColor,
         ),
         const SizedBox(height: 24),
-        _buildConfigCard(
-          'Control de Versiones',
-          Icons.system_update,
-          [
-            _buildTextField(_minVersionCtrl, 'Versión Mínima', theme,
-                borderColor, textSecondary, inputFillColor),
+        ConfigSectionCard(
+          title: 'Control de Versiones',
+          icon: Icons.system_update,
+          children: [
+            ConfigTextField(
+              controller: _minVersionCtrl,
+              label: 'Versión Mínima',
+            ),
             const SizedBox(height: 16),
-            _buildTextField(_latestVersionCtrl, 'Última Versión', theme,
-                borderColor, textSecondary, inputFillColor),
+            ConfigTextField(
+              controller: _latestVersionCtrl,
+              label: 'Última Versión',
+            ),
           ],
-          theme,
-          cardColor,
-          borderColor,
         ),
         const SizedBox(height: 24),
-        _buildConfigCard(
-          'Anuncios Globales',
-          Icons.campaign,
-          [
-            _buildSwitchTile('Mostrar Anuncio', _config!.site.showAnnouncement,
-                (v) {
-              setState(() => _config!.site.showAnnouncement = v);
-            }, theme, borderColor, inputFillColor),
+        ConfigSectionCard(
+          title: 'Anuncios Globales',
+          icon: Icons.campaign,
+          children: [
+            ConfigSwitchTile(
+              title: 'Mostrar Anuncio',
+              value: _config!.site.showAnnouncement,
+              onChanged: (v) {
+                setState(() => _config!.site.showAnnouncement = v);
+              },
+            ),
             const SizedBox(height: 16),
-            _buildTextField(_announcementCtrl, 'Mensaje del Anuncio', theme,
-                borderColor, textSecondary, inputFillColor,
-                maxLines: 3),
+            ConfigTextField(
+              controller: _announcementCtrl,
+              label: 'Mensaje del Anuncio',
+              maxLines: 3,
+            ),
           ],
-          theme,
-          cardColor,
-          borderColor,
         ),
       ],
-    );
-  }
-
-  Widget _buildConfigCard(String title, IconData icon, List<Widget> children,
-      FlutterFlowTheme theme, Color cardColor, Color borderColor,
-      {double? width, double? maxWidth}) {
-    return Container(
-      width: width,
-      constraints: maxWidth != null ? BoxConstraints(maxWidth: maxWidth) : null,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: cardColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: borderColor),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(icon, color: FlutterFlowTheme.of(context).primary, size: 24),
-              const SizedBox(width: 12),
-              Text(title,
-                  style: GoogleFonts.outfit(
-                      color: theme.primaryText,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold)),
-            ],
-          ),
-          const SizedBox(height: 24),
-          ...children,
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTextField(
-      TextEditingController controller,
-      String label,
-      FlutterFlowTheme theme,
-      Color borderColor,
-      Color labelColor,
-      Color fillColor,
-      {int maxLines = 1}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label,
-            style: GoogleFonts.outfit(
-                color: labelColor, fontSize: 14, fontWeight: FontWeight.w500)),
-        const SizedBox(height: 8),
-        TextFormField(
-          controller: controller,
-          maxLines: maxLines,
-          style: GoogleFonts.outfit(color: theme.primaryText),
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: fillColor,
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide.none),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: borderColor)),
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide:
-                    BorderSide(color: FlutterFlowTheme.of(context).primary)),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSwitchTile(String title, bool value, Function(bool) onChanged,
-      FlutterFlowTheme theme, Color borderColor, Color fillColor) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: fillColor,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: borderColor),
-      ),
-      child: SwitchListTile(
-        value: value,
-        onChanged: onChanged,
-        title: Text(title,
-            style: GoogleFonts.outfit(
-                color: theme.primaryText, fontWeight: FontWeight.w500)),
-        activeThumbColor: FlutterFlowTheme.of(context).primary,
-        activeTrackColor:
-            FlutterFlowTheme.of(context).primary.withValues(alpha: 0.3),
-        inactiveThumbColor: FlutterFlowTheme.of(context).secondaryText,
-        inactiveTrackColor:
-            FlutterFlowTheme.of(context).secondaryText.withValues(alpha: 0.3),
-      ),
     );
   }
 }

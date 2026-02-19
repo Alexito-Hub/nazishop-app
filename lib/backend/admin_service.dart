@@ -1,9 +1,19 @@
 import 'package:nazi_shop/backend/api_client.dart';
+import 'package:nazi_shop/models/category_model.dart';
+import 'package:nazi_shop/models/service_model.dart';
+import 'package:nazi_shop/models/offer_model.dart';
+import 'package:nazi_shop/models/user_model.dart';
+import 'package:nazi_shop/models/admin_models.dart';
+import 'package:nazi_shop/models/coupon_model.dart';
+import 'package:nazi_shop/models/order.dart';
+import 'package:nazi_shop/models/notification_model.dart';
+import 'package:nazi_shop/models/domain.dart';
 
 class AdminService {
   // --- DASHBOARD ---
-  static Future<Map<String, dynamic>> getDashboardStats() async {
-    return await ApiClient.get('/api/admin/dashboard/stats');
+  static Future<DashboardStats> getDashboardStats() async {
+    final res = await ApiClient.get('/api/admin/dashboard/stats');
+    return DashboardStats.fromJson(res);
   }
 
   static Future<Map<String, dynamic>> getServerStats() async {
@@ -21,9 +31,10 @@ class AdminService {
     return await ApiClient.adminAction('/api/admin/category', 'create', data);
   }
 
-  static Future<List<dynamic>> getCategories() async {
+  static Future<List<Category>> getCategories() async {
     final res = await ApiClient.adminAction('/api/admin/category', 'list', {});
-    return res['data'] ?? [];
+    return (res['data'] as List?)?.map((e) => Category.fromJson(e)).toList() ??
+        [];
   }
 
   static Future<Map<String, dynamic>> updateCategory(
@@ -43,10 +54,11 @@ class AdminService {
     return await ApiClient.adminAction('/api/admin/service', 'create', data);
   }
 
-  static Future<List<dynamic>> getServices({String? categoryId}) async {
+  static Future<List<Service>> getServices({String? categoryId}) async {
     final res = await ApiClient.adminAction('/api/admin/service', 'list',
         {if (categoryId != null) 'categoryId': categoryId});
-    return res['data'] ?? [];
+    return (res['data'] as List?)?.map((e) => Service.fromJson(e)).toList() ??
+        [];
   }
 
   static Future<Map<String, dynamic>> updateService(
@@ -66,13 +78,13 @@ class AdminService {
     return await ApiClient.adminAction('/api/admin/listing', 'create', data);
   }
 
-  static Future<List<dynamic>> getListings(
+  static Future<List<Offer>> getListings(
       {String? serviceId, String? categoryId}) async {
     final res = await ApiClient.adminAction('/api/admin/listing', 'list', {
       if (serviceId != null) 'serviceId': serviceId,
       if (categoryId != null) 'categoryId': categoryId
     });
-    return res['data'] ?? [];
+    return (res['data'] as List?)?.map((e) => Offer.fromJson(e)).toList() ?? [];
   }
 
   static Future<Map<String, dynamic>> updateListing(
@@ -92,9 +104,9 @@ class AdminService {
     return await ApiClient.adminAction('/api/admin/offer', 'create', data);
   }
 
-  static Future<List<dynamic>> getPromotions() async {
+  static Future<List<Offer>> getPromotions() async {
     final res = await ApiClient.adminAction('/api/admin/offer', 'list', {});
-    return res['data'] ?? [];
+    return (res['data'] as List?)?.map((e) => Offer.fromJson(e)).toList() ?? [];
   }
 
   static Future<Map<String, dynamic>> updatePromotion(
@@ -148,15 +160,12 @@ class AdminService {
         body: {'status': status});
   }
 
-  // --- USERS ---
-
-  // getAllUsers, updateUser, addBalance removed - replaced by newer methods below
-
   // --- COUPONS ---
 
-  static Future<List<dynamic>> getCoupons() async {
+  static Future<List<Coupon>> getCoupons() async {
     final res = await ApiClient.adminAction('/api/admin/coupon', 'list', {});
-    return res['data'] ?? [];
+    return (res['data'] as List?)?.map((e) => Coupon.fromJson(e)).toList() ??
+        [];
   }
 
   static Future<Map<String, dynamic>> createCoupon(
@@ -176,11 +185,14 @@ class AdminService {
 
   // --- NOTIFICATIONS ---
 
-  static Future<List<dynamic>> getNotifications() async {
+  static Future<List<NotificationModel>> getNotifications() async {
     try {
       final res =
           await ApiClient.adminAction('/api/admin/notification', 'list', {});
-      return res['data'] ?? [];
+      return (res['data'] as List?)
+              ?.map((e) => NotificationModel.fromJson(e))
+              .toList() ??
+          [];
     } catch (e) {
       return [];
     }
@@ -195,15 +207,18 @@ class AdminService {
     }
   }
 
-  // --- ORDERS ---
+  // --- ORDERS LIST ---
 
-  static Future<List<dynamic>> getOrders() async {
+  static Future<List<Order>> getOrders() async {
     try {
       final res = await getAllOrders(limit: 100);
       // The backend returns { status: true, data: { orders: [...], pagination: {...} } }
       // So valid path is res['data']['orders']
       if (res['data'] is Map && res['data'].containsKey('orders')) {
-        return res['data']['orders'] ?? [];
+        return (res['data']['orders'] as List?)
+                ?.map((e) => Order.fromJson(e))
+                .toList() ??
+            [];
       }
       return [];
     } catch (e) {
@@ -228,13 +243,14 @@ class AdminService {
 
   // --- USERS ---
 
-  static Future<List<dynamic>> getUsers({String? role}) async {
+  static Future<List<User>> getUsers({String? role}) async {
     try {
       final res = await ApiClient.adminAction('/api/admin/users', 'list', {
         'limit': 100,
         if (role != null) 'role': role,
       });
-      return res['data'] ?? [];
+      return (res['data'] as List?)?.map((e) => User.fromJson(e)).toList() ??
+          [];
     } catch (e) {
       return [];
     }
@@ -291,7 +307,7 @@ class AdminService {
 
   // --- DOMAINS ---
 
-  static Future<List<dynamic>> getDomains({String? status}) async {
+  static Future<List<Domain>> getDomains({String? status}) async {
     try {
       final res = await ApiClient.post('/api/admin/domain', body: {
         'action': 'list',
@@ -300,9 +316,17 @@ class AdminService {
       });
 
       if (res['data'] is Map && res['data'].containsKey('domains')) {
-        return res['data']['domains'] ?? [];
+        return (res['data']['domains'] as List?)
+                ?.map((e) => Domain.fromJson(e))
+                .toList() ??
+            [];
       }
-      return res['data'] ?? [];
+      // Handling consistent response structure
+      if (res['data'] is List) {
+        return (res['data'] as List).map((e) => Domain.fromJson(e)).toList();
+      }
+
+      return [];
     } catch (e) {
       return [];
     }

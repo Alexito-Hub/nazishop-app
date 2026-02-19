@@ -3,8 +3,10 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '../../../components/smart_back_button.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'dart:ui';
+
+import 'components/terms_header.dart';
+import 'components/terms_section.dart';
 
 class TermsWidget extends StatefulWidget {
   const TermsWidget({super.key});
@@ -71,35 +73,42 @@ class _TermsWidgetState extends State<TermsWidget> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildHeader(),
+                      const TermsHeader(),
                       const SizedBox(height: 32),
-                      _buildSection(
-                        '1. Aceptación de los Términos',
-                        'Al acceder y utilizar NaziShop, usted acepta estar legalmente vinculado por estos Términos y Condiciones. Si no está de acuerdo con alguna parte, no debe utilizar nuestros servicios.',
+                      const TermsSection(
+                        title: '1. Aceptación de los Términos',
+                        content:
+                            'Al acceder y utilizar NaziShop, usted acepta estar legalmente vinculado por estos Términos y Condiciones. Si no está de acuerdo con alguna parte, no debe utilizar nuestros servicios.',
                       ),
-                      _buildSection(
-                        '2. Cuentas de Usuario',
-                        'Usted es responsable de mantener la confidencialidad de su cuenta y contraseña. NaziShop no se hace responsable de cualquier actividad que ocurra bajo su cuenta.',
+                      const TermsSection(
+                        title: '2. Cuentas de Usuario',
+                        content:
+                            'Usted es responsable de mantener la confidencialidad de su cuenta y contraseña. NaziShop no se hace responsable de cualquier actividad que ocurra bajo su cuenta.',
                       ),
-                      _buildSection(
-                        '3. Compras y Pagos',
-                        'Todos los precios están sujetos a cambios sin previo aviso. Nos reservamos el derecho de rechazar o cancelar cualquier pedido por motivos de seguridad o error en el precio.',
+                      const TermsSection(
+                        title: '3. Compras y Pagos',
+                        content:
+                            'Todos los precios están sujetos a cambios sin previo aviso. Nos reservamos el derecho de rechazar o cancelar cualquier pedido por motivos de seguridad o error en el precio.',
                       ),
-                      _buildSection(
-                        '4. Productos Digitales',
-                        'La venta de productos digitales y suscripciones es final. No se ofrecen reembolsos una vez que el contenido digital ha sido entregado o accedido, salvo excepciones legales aplicables.',
+                      const TermsSection(
+                        title: '4. Productos Digitales',
+                        content:
+                            'La venta de productos digitales y suscripciones es final. No se ofrecen reembolsos una vez que el contenido digital ha sido entregado o accedido, salvo excepciones legales aplicables.',
                       ),
-                      _buildSection(
-                        '5. Propiedad Intelectual',
-                        'Todo el contenido, marcas y logotipos en NaziShop son propiedad exclusiva de la empresa o sus licenciantes y están protegidos por leyes de propiedad intelectual.',
+                      const TermsSection(
+                        title: '5. Propiedad Intelectual',
+                        content:
+                            'Todo el contenido, marcas y logotipos en NaziShop son propiedad exclusiva de la empresa o sus licenciantes y están protegidos por leyes de propiedad intelectual.',
                       ),
-                      _buildSection(
-                        '6. Limitación de Responsabilidad',
-                        'NaziShop no será responsable por daños indirectos, incidentales o consecuentes derivados del uso o la imposibilidad de uso del servicio.',
+                      const TermsSection(
+                        title: '6. Limitación de Responsabilidad',
+                        content:
+                            'NaziShop no será responsable por daños indirectos, incidentales o consecuentes derivados del uso o la imposibilidad de uso del servicio.',
                       ),
-                      _buildSection(
-                        '7. Modificaciones',
-                        'Nos reservamos el derecho de modificar estos términos en cualquier momento. El uso continuado del servicio constituye la aceptación de los nuevos términos.',
+                      const TermsSection(
+                        title: '7. Modificaciones',
+                        content:
+                            'Nos reservamos el derecho de modificar estos términos en cualquier momento. El uso continuado del servicio constituye la aceptación de los nuevos términos.',
                       ),
                       const SizedBox(height: 40),
                       Center(
@@ -118,62 +127,6 @@ class _TermsWidgetState extends State<TermsWidget> {
                   ),
                 ),
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(Icons.gavel_outlined, color: _primaryColor, size: 48),
-        const SizedBox(height: 16),
-        Text(
-          'Acuerdo de Uso',
-          style: GoogleFonts.outfit(
-            color: FlutterFlowTheme.of(context).primaryText,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          'Por favor lea estos términos cuidadosamente antes de utilizar nuestros servicios de streaming y productos digitales.',
-          style: GoogleFonts.outfit(
-            color: FlutterFlowTheme.of(context).secondaryText,
-            fontSize: 16,
-            height: 1.5,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSection(String title, String content) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: GoogleFonts.outfit(
-              color: _primaryColor,
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            content,
-            textAlign: TextAlign.justify,
-            style: GoogleFonts.outfit(
-              color: FlutterFlowTheme.of(context).secondaryText,
-              fontSize: 15,
-              height: 1.6,
             ),
           ),
         ],

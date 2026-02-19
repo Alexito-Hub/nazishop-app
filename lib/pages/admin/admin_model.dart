@@ -3,8 +3,10 @@ import '/backend/admin_service.dart';
 import 'admin_widget.dart' show AdminWidget;
 import 'package:flutter/material.dart';
 
+import 'package:nazi_shop/models/admin_models.dart';
+
 class AdminModel extends FlutterFlowModel<AdminWidget> {
-  Map<String, dynamic>? dashboardStats;
+  DashboardStats? dashboardStats;
   bool isLoadingStats = false;
   String? errorMessage;
   VoidCallback? onDataChanged;
@@ -31,22 +33,22 @@ class AdminModel extends FlutterFlowModel<AdminWidget> {
     }
 
     return {
-      'totalOrders': dashboardStats!['totalOrders'] ?? 0,
-      'pendingOrders': dashboardStats!['pendingOrders'] ?? 0,
-      'completedOrders': dashboardStats!['completedOrders'] ?? 0,
-      'canceledOrders': dashboardStats!['canceledOrders'] ?? 0,
-      'totalRevenue': (dashboardStats!['totalRevenue'] ?? 0.0).toDouble(),
-      'totalUsers': dashboardStats!['totalUsers'] ?? 0,
-      'activeUsers': dashboardStats!['activeUsers'] ?? 0,
-      'activeServices': dashboardStats!['activeServices'] ?? 0,
-      'totalServices': dashboardStats!['totalServices'] ?? 0,
-      'totalPurchases': dashboardStats!['totalPurchases'] ?? 0,
-      'avgPurchasesPerUser':
-          (dashboardStats!['avgPurchasesPerUser'] ?? 0.0).toDouble(),
-      'avgSpentPerUser': (dashboardStats!['avgSpentPerUser'] ?? 0.0).toDouble(),
-      'recentRevenue': dashboardStats!['recentRevenue'] ?? [],
-      'topServices': dashboardStats!['topServices'] ?? [],
-      'topUsers': dashboardStats!['topUsers'] ?? [],
+      'totalOrders': dashboardStats!.totalOrders,
+      'pendingOrders': dashboardStats!.pendingOrders,
+      // 'completedOrders': dashboardStats!.completedOrders, // Not present in model yet
+      // 'canceledOrders': dashboardStats!.canceledOrders, // Not present in model yet
+      'totalRevenue': dashboardStats!.totalRevenue,
+      'totalUsers': dashboardStats!.totalUsers,
+      // 'activeUsers': dashboardStats!.activeUsers, // Not present in model yet
+      'activeServices': dashboardStats!.activeServices,
+      // 'totalServices': dashboardStats!.totalServices, // Not present in model yet
+      // 'totalPurchases': dashboardStats!.totalPurchases, // Not present in model yet
+      // 'avgPurchasesPerUser': dashboardStats!.avgPurchasesPerUser, // Not present
+      // 'avgSpentPerUser': dashboardStats!.avgSpentPerUser, // Not present
+      'monthlyRevenue': dashboardStats!.monthlyRevenue,
+      // 'recentRevenue': dashboardStats!.recentRevenue, // Not present
+      // 'topServices': dashboardStats!.topServices, // Not present
+      // 'topUsers': dashboardStats!.topUsers, // Not present
     };
   }
 

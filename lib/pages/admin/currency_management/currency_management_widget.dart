@@ -1,15 +1,15 @@
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-
 import '/flutter_flow/custom_snackbar.dart';
 import '/backend/api_client.dart';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../../components/smart_back_button.dart';
 import 'currency_management_model.dart';
+import 'components/currency_card.dart';
+import 'components/currency_header.dart';
+
 export 'currency_management_model.dart';
 
 class CurrencyManagementWidget extends StatefulWidget {
@@ -26,10 +26,6 @@ class CurrencyManagementWidget extends StatefulWidget {
 class _CurrencyManagementWidgetState extends State<CurrencyManagementWidget> {
   late CurrencyManagementModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
-
-  // --- PALETA DE COLORES (COHERENCIA CON HOME/ADMIN) ---
-  // --- PALETA DE COLORES (COHERENCIA CON HOME/ADMIN) ---
-  // Replaced with FlutterFlowTheme in build method
 
   bool get _isDesktop => MediaQuery.of(context).size.width >= 900;
 
@@ -153,83 +149,7 @@ class _CurrencyManagementWidgetState extends State<CurrencyManagementWidget> {
           physics: const BouncingScrollPhysics(),
           slivers: [
             // Header
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(40, 40, 40, 30),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate([
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Gestión de Divisas',
-                            style: GoogleFonts.outfit(
-                              fontSize: 32,
-                              fontWeight: FontWeight.bold,
-                              color: FlutterFlowTheme.of(context).primaryText,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Define el valor de 1 USD en moneda local para pasarelas regionales',
-                            style: GoogleFonts.outfit(
-                                fontSize: 16,
-                                color:
-                                    FlutterFlowTheme.of(context).secondaryText),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              FlutterFlowTheme.of(context).primary,
-                              FlutterFlowTheme.of(context).secondary
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: FlutterFlowTheme.of(context)
-                                  .primary
-                                  .withValues(alpha: 0.4),
-                              blurRadius: 8,
-                              offset: const Offset(0, 4),
-                            )
-                          ],
-                        ),
-                        child: ElevatedButton.icon(
-                          onPressed: _saveRates,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            shadowColor: Colors.transparent,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 24, vertical: 0),
-                            fixedSize: const Size.fromHeight(50),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12)),
-                          ),
-                          icon: const Icon(Icons.save_rounded,
-                              color: Colors.white, size: 20),
-                          label: Text(
-                            'Guardar Cambios',
-                            style: GoogleFonts.outfit(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ]),
-              ),
-            ),
+            CurrencyHeader(onSave: _saveRates),
 
             // Grid
             SliverPadding(
@@ -240,7 +160,7 @@ class _CurrencyManagementWidgetState extends State<CurrencyManagementWidget> {
                 mainAxisSpacing: 24,
                 childAspectRatio: 1.5,
                 children: [
-                  _CurrencyCard(
+                  CurrencyCard(
                     code: 'COP',
                     name: 'Peso Colombiano',
                     flag: '🇨🇴',
@@ -248,7 +168,7 @@ class _CurrencyManagementWidgetState extends State<CurrencyManagementWidget> {
                     focusNode: _model.copFocusNode!,
                     isDesktop: true,
                   ),
-                  _CurrencyCard(
+                  CurrencyCard(
                     code: 'MXN',
                     name: 'Peso Mexicano',
                     flag: '🇲🇽',
@@ -256,7 +176,7 @@ class _CurrencyManagementWidgetState extends State<CurrencyManagementWidget> {
                     focusNode: _model.mxnFocusNode!,
                     isDesktop: true,
                   ),
-                  _CurrencyCard(
+                  CurrencyCard(
                     code: 'PEN',
                     name: 'Sol Peruano',
                     flag: '🇵🇪',
@@ -264,7 +184,7 @@ class _CurrencyManagementWidgetState extends State<CurrencyManagementWidget> {
                     focusNode: _model.penFocusNode!,
                     isDesktop: true,
                   ),
-                  _CurrencyCard(
+                  CurrencyCard(
                     code: 'ARS',
                     name: 'Peso Argentino',
                     flag: '🇦🇷',
@@ -272,7 +192,7 @@ class _CurrencyManagementWidgetState extends State<CurrencyManagementWidget> {
                     focusNode: _model.arsFocusNode!,
                     isDesktop: true,
                   ),
-                  _CurrencyCard(
+                  CurrencyCard(
                     code: 'CLP',
                     name: 'Peso Chileno',
                     flag: '🇨🇱',
@@ -299,7 +219,7 @@ class _CurrencyManagementWidgetState extends State<CurrencyManagementWidget> {
         SliverAppBar(
           backgroundColor: Colors.transparent,
           surfaceTintColor: Colors.transparent,
-          pinned: true, // Pinned for mobile feel
+          pinned: true,
           floating: true,
           elevation: 0,
           expandedHeight: 80,
@@ -359,7 +279,7 @@ class _CurrencyManagementWidgetState extends State<CurrencyManagementWidget> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              _CurrencyCard(
+              CurrencyCard(
                 code: 'COP',
                 name: 'Peso Colombiano',
                 flag: '🇨🇴',
@@ -368,7 +288,7 @@ class _CurrencyManagementWidgetState extends State<CurrencyManagementWidget> {
                 isDesktop: false,
               ),
               const SizedBox(height: 12),
-              _CurrencyCard(
+              CurrencyCard(
                 code: 'MXN',
                 name: 'Peso Mexicano',
                 flag: '🇲🇽',
@@ -377,7 +297,7 @@ class _CurrencyManagementWidgetState extends State<CurrencyManagementWidget> {
                 isDesktop: false,
               ),
               const SizedBox(height: 12),
-              _CurrencyCard(
+              CurrencyCard(
                 code: 'PEN',
                 name: 'Sol Peruano',
                 flag: '🇵🇪',
@@ -386,7 +306,7 @@ class _CurrencyManagementWidgetState extends State<CurrencyManagementWidget> {
                 isDesktop: false,
               ),
               const SizedBox(height: 12),
-              _CurrencyCard(
+              CurrencyCard(
                 code: 'ARS',
                 name: 'Peso Argentino',
                 flag: '🇦🇷',
@@ -395,7 +315,7 @@ class _CurrencyManagementWidgetState extends State<CurrencyManagementWidget> {
                 isDesktop: false,
               ),
               const SizedBox(height: 12),
-              _CurrencyCard(
+              CurrencyCard(
                 code: 'CLP',
                 name: 'Peso Chileno',
                 flag: '🇨🇱',
@@ -457,141 +377,5 @@ class _CurrencyManagementWidgetState extends State<CurrencyManagementWidget> {
         ),
       ],
     );
-  }
-}
-
-class _CurrencyCard extends StatelessWidget {
-  final String code;
-  final String name;
-  final String flag;
-  final TextEditingController controller;
-  final FocusNode focusNode;
-  final bool isDesktop;
-
-  const _CurrencyCard({
-    required this.code,
-    required this.name,
-    required this.flag,
-    required this.controller,
-    required this.focusNode,
-    required this.isDesktop,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color:
-            FlutterFlowTheme.of(context).secondaryBackground, // Surface color
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: FlutterFlowTheme.of(context).alternate),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.2),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          )
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  children: [
-                    Text(flag, style: const TextStyle(fontSize: 32)),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            code,
-                            style: GoogleFonts.outfit(
-                              color: FlutterFlowTheme.of(context).primaryText,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            name,
-                            style: GoogleFonts.outfit(
-                              color: FlutterFlowTheme.of(context).secondaryText,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: isDesktop ? 24 : 16),
-                Container(
-                  decoration: BoxDecoration(
-                    color: FlutterFlowTheme.of(context)
-                        .primaryBackground
-                        .withValues(alpha: 0.5),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                        color: FlutterFlowTheme.of(context).alternate),
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                  child: Row(
-                    children: [
-                      Text(
-                        '\$',
-                        style: GoogleFonts.outfit(
-                          color: Colors.greenAccent,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: TextFormField(
-                          controller: controller,
-                          focusNode: focusNode,
-                          style: GoogleFonts.outfit(
-                            color: FlutterFlowTheme.of(context).primaryText,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true),
-                          cursorColor: FlutterFlowTheme.of(context).primaryText,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: '0.00',
-                            hintStyle: GoogleFonts.outfit(
-                                color:
-                                    FlutterFlowTheme.of(context).secondaryText),
-                            isDense: true,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        'x 1 USD',
-                        style: GoogleFonts.outfit(
-                          color: FlutterFlowTheme.of(context).secondaryText,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    ).animate().fadeIn().moveY(begin: 10, end: 0, duration: 400.ms);
   }
 }

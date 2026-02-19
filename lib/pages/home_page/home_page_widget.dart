@@ -9,6 +9,9 @@ import '/backend/catalog_service.dart';
 import '/models/category_model.dart';
 import '/models/service_model.dart';
 import '../../components/service_card.dart';
+import '../../components/modern_search_bar.dart';
+import '../../components/category_selector.dart';
+import '../../components/desktop_banner.dart';
 
 class HomePageWidget extends StatefulWidget {
   const HomePageWidget({super.key});
@@ -48,11 +51,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       List<Service> allServices = [];
       for (final cat in categories) {
         if (cat.services != null) {
-          for (final svc in cat.services!) {
-            if (svc is Map<String, dynamic>) {
-              final service = Service.fromJson(svc);
-              if (service.isActive) allServices.add(service);
-            }
+          for (final service in cat.services!) {
+            if (service.isActive) allServices.add(service);
           }
         }
       }
@@ -169,7 +169,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-            child: _ModernSearchBar(
+            child: ModernSearchBar(
               controller: _searchController,
               onChanged: (_) => setState(() {}),
             ),
@@ -178,7 +178,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
         // 3. Filtros Móvil
         SliverToBoxAdapter(
-          child: _CategorySelector(
+          child: CategorySelector(
             categories: _categories,
             selectedId: _selectedCategory,
             onSelect: (id) => setState(() => _selectedCategory = id),
@@ -243,7 +243,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
                   // 1. Banner Principal Desktop
-                  _buildDesktopBanner(),
+                  const DesktopBanner(),
 
                   const SizedBox(height: 40),
 
@@ -265,7 +265,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                       FlutterFlowTheme.of(context).primaryText),
                             ),
                             const SizedBox(height: 16),
-                            _CategorySelector(
+                            CategorySelector(
                               categories: _categories,
                               selectedId: _selectedCategory,
                               onSelect: (id) =>
@@ -279,7 +279,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       // Buscador Desktop
                       SizedBox(
                         width: 350,
-                        child: _ModernSearchBar(
+                        child: ModernSearchBar(
                           controller: _searchController,
                           onChanged: (_) => setState(() {}),
                         ),
@@ -328,132 +328,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         ),
       ),
     );
-  }
-
-  // --- COMPONENTE BANNER DESKTOP ---
-  Widget _buildDesktopBanner() {
-    final theme = FlutterFlowTheme.of(context);
-    final primaryColor = theme.primary;
-
-    return Container(
-      constraints: const BoxConstraints(minHeight: 280),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        gradient: LinearGradient(
-          colors: [
-            FlutterFlowTheme.of(context).secondaryBackground,
-            FlutterFlowTheme.of(context).primaryBackground
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 30,
-            offset: const Offset(0, 10),
-          ),
-        ],
-        border: Border.all(
-          color: FlutterFlowTheme.of(context).alternate.withValues(alpha: 0.2),
-        ),
-      ),
-      child: Stack(
-        children: [
-          // Elementos decorativos de fondo
-          Positioned(
-            right: -50,
-            bottom: -50,
-            child: Icon(
-              Icons.stars_rounded,
-              size: 400,
-              color: primaryColor.withValues(alpha: 0.03),
-            ),
-          ),
-          Positioned(
-            top: 20,
-            left: 200,
-            child: Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: primaryColor.withValues(alpha: 0.05),
-              ),
-            ),
-          ),
-
-          // Contenido
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 32),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 6),
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [theme.primary, theme.secondary],
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: primaryColor.withValues(alpha: 0.4),
-                                  blurRadius: 10)
-                            ]),
-                        child: Text(
-                          'PREMIUM ACCESS',
-                          style: GoogleFonts.outfit(
-                            color: Colors.white, // White on gradient background
-                            fontSize: 10 * FlutterFlowTheme.fontSizeFactor,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.0,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      Text(
-                        'Descubre servicios\nde alto nivel.',
-                        style: GoogleFonts.outfit(
-                          fontSize: 42 * FlutterFlowTheme.fontSizeFactor,
-                          fontWeight: FontWeight.w800,
-                          color: FlutterFlowTheme.of(context).primaryText,
-                          height: 1.1,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        'Calidad garantizada y entrega inmediata en todos nuestros productos digitales.',
-                        style: GoogleFonts.outfit(
-                          fontSize: 16 * FlutterFlowTheme.fontSizeFactor,
-                          color: FlutterFlowTheme.of(context).secondaryText,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                // Imagen ilustrativa
-                Container(
-                  width: 200,
-                  alignment: Alignment.center,
-                  child: Icon(Icons.rocket_launch_rounded,
-                      size: 120,
-                      color: FlutterFlowTheme.of(context)
-                          .primaryText
-                          .withValues(alpha: 0.8)),
-                )
-              ],
-            ),
-          ),
-        ],
-      ),
-    ).animate().fadeIn().slideY(begin: 0.1);
   }
 
   // --- HELPERS Y UI GENÉRICA ---
@@ -513,166 +387,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             duration: 2.seconds,
             color: FlutterFlowTheme.of(context).accent1.withValues(alpha: 0.3)),
         childCount: 6,
-      ),
-    );
-  }
-}
-
-// -----------------------------------------------------------------------------
-// 🔍 BARRA DE BÚSQUEDA MODERNA
-// -----------------------------------------------------------------------------
-class _ModernSearchBar extends StatelessWidget {
-  final TextEditingController controller;
-  final Function(String)? onChanged;
-
-  const _ModernSearchBar({
-    required this.controller,
-    this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).secondaryBackground,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-            color:
-                FlutterFlowTheme.of(context).alternate.withValues(alpha: 0.2)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: TextField(
-        controller: controller,
-        onChanged: onChanged,
-        style: GoogleFonts.outfit(
-            color: FlutterFlowTheme.of(context).primaryText,
-            fontSize: 14 * FlutterFlowTheme.fontSizeFactor),
-        decoration: InputDecoration(
-          hintText: 'Buscar servicios...',
-          hintStyle: GoogleFonts.outfit(
-              color: FlutterFlowTheme.of(context).secondaryText,
-              fontSize: 14 * FlutterFlowTheme.fontSizeFactor),
-          prefixIcon: Icon(Icons.search,
-              color: FlutterFlowTheme.of(context).secondaryText),
-          border: InputBorder.none,
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-        ),
-      ),
-    );
-  }
-}
-
-// -----------------------------------------------------------------------------
-// 🏷️ SELECTOR DE CATEGORÍAS (Pill Style)
-// -----------------------------------------------------------------------------
-class _CategorySelector extends StatelessWidget {
-  final List<Category> categories;
-  final String? selectedId;
-  final Function(String?) onSelect;
-  final bool isLoading;
-
-  const _CategorySelector({
-    required this.categories,
-    required this.selectedId,
-    required this.onSelect,
-    required this.isLoading,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    if (isLoading) {
-      return SizedBox(
-        height: 44,
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          itemCount: 5,
-          separatorBuilder: (_, __) => const SizedBox(width: 10),
-          itemBuilder: (_, __) => Container(
-                  width: 90,
-                  decoration: BoxDecoration(
-                    color: FlutterFlowTheme.of(context)
-                        .secondaryText
-                        .withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(30),
-                  ))
-              .animate(onPlay: (c) => c.repeat())
-              .shimmer(
-                  color: FlutterFlowTheme.of(context)
-                      .accent1
-                      .withValues(alpha: 0.3)),
-        ),
-      );
-    }
-
-    return SizedBox(
-      height: 44,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: categories.length + 1,
-        separatorBuilder: (_, __) => const SizedBox(width: 10),
-        itemBuilder: (context, index) {
-          final isAll = index == 0;
-          final cat = isAll ? null : categories[index - 1];
-          final isSelected = isAll ? selectedId == null : selectedId == cat!.id;
-          final primaryColor = FlutterFlowTheme.of(context).primary;
-
-          return GestureDetector(
-            onTap: () => onSelect(isAll ? null : cat!.id),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeOutCubic,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-              decoration: BoxDecoration(
-                gradient: isSelected
-                    ? LinearGradient(colors: [
-                        primaryColor,
-                        primaryColor.withValues(alpha: 0.8)
-                      ])
-                    : null,
-                color: isSelected
-                    ? null
-                    : FlutterFlowTheme.of(context).secondaryBackground,
-                borderRadius: BorderRadius.circular(30),
-                border: Border.all(
-                    color: isSelected
-                        ? FlutterFlowTheme.of(context).transparent
-                        : FlutterFlowTheme.of(context)
-                            .alternate
-                            .withValues(alpha: 0.2),
-                    width: 1.5),
-                boxShadow: isSelected
-                    ? [
-                        BoxShadow(
-                            color: primaryColor.withValues(alpha: 0.4),
-                            blurRadius: 12,
-                            offset: const Offset(0, 4))
-                      ]
-                    : [],
-              ),
-              child: Center(
-                child: Text(
-                  isAll ? 'Todo' : cat!.name,
-                  style: GoogleFonts.outfit(
-                    color: isSelected
-                        ? Colors.white // White on selected primary-colored chip
-                        : FlutterFlowTheme.of(context).secondaryText,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                    fontSize: 14 * FlutterFlowTheme.fontSizeFactor,
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
       ),
     );
   }

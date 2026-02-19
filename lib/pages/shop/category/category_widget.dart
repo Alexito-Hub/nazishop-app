@@ -33,7 +33,6 @@ class _CategoryPageState extends State<CategoryPage> {
     if (widget.category.services != null &&
         widget.category.services!.isNotEmpty) {
       _servicesFuture = Future.value(widget.category.services!
-          .map((json) => Service.fromJson(json))
           .where((s) => s.isActive) // Removed && s.isInStock
           .toList());
     } else {

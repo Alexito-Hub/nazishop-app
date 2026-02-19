@@ -32,7 +32,7 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
       final data = await AdminService.getListings();
       if (mounted) {
         setState(() {
-          _offers = data.map((d) => Offer.fromJson(d)).toList();
+          _offers = data;
           _isLoading = false;
         });
       }

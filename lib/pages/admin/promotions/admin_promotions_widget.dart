@@ -1,12 +1,12 @@
 import 'package:nazi_shop/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import '../../../components/smart_back_button.dart';
 import 'package:nazi_shop/backend/admin_service.dart';
 import 'package:go_router/go_router.dart';
-import 'package:nazi_shop/models/promotion_model.dart';
-import 'package:intl/intl.dart';
+import 'package:nazi_shop/models/offer_model.dart';
+
+import 'components/promotion_card.dart';
 
 class AdminPromotionsWidget extends StatefulWidget {
   const AdminPromotionsWidget({super.key});
@@ -20,7 +20,7 @@ class _AdminPromotionsWidgetState extends State<AdminPromotionsWidget> {
   // Removed hardcoded colors in favor of theme
 
   bool _isLoading = false;
-  List<Promotion> _promotions = [];
+  List<Offer> _promotions = [];
   String _filterStatus = 'all'; // all, active, inactive
 
   @override
@@ -35,7 +35,7 @@ class _AdminPromotionsWidgetState extends State<AdminPromotionsWidget> {
       final data = await AdminService.getPromotions();
       if (mounted) {
         setState(() {
-          _promotions = data.map((d) => Promotion.fromJson(d)).toList();
+          _promotions = data;
           _isLoading = false;
         });
       }
@@ -52,7 +52,7 @@ class _AdminPromotionsWidgetState extends State<AdminPromotionsWidget> {
     }
   }
 
-  List<Promotion> get _filteredPromotions {
+  List<Offer> get _filteredPromotions {
     final now = DateTime.now();
     return _promotions.where((p) {
       bool matchesFilter = true;
@@ -74,14 +74,10 @@ class _AdminPromotionsWidgetState extends State<AdminPromotionsWidget> {
 
     // Adaptive Colors
     final bgColor = theme.primaryBackground;
-    final cardColor = theme.secondaryBackground;
-    final borderColor = theme.alternate;
 
     return Scaffold(
       backgroundColor: bgColor,
-      body: isDesktop
-          ? _buildDesktopLayout(theme, cardColor, borderColor)
-          : _buildMobileLayout(theme, cardColor, borderColor),
+      body: isDesktop ? _buildDesktopLayout(theme) : _buildMobileLayout(theme),
       floatingActionButton: isDesktop
           ? null
           : Container(
@@ -129,14 +125,13 @@ class _AdminPromotionsWidgetState extends State<AdminPromotionsWidget> {
     _loadPromotions();
   }
 
-  Future<void> _editPromotion(Promotion item) async {
+  Future<void> _editPromotion(Offer item) async {
     await context.pushNamed('create_promotion', extra: item.toJson());
     _loadPromotions();
   }
 
   // --- MOBILE LAYOUT ---
-  Widget _buildMobileLayout(
-      FlutterFlowTheme theme, Color cardColor, Color borderColor) {
+  Widget _buildMobileLayout(FlutterFlowTheme theme) {
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
@@ -198,13 +193,10 @@ class _AdminPromotionsWidgetState extends State<AdminPromotionsWidget> {
                 final item = _filteredPromotions[index];
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 12),
-                  child: PromotionRowItem(
+                  child: PromotionCard(
                     item: item,
                     onTap: () => _editPromotion(item),
-                    theme: theme,
-                    cardColor: cardColor,
-                    borderColor: borderColor,
-                  ).animate().fadeIn(delay: (30 * index).ms).slideX(begin: 0.1),
+                  ),
                 );
               }, childCount: _filteredPromotions.length),
             ),
@@ -215,8 +207,7 @@ class _AdminPromotionsWidgetState extends State<AdminPromotionsWidget> {
   }
 
   // --- DESKTOP LAYOUT ---
-  Widget _buildDesktopLayout(
-      FlutterFlowTheme theme, Color cardColor, Color borderColor) {
+  Widget _buildDesktopLayout(FlutterFlowTheme theme) {
     return Align(
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
@@ -333,12 +324,9 @@ class _AdminPromotionsWidgetState extends State<AdminPromotionsWidget> {
                     mainAxisExtent: 180, // Allow card height
                   ),
                   delegate: SliverChildBuilderDelegate((context, index) {
-                    return PromotionRowItem(
+                    return PromotionCard(
                       item: _filteredPromotions[index],
                       onTap: () => _editPromotion(_filteredPromotions[index]),
-                      theme: theme,
-                      cardColor: cardColor,
-                      borderColor: borderColor,
                     );
                   }, childCount: _filteredPromotions.length),
                 ),
@@ -397,125 +385,6 @@ class _AdminPromotionsWidgetState extends State<AdminPromotionsWidget> {
           style: GoogleFonts.outfit(
             color: isSelected ? theme.primaryText : theme.secondaryText,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class PromotionRowItem extends StatelessWidget {
-  final Promotion item;
-  final VoidCallback? onTap;
-  final FlutterFlowTheme theme;
-  final Color cardColor;
-  final Color borderColor;
-
-  const PromotionRowItem({
-    super.key,
-    required this.item,
-    this.onTap,
-    required this.theme,
-    required this.cardColor,
-    required this.borderColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final bool isExpired =
-        item.validUntil != null && item.validUntil!.isBefore(DateTime.now());
-    final bool isActive = item.isActive && !isExpired;
-    final color = isActive ? theme.success : theme.error;
-    final statusText =
-        isActive ? 'Activa' : (isExpired ? 'Expirada' : 'Inactiva');
-
-    return Container(
-      decoration: BoxDecoration(
-        color: cardColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: borderColor),
-      ),
-      child: Material(
-        color: theme.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(16),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: color.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: color.withValues(alpha: 0.2)),
-                      ),
-                      child: Text(
-                        statusText,
-                        style: GoogleFonts.outfit(
-                          color: color,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    if (item.isFeatured)
-                      Icon(Icons.star, color: theme.warning, size: 16),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  item.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.outfit(
-                    color: theme.primaryText,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  item.description ?? 'Sin descripción',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.outfit(
-                    color: theme.secondaryText,
-                    fontSize: 13,
-                  ),
-                ),
-                const Spacer(),
-                Divider(color: theme.alternate),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '\$${item.finalPrice.toStringAsFixed(2)}',
-                      style: GoogleFonts.outfit(
-                        color: theme.primaryText,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    if (item.validUntil != null)
-                      Text(
-                        'Hasta: ${DateFormat('dd MMM').format(item.validUntil!)}',
-                        style: GoogleFonts.outfit(
-                          color: theme.secondaryText,
-                          fontSize: 12,
-                        ),
-                      ),
-                  ],
-                ),
-              ],
-            ),
           ),
         ),
       ),

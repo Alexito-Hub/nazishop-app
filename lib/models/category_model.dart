@@ -1,3 +1,5 @@
+import 'service_model.dart';
+
 class Category {
   final String id;
   final String code;
@@ -5,7 +7,7 @@ class Category {
   final String description;
   final CategoryUI ui;
   final bool isActive;
-  final List<dynamic>?
+  final List<Service>?
       services; // Lista de servicios (puede venir del /api/catalog)
 
   Category({
@@ -26,7 +28,9 @@ class Category {
       description: json['description'] ?? '',
       ui: CategoryUI.fromJson(json['ui'] ?? {}),
       isActive: json['isActive'] ?? true,
-      services: json['services'], // Capturar servicios si vienen del backend
+      services: (json['services'] as List?)
+          ?.map((e) => Service.fromJson(e))
+          .toList(), // Capturar servicios si vienen del backend
     );
   }
 
@@ -37,7 +41,8 @@ class Category {
         'description': description,
         'ui': ui.toJson(),
         'isActive': isActive,
-        if (services != null) 'services': services,
+        if (services != null)
+          'services': services!.map((s) => s.toJson()).toList(),
       };
 }
 

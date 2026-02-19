@@ -32,8 +32,7 @@ class _AdminNotificationsWidgetState extends State<AdminNotificationsWidget> {
       final res = await AdminService.getNotifications();
       if (mounted) {
         setState(() {
-          _notifications =
-              res.map((e) => NotificationModel.fromJson(e)).toList();
+          _notifications = res;
           _isLoading = false;
         });
       }

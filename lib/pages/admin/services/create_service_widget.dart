@@ -76,7 +76,7 @@ class CreateServiceWidgetState extends State<CreateServiceWidget> {
     try {
       final data = await AdminService.getCategories();
       setState(() {
-        _categories = data.map((d) => Category.fromJson(d)).toList();
+        _categories = data;
         _isLoadingCats = false;
 
         // If editing and categoryId was likely populated object, try to match

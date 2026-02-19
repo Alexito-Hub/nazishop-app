@@ -115,7 +115,7 @@ class _CreateListingWidgetState extends State<CreateListingWidget> {
       final data = await AdminService.getServices();
       if (mounted) {
         setState(() {
-          _services = data.map((d) => Service.fromJson(d)).toList();
+          _services = data;
           _isLoadingServices = false;
         });
       }

@@ -31,7 +31,7 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
       final data = await AdminService.getServices();
       if (mounted) {
         setState(() {
-          _services = data.map((d) => Service.fromJson(d)).toList();
+          _services = data;
           _isLoading = false;
         });
       }

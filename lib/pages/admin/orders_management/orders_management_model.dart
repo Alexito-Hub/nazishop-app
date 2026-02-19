@@ -2,7 +2,7 @@ import '/backend/admin_service.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'orders_management_widget.dart' show OrdersManagementWidget;
 import 'package:flutter/material.dart';
-import 'package:nazi_shop/models/order_model.dart';
+import 'package:nazi_shop/models/order.dart';
 
 class OrdersManagementModel extends FlutterFlowModel<OrdersManagementWidget> {
   Map<String, dynamic>? ordersData;
