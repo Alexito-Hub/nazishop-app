@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:nazi_shop/backend/admin_service.dart';
-import 'package:nazi_shop/models/app_config_model.dart';
-import 'package:nazi_shop/flutter_flow/flutter_flow_theme.dart';
-import '../../../components/smart_back_button.dart';
+import '/backend/admin_service.dart';
+import '/models/app_config_model.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/components/design_system.dart';
 import 'components/config_section_card.dart';
 import 'components/config_inputs.dart';
 
@@ -133,64 +132,12 @@ class _AdminConfigWidgetState extends State<AdminConfigWidget> {
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
-                child: Row(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Configuración',
-                            style: GoogleFonts.outfit(
-                                color: theme.primaryText,
-                                fontSize: 32,
-                                fontWeight: FontWeight.bold)),
-                        Text('Ajustes generales de la tienda',
-                            style: GoogleFonts.outfit(
-                                color: textSecondary, fontSize: 16)),
-                      ],
-                    ),
-                    const Spacer(),
-                    Container(
-                      height: 44,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [theme.primary, theme.secondary],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                              color: FlutterFlowTheme.of(context)
-                                  .primary
-                                  .withValues(alpha: 0.4),
-                              blurRadius: 8,
-                              offset: const Offset(0, 4))
-                        ],
-                      ),
-                      child: ElevatedButton.icon(
-                        onPressed: _isSaving ? null : _saveSettings,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          shadowColor: Colors.transparent,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                        ),
-                        icon: _isSaving
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                    strokeWidth: 2, color: Colors.white))
-                            : const Icon(Icons.save,
-                                color: Colors.white, size: 20),
-                        label: Text(
-                            _isSaving ? 'Guardando...' : 'Guardar Cambios',
-                            style: GoogleFonts.outfit(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold)),
-                      ),
-                    ),
-                  ],
+                child: DSAdminPageHeader(
+                  title: 'Configuración',
+                  subtitle: 'Ajustes generales de la tienda',
+                  actionLabel: _isSaving ? 'Guardando...' : 'Guardar Cambios',
+                  actionIcon: Icons.save,
+                  onAction: _isSaving ? () {} : _saveSettings,
                 ),
               ),
             ),
@@ -208,16 +155,7 @@ class _AdminConfigWidgetState extends State<AdminConfigWidget> {
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
-        SliverAppBar(
-          backgroundColor: Colors.transparent,
-          leading: SmartBackButton(color: theme.primaryText),
-          title: Text('Configuración',
-              style: GoogleFonts.outfit(
-                  color: theme.primaryText, fontWeight: FontWeight.bold)),
-          centerTitle: true,
-          pinned: true,
-          floating: true,
-        ),
+        const DSMobileAppBar(title: 'Configuración'),
         SliverPadding(
           padding: const EdgeInsets.all(16),
           sliver: SliverToBoxAdapter(child: _buildMobileContent(theme)),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
-import 'package:nazi_shop/models/listing_model.dart';
+import '/models/listing_model.dart';
 import 'service_pricing.dart';
 
 class PurchaseSidebar extends StatelessWidget {

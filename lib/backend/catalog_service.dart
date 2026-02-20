@@ -1,7 +1,7 @@
 // import 'package:flutter/material.dart';
-import 'package:nazi_shop/backend/api_client.dart';
-import 'package:nazi_shop/models/category_model.dart';
-import 'package:nazi_shop/models/service_model.dart';
+import '/backend/api_client.dart';
+import '/models/category_model.dart';
+import '/models/service_model.dart';
 
 class CatalogService {
   /// Fetches the full hierarchical catalog from the backend.

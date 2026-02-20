@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:nazi_shop/backend/notification_service.dart';
+import '/backend/notification_service.dart';
 import 'package:go_router/go_router.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
-import '../../../components/smart_back_button.dart';
+import '/components/design_system.dart';
 
 class NotificationsUserWidget extends StatefulWidget {
   const NotificationsUserWidget({super.key});
@@ -222,35 +222,9 @@ class _NotificationsUserWidgetState extends State<NotificationsUserWidget> {
       physics: const BouncingScrollPhysics(),
       slivers: [
         // 1. Header Standard Transparente & Centrado
-        SliverAppBar(
-          backgroundColor: theme.transparent,
-          surfaceTintColor: theme.transparent,
-          pinned: true,
-          floating: true,
-          elevation: 0,
-          leadingWidth: 70,
-          leading: Container(
-            margin: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: theme.secondaryBackground,
-              shape: BoxShape.circle,
-            ),
-            child: SmartBackButton(
-              color: theme.primaryText,
-            ),
-          ),
-          centerTitle: true,
-          title: Text(
-            'Notificaciones',
-            style: GoogleFonts.outfit(
-              color: theme.primaryText,
-              fontWeight: FontWeight.w900,
-              fontSize: 24,
-              letterSpacing: 1.0,
-            ),
-          ),
+        DSMobileAppBar(
+          title: 'Notificaciones',
           actions: [
-            // Botón Refresh
             IconButton(
               onPressed: _handleRefresh,
               icon: Icon(Icons.refresh_rounded, color: theme.secondaryText),

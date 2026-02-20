@@ -1,4 +1,4 @@
-import 'package:nazi_shop/backend/api_client.dart';
+import '/backend/api_client.dart';
 
 class OrderService {
   /// Create a new order (purchase a listing)

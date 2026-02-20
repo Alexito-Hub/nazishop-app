@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import 'package:nazi_shop/models/category_model.dart';
-import 'package:nazi_shop/models/service_model.dart';
+import '/models/category_model.dart';
+import '/models/service_model.dart';
 import '../../../components/smart_back_button.dart';
 import '/components/service_card.dart';
-import 'package:nazi_shop/utils/icon_utils.dart';
-import 'package:nazi_shop/utils/color_utils.dart';
+import '/utils/icon_utils.dart';
+import '/utils/color_utils.dart';
 import '../../../flutter_flow/flutter_flow_theme.dart';
 // import '../../pages/service_detail/service_detail_widget.dart';
 

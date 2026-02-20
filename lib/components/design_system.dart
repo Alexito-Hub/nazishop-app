@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/components/smart_back_button.dart';
+import '/components/app_dialog.dart';
 
 // ===========================================================================
 // 🎨 DESIGN SYSTEM COMPONENTS
@@ -51,11 +53,11 @@ class DSButton extends StatelessWidget {
       border = BorderSide(color: theme.alternate, width: 1);
     } else if (isDanger) {
       backgroundColor = theme.error;
-      foregroundColor = theme.info; // Assuming info is white/contrast
+      foregroundColor = theme.tertiary; // Use tertiary for contrast on danger
       border = null;
     } else {
       backgroundColor = theme.primary;
-      foregroundColor = theme.info;
+      foregroundColor = theme.tertiary; // Use tertiary for contrast on primary
       border = null;
     }
 
@@ -322,17 +324,228 @@ class DSBadge extends StatelessWidget {
       decoration: BoxDecoration(
         color: isOutlined ? bgColor : (color ?? theme.primary),
         borderRadius: BorderRadius.circular(20),
-        border:
-            isOutlined ? Border.all(color: txtColor.withValues(alpha: 0.5)) : null,
+        border: isOutlined
+            ? Border.all(color: txtColor.withValues(alpha: 0.5))
+            : null,
       ),
       child: Text(
         text,
         style: GoogleFonts.outfit(
-          color: isOutlined ? txtColor : (textColor ?? Colors.white),
+          color: isOutlined ? txtColor : (textColor ?? theme.tertiary),
           fontSize: 12,
           fontWeight: FontWeight.w600,
         ),
       ),
+    );
+  }
+}
+
+// ===========================================================================
+// 🚀 ADMIN SHARED COMPONENTS
+// ===========================================================================
+
+/// Gradient FloatingActionButton used across all admin list pages on mobile.
+/// Extracted from identical blocks in admin_categories, admin_services,
+/// admin_listings, admin_promotions.
+class DSGradientFab extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final VoidCallback onPressed;
+
+  const DSGradientFab({
+    super.key,
+    required this.label,
+    required this.icon,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = FlutterFlowTheme.of(context);
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [theme.primary, theme.secondary],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: theme.primary.withValues(alpha: 0.4),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: FloatingActionButton.extended(
+        onPressed: onPressed,
+        backgroundColor: theme.transparent,
+        elevation: 0,
+        highlightElevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        icon: Icon(icon, color: theme.tertiary),
+        label: Text(
+          label,
+          style: GoogleFonts.outfit(
+            color: theme.tertiary,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Desktop page header row — title/subtitle on the left, gradient action button on the right.
+/// Extracted from identical SliverToBoxAdapter > Row blocks in all admin list pages.
+class DSAdminPageHeader extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final String actionLabel;
+  final IconData actionIcon;
+  final VoidCallback onAction;
+
+  const DSAdminPageHeader({
+    super.key,
+    required this.title,
+    required this.subtitle,
+    required this.actionLabel,
+    required this.actionIcon,
+    required this.onAction,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = FlutterFlowTheme.of(context);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: GoogleFonts.outfit(
+                color: theme.primaryText,
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              subtitle,
+              style: GoogleFonts.outfit(
+                color: theme.secondaryText,
+                fontSize: 16,
+              ),
+            ),
+          ],
+        ),
+        const Spacer(),
+        Container(
+          height: 44,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [theme.primary, theme.secondary],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: theme.primary.withValues(alpha: 0.4),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: ElevatedButton.icon(
+            onPressed: onAction,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+            ),
+            icon: Icon(actionIcon, color: theme.tertiary, size: 20),
+            label: Text(
+              actionLabel,
+              style: GoogleFonts.outfit(
+                color: theme.tertiary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Standard transparent mobile SliverAppBar with a circular SmartBackButton.
+/// Extracted from identical SliverAppBar blocks in admin and user pages.
+///
+/// Must be used inside a [CustomScrollView].
+class DSMobileAppBar extends StatelessWidget {
+  final String title;
+  final List<Widget> actions;
+
+  const DSMobileAppBar({
+    super.key,
+    required this.title,
+    this.actions = const [],
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = FlutterFlowTheme.of(context);
+    return SliverAppBar(
+      backgroundColor: theme.transparent,
+      surfaceTintColor: theme.transparent,
+      pinned: true,
+      floating: true,
+      elevation: 0,
+      leadingWidth: 70,
+      leading: Container(
+        margin: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: theme.secondaryBackground,
+          shape: BoxShape.circle,
+        ),
+        child: SmartBackButton(color: theme.primaryText),
+      ),
+      centerTitle: true,
+      title: Text(
+        title,
+        style: GoogleFonts.outfit(
+          color: theme.primaryText,
+          fontWeight: FontWeight.w900,
+          fontSize: 24,
+          letterSpacing: 1.0,
+        ),
+      ),
+      actions: actions,
+    );
+  }
+}
+
+/// Standard delete confirmation dialog used across admin pages.
+class DSDeleteConfirmDialog {
+  static Future<bool> show(
+    BuildContext context, {
+    String title = 'Confirmar Eliminación',
+    String message = '¿Estás seguro? Esta acción es irreversible.',
+  }) async {
+    return AppDialog.confirm(
+      context,
+      title: title,
+      message: message,
+      confirmLabel: 'Eliminar',
+      isDanger: true,
+      icon: Icons.delete_outline_rounded,
     );
   }
 }

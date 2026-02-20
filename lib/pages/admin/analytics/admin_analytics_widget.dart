@@ -1,10 +1,10 @@
-import 'package:nazi_shop/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nazi_shop/backend/admin_service.dart';
-import 'package:nazi_shop/models/admin_models.dart';
+import '/backend/admin_service.dart';
+import '/models/admin_models.dart';
 
-import '../../../components/smart_back_button.dart';
+import '/components/design_system.dart';
 import 'components/analytics_stat_card.dart';
 import 'components/server_info_card.dart';
 import 'components/app_status_card.dart';
@@ -133,16 +133,7 @@ class _AdminAnalyticsWidgetState extends State<AdminAnalyticsWidget> {
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
-        SliverAppBar(
-          backgroundColor: Colors.transparent,
-          leading: SmartBackButton(color: theme.primaryText),
-          title: Text('Analytics',
-              style: GoogleFonts.outfit(
-                  color: theme.primaryText, fontWeight: FontWeight.bold)),
-          centerTitle: true,
-          pinned: true,
-          floating: true,
-        ),
+        const DSMobileAppBar(title: 'Analytics'),
         SliverPadding(
           padding: const EdgeInsets.all(16),
           sliver: SliverToBoxAdapter(

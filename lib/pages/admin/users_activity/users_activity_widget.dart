@@ -4,8 +4,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'users_activity_model.dart';
-import '../../../components/smart_back_button.dart';
-import '../../admin/components/admin_section_container.dart';
+import '/components/design_system.dart';
+import '/components/smart_back_button.dart';
+import '../components/admin_section_container.dart';
 import 'components/activity_stat_card.dart';
 import 'components/activity_list_item.dart';
 import 'components/top_user_item.dart';
@@ -39,12 +40,13 @@ class _UsersActivityWidgetState extends State<UsersActivityWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = FlutterFlowTheme.of(context);
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+      backgroundColor: theme.primaryBackground,
       body: Stack(
         children: [
-          // Background Elements
+          // Background glow blobs
           Positioned(
             top: -100,
             right: -100,
@@ -55,9 +57,7 @@ class _UsersActivityWidgetState extends State<UsersActivityWidget> {
                 height: 500,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: FlutterFlowTheme.of(context)
-                      .primary
-                      .withValues(alpha: 0.15),
+                  color: theme.primary.withValues(alpha: 0.15),
                 ),
               ),
             ),
@@ -72,21 +72,19 @@ class _UsersActivityWidgetState extends State<UsersActivityWidget> {
                 height: 400,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: FlutterFlowTheme.of(context)
-                      .primary
-                      .withValues(alpha: 0.1),
+                  color: theme.primary.withValues(alpha: 0.1),
                 ),
               ),
             ),
           ),
 
-          // Main Content
+          // Responsive layout
           LayoutBuilder(
             builder: (context, constraints) {
               if (constraints.maxWidth > 900) {
-                return _buildDesktopLayout();
+                return _buildDesktopLayout(theme);
               } else {
-                return _buildMobileLayout();
+                return _buildMobileLayout(theme);
               }
             },
           ),
@@ -95,21 +93,17 @@ class _UsersActivityWidgetState extends State<UsersActivityWidget> {
     );
   }
 
-  Widget _buildDesktopLayout() {
+  Widget _buildDesktopLayout(FlutterFlowTheme theme) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Sidebar placeholder or actual content if needed
+        // Sidebar with back button
         Container(
           width: 80,
           height: double.infinity,
           decoration: BoxDecoration(
-            color: FlutterFlowTheme.of(context)
-                .primaryBackground
-                .withValues(alpha: 0.3),
-            border: Border(
-                right:
-                    BorderSide(color: FlutterFlowTheme.of(context).alternate)),
+            color: theme.primaryBackground.withValues(alpha: 0.3),
+            border: Border(right: BorderSide(color: theme.alternate)),
           ),
           child: ClipRRect(
             child: BackdropFilter(
@@ -117,153 +111,37 @@ class _UsersActivityWidgetState extends State<UsersActivityWidget> {
               child: Column(
                 children: [
                   const SizedBox(height: 24),
-                  // Back Button
-                  SmartBackButton(
-                      color: FlutterFlowTheme.of(context).secondaryText),
+                  Container(
+                    margin: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: theme.secondaryBackground,
+                      shape: BoxShape.circle,
+                    ),
+                    child: SmartBackButton(color: theme.primaryText),
+                  ),
                 ],
               ),
             ),
           ),
         ),
 
-        // Content
+        // Main content
         Expanded(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(40.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildHeader(),
+                _buildHeader(theme),
                 const SizedBox(height: 40),
-
-                // Stats Grid
-                GridView(
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 300,
-                    mainAxisExtent: 140, // Height for Stat Cards
-                    mainAxisSpacing: 24,
-                    crossAxisSpacing: 24,
-                  ),
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: [
-                    ActivityStatCard(
-                        title: 'Total Usuarios',
-                        value: '2,543',
-                        icon: Icons.people_outline,
-                        color: FlutterFlowTheme.of(context).primary),
-                    ActivityStatCard(
-                        title: 'Activos hoy',
-                        value: '142',
-                        icon: Icons.show_chart,
-                        color: FlutterFlowTheme.of(context).secondary),
-                    ActivityStatCard(
-                        title: 'Nuevos (Mes)',
-                        value: '85',
-                        icon: Icons.person_add_outlined,
-                        color: FlutterFlowTheme.of(context).tertiary),
-                    ActivityStatCard(
-                        title: 'Retención',
-                        value: '87%',
-                        icon: Icons.repeat,
-                        color: FlutterFlowTheme.of(context).warning),
-                  ],
-                ),
-
+                _buildStatsGrid(crossAxisExtent: 300, theme: theme),
                 const SizedBox(height: 40),
-
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Recent Activity - 2 parts width
-                    Expanded(
-                      flex: 2,
-                      child: AdminSectionContainer(
-                        title: 'Actividad Reciente',
-                        child: Column(
-                          children: [
-                            ActivityListItem(
-                                name: 'Juan Pérez',
-                                action: 'Completó una compra',
-                                time: 'Hace 2 min',
-                                icon: Icons.shopping_bag_outlined,
-                                color: FlutterFlowTheme.of(context).secondary),
-                            ActivityListItem(
-                                name: 'María García',
-                                action: 'Inició sesión',
-                                time: 'Hace 5 min',
-                                icon: Icons.login,
-                                color: FlutterFlowTheme.of(context).primary),
-                            ActivityListItem(
-                                name: 'Carlos López',
-                                action: 'Actualizó perfil',
-                                time: 'Hace 12 min',
-                                icon: Icons.edit_outlined,
-                                color: FlutterFlowTheme.of(context).warning),
-                            ActivityListItem(
-                                name: 'Ana Smith',
-                                action: 'Agregó favoritos',
-                                time: 'Hace 25 min',
-                                icon: Icons.favorite_border,
-                                color: FlutterFlowTheme.of(context).tertiary),
-                            ActivityListItem(
-                                name: 'Pedro Diaz',
-                                action: 'Consultó soporte',
-                                time: 'Hace 1h',
-                                icon: Icons.support_agent,
-                                color: FlutterFlowTheme.of(context).info),
-                          ],
-                        ),
-                      ),
-                    ),
-
+                    Expanded(flex: 2, child: _buildRecentActivity(theme)),
                     const SizedBox(width: 24),
-
-                    // Top Users - 1 part width
-                    Expanded(
-                      flex: 1,
-                      child: Column(
-                        children: [
-                          AdminSectionContainer(
-                            title: 'Usuarios Top',
-                            child: Column(
-                              children: [
-                                TopUserItem(
-                                    position: 1,
-                                    name: 'Roberto G.',
-                                    stats: '150 compras',
-                                    medalColor:
-                                        FlutterFlowTheme.of(context).warning),
-                                TopUserItem(
-                                    position: 2,
-                                    name: 'Laura M.',
-                                    stats: '128 compras',
-                                    medalColor: FlutterFlowTheme.of(context)
-                                        .secondaryText),
-                                TopUserItem(
-                                    position: 3,
-                                    name: 'Fernando T.',
-                                    stats: '95 compras',
-                                    medalColor:
-                                        FlutterFlowTheme.of(context).tertiary),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 24),
-                          AdminSectionContainer(
-                            title: 'Retención',
-                            footer: 'Basado en últimos 90 días',
-                            child: Column(
-                              children: const [
-                                RetentionItem(label: '1 día', value: '87%'),
-                                RetentionItem(label: '7 días', value: '68%'),
-                                RetentionItem(label: '30 días', value: '45%'),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    Expanded(flex: 1, child: _buildTopUsersAndRetention(theme)),
                   ],
                 ),
               ],
@@ -274,150 +152,188 @@ class _UsersActivityWidgetState extends State<UsersActivityWidget> {
     );
   }
 
-  Widget _buildMobileLayout() {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading:
-            SmartBackButton(color: FlutterFlowTheme.of(context).primaryText),
-        title: Text(
-          'Actividad de Usuarios',
-          style: FlutterFlowTheme.of(context).headlineMedium.override(
-                fontFamily: 'Outfit',
-                color: FlutterFlowTheme.of(context).primaryText,
-                fontSize: 22.0,
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-        centerTitle: false,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Stats Grid 2x2 for mobile
-            GridView(
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 250,
-                mainAxisExtent: 140, // Height for Stat Cards
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-              ),
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
+  Widget _buildMobileLayout(FlutterFlowTheme theme) {
+    return CustomScrollView(
+      physics: const BouncingScrollPhysics(),
+      slivers: [
+        const DSMobileAppBar(title: 'Actividad de Usuarios'),
+        SliverPadding(
+          padding: const EdgeInsets.all(20),
+          sliver: SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                ActivityStatCard(
-                    title: 'Total Usuarios',
-                    value: '2,543',
-                    icon: Icons.people_outline,
-                    color: FlutterFlowTheme.of(context).primary),
-                ActivityStatCard(
-                    title: 'Activos hoy',
-                    value: '142',
-                    icon: Icons.show_chart,
-                    color: FlutterFlowTheme.of(context).secondary),
-                ActivityStatCard(
-                    title: 'Nuevos (Mes)',
-                    value: '85',
-                    icon: Icons.person_add_outlined,
-                    color: FlutterFlowTheme.of(context).tertiary),
-                ActivityStatCard(
-                    title: 'Retención',
-                    value: '87%',
-                    icon: Icons.repeat,
-                    color: FlutterFlowTheme.of(context).warning),
+                _buildStatsGrid(crossAxisExtent: 250, theme: theme),
+                const SizedBox(height: 24),
+                _buildRecentActivity(theme),
+                const SizedBox(height: 24),
+                AdminSectionContainer(
+                  title: 'Usuarios Top',
+                  child: Column(
+                    children: [
+                      TopUserItem(
+                          position: 1,
+                          name: 'Roberto G.',
+                          stats: '150 compras',
+                          medalColor: theme.warning),
+                      TopUserItem(
+                          position: 2,
+                          name: 'Laura M.',
+                          stats: '128 compras',
+                          medalColor: theme.secondaryText),
+                      TopUserItem(
+                          position: 3,
+                          name: 'Fernando T.',
+                          stats: '95 compras',
+                          medalColor: theme.tertiary),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+                AdminSectionContainer(
+                  title: 'Retención',
+                  child: const Column(
+                    children: [
+                      RetentionItem(label: '1 día', value: '87%'),
+                      RetentionItem(label: '7 días', value: '68%'),
+                      RetentionItem(label: '30 días', value: '45%'),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 40),
               ],
             ),
-
-            const SizedBox(height: 24),
-
-            AdminSectionContainer(
-              title: 'Actividad Reciente',
-              child: Column(
-                children: [
-                  ActivityListItem(
-                      name: 'Juan Pérez',
-                      action: 'Completó una compra',
-                      time: 'Hace 2 min',
-                      icon: Icons.shopping_bag_outlined,
-                      color: FlutterFlowTheme.of(context).secondary),
-                  ActivityListItem(
-                      name: 'María García',
-                      action: 'Inició sesión',
-                      time: 'Hace 5 min',
-                      icon: Icons.login,
-                      color: FlutterFlowTheme.of(context).primary),
-                  ActivityListItem(
-                      name: 'Carlos López',
-                      action: 'Actualizó perfil',
-                      time: 'Hace 12 min',
-                      icon: Icons.edit_outlined,
-                      color: FlutterFlowTheme.of(context).warning),
-                  ActivityListItem(
-                      name: 'Ana Smith',
-                      action: 'Agregó favoritos',
-                      time: 'Hace 25 min',
-                      icon: Icons.favorite_border,
-                      color: FlutterFlowTheme.of(context).tertiary),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            AdminSectionContainer(
-              title: 'Usuarios Top',
-              child: Column(
-                children: [
-                  TopUserItem(
-                      position: 1,
-                      name: 'Roberto G.',
-                      stats: '150 compras',
-                      medalColor: FlutterFlowTheme.of(context).warning),
-                  TopUserItem(
-                      position: 2,
-                      name: 'Laura M.',
-                      stats: '128 compras',
-                      medalColor: FlutterFlowTheme.of(context).secondaryText),
-                  TopUserItem(
-                      position: 3,
-                      name: 'Fernando T.',
-                      stats: '95 compras',
-                      medalColor: FlutterFlowTheme.of(context).tertiary),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            AdminSectionContainer(
-              title: 'Retención',
-              child: Column(
-                children: const [
-                  RetentionItem(label: '1 día', value: '87%'),
-                  RetentionItem(label: '7 días', value: '68%'),
-                  RetentionItem(label: '30 días', value: '45%'),
-                ],
-              ),
-            ),
-            const SizedBox(height: 40),
-          ],
+          ),
         ),
+      ],
+    );
+  }
+
+  Widget _buildStatsGrid(
+      {required double crossAxisExtent, required FlutterFlowTheme theme}) {
+    return GridView(
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: crossAxisExtent,
+        mainAxisExtent: 140,
+        mainAxisSpacing: 16,
+        crossAxisSpacing: 16,
+      ),
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      children: [
+        ActivityStatCard(
+            title: 'Total Usuarios',
+            value: '2,543',
+            icon: Icons.people_outline,
+            color: theme.primary),
+        ActivityStatCard(
+            title: 'Activos hoy',
+            value: '142',
+            icon: Icons.show_chart,
+            color: theme.secondary),
+        ActivityStatCard(
+            title: 'Nuevos (Mes)',
+            value: '85',
+            icon: Icons.person_add_outlined,
+            color: theme.tertiary),
+        ActivityStatCard(
+            title: 'Retención',
+            value: '87%',
+            icon: Icons.repeat,
+            color: theme.warning),
+      ],
+    );
+  }
+
+  Widget _buildRecentActivity(FlutterFlowTheme theme) {
+    return AdminSectionContainer(
+      title: 'Actividad Reciente',
+      child: Column(
+        children: [
+          ActivityListItem(
+              name: 'Juan Pérez',
+              action: 'Completó una compra',
+              time: 'Hace 2 min',
+              icon: Icons.shopping_bag_outlined,
+              color: theme.secondary),
+          ActivityListItem(
+              name: 'María García',
+              action: 'Inició sesión',
+              time: 'Hace 5 min',
+              icon: Icons.login,
+              color: theme.primary),
+          ActivityListItem(
+              name: 'Carlos López',
+              action: 'Actualizó perfil',
+              time: 'Hace 12 min',
+              icon: Icons.edit_outlined,
+              color: theme.warning),
+          ActivityListItem(
+              name: 'Ana Smith',
+              action: 'Agregó favoritos',
+              time: 'Hace 25 min',
+              icon: Icons.favorite_border,
+              color: theme.tertiary),
+          ActivityListItem(
+              name: 'Pedro Diaz',
+              action: 'Consultó soporte',
+              time: 'Hace 1h',
+              icon: Icons.support_agent,
+              color: theme.secondary),
+        ],
       ),
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildTopUsersAndRetention(FlutterFlowTheme theme) {
+    return Column(
+      children: [
+        AdminSectionContainer(
+          title: 'Usuarios Top',
+          child: Column(
+            children: [
+              TopUserItem(
+                  position: 1,
+                  name: 'Roberto G.',
+                  stats: '150 compras',
+                  medalColor: theme.warning),
+              TopUserItem(
+                  position: 2,
+                  name: 'Laura M.',
+                  stats: '128 compras',
+                  medalColor: theme.secondaryText),
+              TopUserItem(
+                  position: 3,
+                  name: 'Fernando T.',
+                  stats: '95 compras',
+                  medalColor: theme.tertiary),
+            ],
+          ),
+        ),
+        const SizedBox(height: 24),
+        AdminSectionContainer(
+          title: 'Retención',
+          footer: 'Basado en últimos 90 días',
+          child: const Column(
+            children: [
+              RetentionItem(label: '1 día', value: '87%'),
+              RetentionItem(label: '7 días', value: '68%'),
+              RetentionItem(label: '30 días', value: '45%'),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHeader(FlutterFlowTheme theme) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Actividad de Usuarios',
           style: GoogleFonts.outfit(
-            color: FlutterFlowTheme.of(context).primaryText,
+            color: theme.primaryText,
             fontSize: 32.0,
             fontWeight: FontWeight.bold,
           ),
@@ -426,9 +342,7 @@ class _UsersActivityWidgetState extends State<UsersActivityWidget> {
         Text(
           'Monitoreo en tiempo real del comportamiento de usuarios',
           style: GoogleFonts.outfit(
-            color: FlutterFlowTheme.of(context)
-                .secondaryText
-                .withValues(alpha: 0.7),
+            color: theme.secondaryText.withValues(alpha: 0.7),
             fontSize: 16.0,
           ),
         ),

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nazi_shop/backend/admin_service.dart';
+import '/backend/admin_service.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/components/app_dialog.dart';
 
 class SecurityCheckDialog extends StatefulWidget {
   const SecurityCheckDialog({super.key});
@@ -108,185 +109,119 @@ class _SecurityCheckDialogState extends State<SecurityCheckDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = FlutterFlowTheme.of(context);
     final isMobile = MediaQuery.of(context).size.width < 600;
-    final dialogWidth = isMobile ? 320.0 : 400.0;
 
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      insetPadding: const EdgeInsets.all(16),
-      child: Container(
-        width: dialogWidth,
-        padding: const EdgeInsets.all(24),
+    return AppDialog(
+      icon: Container(
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: FlutterFlowTheme.of(context).secondaryBackground,
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(
-            color: _hasError
-                ? FlutterFlowTheme.of(context).error.withValues(alpha: 0.5)
-                : FlutterFlowTheme.of(context).primaryText.withValues(alpha: 0.1),
-            width: 1.5,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.5),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
-            )
-          ],
+          color: theme.primary.withValues(alpha: 0.1),
+          shape: BoxShape.circle,
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // Header Icon
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: FlutterFlowTheme.of(context).primary.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.lock_person_rounded,
-                color: FlutterFlowTheme.of(context).primary,
-                size: 32,
-              ),
-            ).animate().scale(duration: 400.ms, curve: Curves.easeOutBack),
-
-            const SizedBox(height: 20),
-
-            // Title
-            Text(
-              'Verificación de Identidad',
+        child: Icon(
+          Icons.lock_person_rounded,
+          color: theme.primary,
+          size: 32,
+        ),
+      ).animate().scale(duration: 400.ms, curve: Curves.easeOutBack),
+      title: 'Verificación de Identidad',
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            child: Text(
+              _message,
+              key: ValueKey(_message),
               textAlign: TextAlign.center,
               style: GoogleFonts.outfit(
-                color: FlutterFlowTheme.of(context).primaryText,
-                fontWeight: FontWeight.w600,
-                fontSize: 20,
+                color: _hasError ? theme.error : theme.secondaryText,
+                fontSize: 15,
+                height: 1.4,
               ),
             ),
-
-            const SizedBox(height: 12),
-
-            // Message
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 300),
-              child: Text(
-                _message,
-                key: ValueKey(_message),
-                textAlign: TextAlign.center,
-                style: GoogleFonts.outfit(
-                  color: _hasError
-                      ? FlutterFlowTheme.of(context).error
-                      : FlutterFlowTheme.of(context).secondaryText,
-                  fontSize: 15,
-                  height: 1.4,
+          ),
+          const SizedBox(height: 32),
+          if (_isLoading)
+            SizedBox(
+              height: 60,
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: theme.primary,
+                  strokeWidth: 3,
+                ),
+              ),
+            )
+          else if (_codeSent)
+            _buildPinCodeInput(isMobile)
+          else
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: ElevatedButton.icon(
+                onPressed: _sendCode,
+                icon: const Icon(Icons.refresh_rounded, size: 18),
+                label: Text('Reenviar Código', style: GoogleFonts.outfit()),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      theme.primaryBackground.withValues(alpha: 0.1),
+                  foregroundColor: theme.primaryText,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
               ),
             ),
-
-            const SizedBox(height: 32),
-
-            // Main Content Area
-            if (_isLoading)
-              SizedBox(
-                height: 60,
-                child: Center(
-                  child: CircularProgressIndicator(
-                    color: FlutterFlowTheme.of(context).primary,
-                    strokeWidth: 3,
-                  ),
-                ),
-              )
-            else if (_codeSent)
-              _buildPinCodeInput(isMobile)
-            else
-              // Retry / Error View Button
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: ElevatedButton.icon(
-                  onPressed: _sendCode,
-                  icon: const Icon(Icons.refresh_rounded, size: 18),
-                  label: Text('Reenviar Código', style: GoogleFonts.outfit()),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: FlutterFlowTheme.of(context)
-                        .primaryBackground
-                        .withValues(alpha: 0.1),
-                    foregroundColor: FlutterFlowTheme.of(context).primaryText,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-              ),
-
-            // Actions for Verify
-            if (!_isLoading && _codeSent) ...[
-              const SizedBox(height: 32),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextButton(
-                      onPressed: () => Navigator.pop(context, false),
-                      child: Text(
-                        'Cancelar',
-                        style: GoogleFonts.outfit(
-                            color: FlutterFlowTheme.of(context).secondaryText),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed:
-                          _codeController.text.length == 6 ? _verifyCode : null,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: FlutterFlowTheme.of(context).primary,
-                        disabledBackgroundColor: FlutterFlowTheme.of(context)
-                            .primary
-                            .withValues(alpha: 0.3),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        elevation: 0,
-                      ),
-                      child: Text(
-                        'Verificar',
-                        style: GoogleFonts.outfit(
-                          color: _codeController.text.length == 6
-                              ? FlutterFlowTheme.of(context).info
-                              : FlutterFlowTheme.of(context)
-                                  .secondaryText
-                                  .withValues(alpha: 0.5),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-
-            // Actions for Loading / Error only cancel
-            if (!_codeSent && !_isLoading) ...[
-              const SizedBox(height: 20),
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: Text(
-                  'Cerrar',
-                  style: GoogleFonts.outfit(
-                      color: FlutterFlowTheme.of(context)
-                          .secondaryText
-                          .withValues(alpha: 0.5)),
-                ),
-              ),
-            ],
-          ],
-        ),
+        ],
       ),
+      actions: [
+        if (!_isLoading && _codeSent) ...[
+          Expanded(
+            child: TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(
+                'Cancelar',
+                style: GoogleFonts.outfit(color: theme.secondaryText),
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: ElevatedButton(
+              onPressed: _codeController.text.length == 6 ? _verifyCode : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: theme.primary,
+                disabledBackgroundColor: theme.primary.withValues(alpha: 0.3),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                elevation: 0,
+              ),
+              child: Text(
+                'Verificar',
+                style: GoogleFonts.outfit(
+                  color: _codeController.text.length == 6
+                      ? theme.info
+                      : theme.secondaryText.withValues(alpha: 0.5),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+        if (!_codeSent && !_isLoading)
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(
+              'Cerrar',
+              style: GoogleFonts.outfit(
+                  color: theme.secondaryText.withValues(alpha: 0.5)),
+            ),
+          ),
+      ],
     );
   }
 

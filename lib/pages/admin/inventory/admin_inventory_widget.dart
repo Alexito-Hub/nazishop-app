@@ -2,14 +2,15 @@ import 'package:flutter/services.dart'; // Required for Clipboard
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:nazi_shop/backend/admin_service.dart';
-import '../../../components/smart_back_button.dart';
+import '/backend/admin_service.dart';
 import 'package:intl/intl.dart';
 // Required for auth check
 import 'package:go_router/go_router.dart';
 import '../../../../backend/security_manager.dart';
 import '../components/security_check_dialog.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/components/design_system.dart';
+import '/components/app_dialog.dart';
 
 class AdminInventoryWidget extends StatefulWidget {
   final String? listingId;
@@ -114,44 +115,10 @@ class _AdminInventoryWidgetState extends State<AdminInventoryWidget> {
       body: isDesktop ? _buildDesktopLayout() : _buildMobileLayout(),
       floatingActionButton: isDesktop
           ? null
-          : Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    FlutterFlowTheme.of(context).primary,
-                    FlutterFlowTheme.of(context).secondary,
-                  ], // Red Gradient
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: FlutterFlowTheme.of(context)
-                        .primary
-                        .withValues(alpha: 0.4),
-                    blurRadius: 12,
-                    offset: const Offset(0, 6),
-                  ),
-                ],
-              ),
-              child: FloatingActionButton.extended(
-                onPressed: _showAddModal,
-                backgroundColor: FlutterFlowTheme.of(context).transparent,
-                elevation: 0,
-                highlightElevation: 0,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16)),
-                icon: Icon(Icons.add_task,
-                    color: FlutterFlowTheme.of(context).tertiary),
-                label: Text(
-                  'Añadir Cuenta',
-                  style: GoogleFonts.outfit(
-                      color: FlutterFlowTheme.of(context).tertiary,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1),
-                ),
-              ),
+          : DSGradientFab(
+              label: 'Añadir Cuenta',
+              icon: Icons.add_task,
+              onPressed: _showAddModal,
             ),
     );
   }
@@ -161,30 +128,7 @@ class _AdminInventoryWidgetState extends State<AdminInventoryWidget> {
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
-        SliverAppBar(
-          backgroundColor: FlutterFlowTheme.of(context).transparent,
-          surfaceTintColor: FlutterFlowTheme.of(context).transparent,
-          pinned: true,
-          floating: true,
-          elevation: 0,
-          leadingWidth: 70,
-          automaticallyImplyLeading: false,
-          leading:
-              SmartBackButton(color: FlutterFlowTheme.of(context).primaryText),
-          centerTitle: true,
-          title: Text(
-            widget.listingTitle ?? 'Gestión de Stock',
-            style: GoogleFonts.outfit(
-              color: FlutterFlowTheme.of(context).primaryText,
-              fontWeight: FontWeight.bold,
-              fontSize: 24,
-              letterSpacing: 1.0,
-            ),
-          ),
-          actions: [
-            // Removed redundant IconButton
-          ],
-        ),
+        DSMobileAppBar(title: widget.listingTitle ?? 'Gestión de Stock'),
         SliverToBoxAdapter(
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -460,117 +404,107 @@ class _InventoryRowItemState extends State<InventoryRowItem> {
     final item = widget.item;
     final creds = item['credentials'] ?? {};
     final soldTo = item['soldToUser'];
-    final reservedBy = item['reservedBy']; // Available if populated
+    final reservedBy = item['reservedBy'];
     final theme = FlutterFlowTheme.of(context);
 
     showDialog(
-        context: context,
-        builder: (context) => Dialog(
-              backgroundColor: theme.secondaryBackground,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-                side: BorderSide(color: theme.alternate),
+      context: context,
+      builder: (context) => AppDialog(
+        maxWidth: 500,
+        showCloseButton: true,
+        icon: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: theme.primary.withValues(alpha: 0.1),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(Icons.info_outline, color: theme.primary, size: 24),
+        ),
+        title: 'Detalles del Item',
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Credentials Section
+            Text(
+              'CREDENCIALES',
+              style: GoogleFonts.outfit(
+                color: theme.secondaryText,
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1,
               ),
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 500),
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Header
-                    Row(
-                      children: [
-                        Icon(Icons.info_outline, color: theme.primary),
-                        const SizedBox(width: 12),
-                        Text('Detalles del Item',
-                            style: GoogleFonts.outfit(
-                                color: theme.primaryText,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold)),
-                        const Spacer(),
-                        IconButton(
-                            onPressed: () => Navigator.pop(context),
-                            icon: Icon(Icons.close, color: theme.secondaryText))
-                      ],
-                    ),
-                    Divider(color: theme.alternate, height: 30),
+            ),
+            const SizedBox(height: 12),
+            _buildDetailRow(
+                Icons.email, 'Email', creds['email'] ?? 'N/A', theme,
+                copyable: true),
+            _buildDetailRow(
+                Icons.key, 'Contraseña', creds['password'] ?? '********', theme,
+                copyable: true),
+            if (creds['pin'] != null && creds['pin'].toString().isNotEmpty)
+              _buildDetailRow(Icons.pin, 'PIN', creds['pin'].toString(), theme,
+                  copyable: true),
+            if (creds['profileName'] != null &&
+                creds['profileName'].toString().isNotEmpty)
+              _buildDetailRow(Icons.portrait, 'Perfil',
+                  creds['profileName'].toString(), theme),
 
-                    // Credentials Section
-                    Text('CREDENCIALES',
-                        style: GoogleFonts.outfit(
-                            color: theme.secondaryText,
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1)),
-                    const SizedBox(height: 12),
-                    _buildDetailRow(
-                        Icons.email, 'Email', creds['email'] ?? 'N/A', theme,
-                        copyable: true),
-                    _buildDetailRow(Icons.key, 'Contraseña',
-                        creds['password'] ?? '********', theme,
-                        copyable: true),
-                    if (creds['pin'] != null &&
-                        creds['pin'].toString().isNotEmpty)
-                      _buildDetailRow(
-                          Icons.pin, 'PIN', creds['pin'].toString(), theme,
-                          copyable: true),
-                    if (creds['profileName'] != null &&
-                        creds['profileName'].toString().isNotEmpty)
-                      _buildDetailRow(Icons.portrait, 'Perfil',
-                          creds['profileName'].toString(), theme),
+            Divider(color: theme.alternate, height: 32),
 
-                    Divider(color: theme.alternate, height: 30),
-
-                    // Status / Buyer Section
-                    Text('ESTADO Y ASIGNACIÓN',
-                        style: GoogleFonts.outfit(
-                            color: theme.secondaryText,
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1)),
-                    const SizedBox(height: 12),
-
-                    if (soldTo != null)
-                      _buildUserRow('Vendido a', soldTo, theme.error, theme)
-                    else if (reservedBy != null)
-                      _buildUserRow(
-                          'Reservado por', reservedBy, theme.warning, theme)
-                    else
-                      Row(children: [
-                        Icon(Icons.check_circle_outline,
-                            color: theme.success, size: 16),
-                        const SizedBox(width: 8),
-                        Text('Disponible para venta',
-                            style: GoogleFonts.outfit(
-                                color: theme.success, fontSize: 14))
-                      ]),
-
-                    const SizedBox(height: 20),
-
-                    // Timestamps
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                          color: theme.primaryBackground,
-                          borderRadius: BorderRadius.circular(8)),
-                      child: Column(
-                        children: [
-                          _buildTimestampRow(
-                              'Creado', item['createdAt'], theme),
-                          if (item['reservedAt'] != null)
-                            _buildTimestampRow(
-                                'Reservado', item['reservedAt'], theme),
-                          if (item['soldAt'] != null)
-                            _buildTimestampRow(
-                                'Vendido', item['soldAt'], theme),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+            // Status / Buyer Section
+            Text(
+              'ESTADO Y ASIGNACIÓN',
+              style: GoogleFonts.outfit(
+                color: theme.secondaryText,
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1,
               ),
-            ));
+            ),
+            const SizedBox(height: 12),
+
+            if (soldTo != null)
+              _buildUserRow('Vendido a', soldTo, theme.error, theme)
+            else if (reservedBy != null)
+              _buildUserRow('Reservado por', reservedBy, theme.warning, theme)
+            else
+              Row(
+                children: [
+                  Icon(Icons.check_circle_outline,
+                      color: theme.success, size: 16),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Disponible para venta',
+                    style:
+                        GoogleFonts.outfit(color: theme.success, fontSize: 14),
+                  )
+                ],
+              ),
+
+            Divider(color: theme.alternate, height: 32),
+
+            // Timestamps
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: theme.primaryBackground,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                children: [
+                  _buildTimestampRow('Creado', item['createdAt'], theme),
+                  if (item['reservedAt'] != null)
+                    _buildTimestampRow('Reservado', item['reservedAt'], theme),
+                  if (item['soldAt'] != null)
+                    _buildTimestampRow('Vendido', item['soldAt'], theme),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildDetailRow(

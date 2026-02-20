@@ -1,5 +1,5 @@
-import 'package:nazi_shop/backend/api_client.dart';
-import 'package:nazi_shop/models/service_model.dart';
+import '/backend/api_client.dart';
+import '/models/service_model.dart';
 // For Service parser
 
 class FavoritesService {

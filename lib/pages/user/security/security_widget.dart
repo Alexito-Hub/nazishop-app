@@ -3,8 +3,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '/auth/nazishop_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/auth/nazishop_auth/nazishop_auth_provider.dart';
+import '/flutter_flow/nav/nav.dart';
+import 'package:provider/provider.dart';
 import '/services/biometric_service.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import '/backend/user_service.dart';
+import '/components/design_system.dart';
+import 'components/device_session_card.dart';
 
 class SecurityWidget extends StatefulWidget {
   const SecurityWidget({super.key});
@@ -17,7 +23,7 @@ class _SecurityWidgetState extends State<SecurityWidget> {
   bool _is2FAEnabled = false;
   bool _isBiometricEnabled = false;
   bool _isLoadingSecurity = true;
-  List<dynamic> _sessions = [];
+  List<Map<String, dynamic>> _sessions = [];
   bool _loadingSessions = true;
 
   @override
@@ -29,15 +35,23 @@ class _SecurityWidgetState extends State<SecurityWidget> {
 
   Future<void> _loadSecuritySettings() async {
     try {
+      if (currentUserUid.isEmpty) {
+        if (mounted) setState(() => _isLoadingSecurity = false);
+        return;
+      }
+
       final doc = await FirebaseFirestore.instance
           .collection('users')
           .doc(currentUserUid)
           .get();
 
-      if (doc.exists && mounted) {
-        final biometricEnabled = await BiometricService.isEnabled();
+      final biometricEnabled = await BiometricService.isEnabled();
+
+      if (mounted) {
         setState(() {
-          _is2FAEnabled = doc.data()?['is2FAEnabled'] ?? false;
+          if (doc.exists) {
+            _is2FAEnabled = doc.data()?['is2FAEnabled'] ?? false;
+          }
           _isBiometricEnabled = biometricEnabled;
           _isLoadingSecurity = false;
         });
@@ -52,7 +66,7 @@ class _SecurityWidgetState extends State<SecurityWidget> {
     final sessions = await UserService.getSessions();
     if (mounted) {
       setState(() {
-        _sessions = sessions;
+        _sessions = List<Map<String, dynamic>>.from(sessions);
         _loadingSessions = false;
       });
     }
@@ -92,21 +106,33 @@ class _SecurityWidgetState extends State<SecurityWidget> {
 
   Future<void> _revokeSession(String sessionId) async {
     final success = await UserService.revokeSession(sessionId);
-    if (success && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Sesión cerrada')),
-      );
-      _fetchSessions();
+    if (mounted) {
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Sesión cerrada')),
+        );
+        _fetchSessions();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error al cerrar la sesión')),
+        );
+      }
     }
   }
 
   Future<void> _revokeAllOthers() async {
     final success = await UserService.revokeAllOtherSessions();
-    if (success && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Otras sesiones cerradas')),
-      );
-      _fetchSessions();
+    if (mounted) {
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Otras sesiones cerradas')),
+        );
+        _fetchSessions();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error al cerrar otras sesiones')),
+        );
+      }
     }
   }
 
@@ -115,55 +141,37 @@ class _SecurityWidgetState extends State<SecurityWidget> {
     final theme = FlutterFlowTheme.of(context);
     final isDesktop = MediaQuery.of(context).size.width >= 900;
 
+    if (_isLoadingSecurity) {
+      return Scaffold(
+        backgroundColor: theme.primaryBackground,
+        body: Center(child: CircularProgressIndicator(color: theme.primary)),
+      );
+    }
+
     return Scaffold(
       backgroundColor: theme.primaryBackground,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_rounded, color: theme.primaryText),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: Text(
-          'Centro de Seguridad',
-          style: GoogleFonts.outfit(
-            color: theme.primaryText,
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: !isDesktop,
-      ),
-      body: _isLoadingSecurity
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(24.0),
-              child: isDesktop
-                  ? _buildDesktopLayout(theme)
-                  : _buildMobileLayout(theme),
-            ),
+      body: isDesktop ? _buildDesktopLayout(theme) : _buildMobileLayout(theme),
     );
   }
 
-  Widget _buildDesktopLayout(FlutterFlowTheme theme) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(child: _buildPasswordSection(theme)),
-            const SizedBox(width: 24),
-            Expanded(child: _buildAdditionalProtectionSection(theme)),
-          ],
+  // ── MOBILE ─────────────────────────────────────────────────────────────────
+  Widget _buildMobileLayout(FlutterFlowTheme theme) {
+    return CustomScrollView(
+      physics: const BouncingScrollPhysics(),
+      slivers: [
+        const DSMobileAppBar(title: 'Seguridad'),
+        SliverPadding(
+          padding: const EdgeInsets.all(24),
+          sliver: SliverToBoxAdapter(
+            child: _buildMobileContent(theme),
+          ),
         ),
-        const SizedBox(height: 32),
-        _buildDeviceSection(theme),
+        const SliverPadding(padding: EdgeInsets.only(bottom: 32)),
       ],
     );
   }
 
-  Widget _buildMobileLayout(FlutterFlowTheme theme) {
+  Widget _buildMobileContent(FlutterFlowTheme theme) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -176,6 +184,53 @@ class _SecurityWidgetState extends State<SecurityWidget> {
     );
   }
 
+  // ── DESKTOP ────────────────────────────────────────────────────────────────
+  Widget _buildDesktopLayout(FlutterFlowTheme theme) {
+    return Align(
+      alignment: Alignment.topCenter,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 1200),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(40),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Desktop page header (matches DS style)
+              Text(
+                'Centro de Seguridad',
+                style: GoogleFonts.outfit(
+                  color: theme.primaryText,
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Gestiona tu contraseña, 2FA y sesiones activas',
+                style: GoogleFonts.outfit(
+                  color: theme.secondaryText,
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(height: 40),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(child: _buildPasswordSection(theme)),
+                  const SizedBox(width: 24),
+                  Expanded(child: _buildAdditionalProtectionSection(theme)),
+                ],
+              ),
+              const SizedBox(height: 32),
+              _buildDeviceSection(theme),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ── SHARED SECTIONS ────────────────────────────────────────────────────────
   Widget _buildSectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
@@ -221,15 +276,17 @@ class _SecurityWidgetState extends State<SecurityWidget> {
                   ),
                 ],
               ),
+              const SizedBox(height: 16),
+              _buildVerificationOptions(theme),
               const SizedBox(height: 20),
               Divider(color: theme.alternate),
               const SizedBox(height: 20),
               Text(
-                'Para cambiar tu contraseña, te enviaremos un enlace seguro.',
+                'Si olvidaste tu contraseña, enviaremos un enlace de recuperación.',
                 style: GoogleFonts.outfit(
-                    color: theme.secondaryText, fontSize: 14),
+                    color: theme.secondaryText, fontSize: 13),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton(
@@ -252,11 +309,75 @@ class _SecurityWidgetState extends State<SecurityWidget> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text('Enviar Correo'),
+                  child: const Text('Enviar Correo de Recuperación'),
                 ),
               ),
             ],
           ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildVerificationOptions(FlutterFlowTheme theme) {
+    final authProvider = Provider.of<NaziShopAuthProvider>(context);
+    return Column(
+      children: [
+        // Email Verification
+        ListTile(
+          leading: Icon(Icons.mark_email_read_outlined,
+              color: authProvider.currentUser?.emailVerified == true
+                  ? theme.success
+                  : theme.primaryText),
+          title: Text('Correo Electrónico',
+              style: GoogleFonts.outfit(color: theme.primaryText)),
+          subtitle: Text(
+              authProvider.currentUser?.emailVerified == true
+                  ? 'Verificado'
+                  : 'No verificado',
+              style:
+                  GoogleFonts.outfit(color: theme.secondaryText, fontSize: 12)),
+          trailing: authProvider.currentUser?.emailVerified == true
+              ? Icon(Icons.check_circle, color: theme.success)
+              : Icon(Icons.arrow_forward_ios,
+                  size: 16, color: theme.secondaryText),
+          onTap: authProvider.currentUser?.emailVerified == true
+              ? null
+              : () => context.pushNamed('email_verification'),
+          contentPadding: EdgeInsets.zero,
+        ),
+        Divider(color: theme.alternate, height: 1),
+
+        // Set Password (if needed - currently we show standard set password btn)
+        ListTile(
+          leading: Icon(Icons.password_rounded, color: theme.primaryText),
+          title: Text('Contraseña',
+              style: GoogleFonts.outfit(color: theme.primaryText)),
+          subtitle: Text('Establecer nueva contraseña',
+              style:
+                  GoogleFonts.outfit(color: theme.secondaryText, fontSize: 12)),
+          trailing: Icon(Icons.arrow_forward_ios,
+              size: 16, color: theme.secondaryText),
+          onTap: () => context.pushNamed('set_password'),
+          contentPadding: EdgeInsets.zero,
+        ),
+        Divider(color: theme.alternate, height: 1),
+
+        // Phone Verification
+        ListTile(
+          leading: Icon(Icons.phone_iphone_rounded, color: theme.primaryText),
+          title: Text('Número de Teléfono',
+              style: GoogleFonts.outfit(color: theme.primaryText)),
+          subtitle: Text(
+              currentUserPhoneNumber.isNotEmpty
+                  ? currentUserPhoneNumber
+                  : 'No registrado',
+              style:
+                  GoogleFonts.outfit(color: theme.secondaryText, fontSize: 12)),
+          trailing: Icon(Icons.arrow_forward_ios,
+              size: 16, color: theme.secondaryText),
+          onTap: () => context.pushNamed('phone_verification'),
+          contentPadding: EdgeInsets.zero,
         ),
       ],
     );
@@ -274,7 +395,6 @@ class _SecurityWidgetState extends State<SecurityWidget> {
               SwitchListTile(
                 value: _is2FAEnabled,
                 onChanged: (val) => _toggleSetting('is2FAEnabled', val),
-                activeColor: theme.primary,
                 title: Text('Autenticación 2FA',
                     style: GoogleFonts.outfit(color: theme.primaryText)),
                 subtitle: Text('Código extra al iniciar sesión.',
@@ -283,18 +403,19 @@ class _SecurityWidgetState extends State<SecurityWidget> {
                 secondary: Icon(Icons.security_rounded, color: theme.info),
               ),
               Divider(color: theme.alternate, height: 1),
-              SwitchListTile(
-                value: _isBiometricEnabled,
-                onChanged: (val) => _toggleSetting('isBiometricEnabled', val),
-                activeColor: theme.primary,
-                title: Text('Biometría',
-                    style: GoogleFonts.outfit(color: theme.primaryText)),
-                subtitle: Text('FaceID o Huella digital.',
-                    style: GoogleFonts.outfit(
-                        color: theme.secondaryText, fontSize: 12)),
-                secondary:
-                    Icon(Icons.fingerprint_rounded, color: theme.primary),
-              ),
+              if (!kIsWeb) ...[
+                SwitchListTile(
+                  value: _isBiometricEnabled,
+                  onChanged: (val) => _toggleSetting('isBiometricEnabled', val),
+                  title: Text('Biometría',
+                      style: GoogleFonts.outfit(color: theme.primaryText)),
+                  subtitle: Text('FaceID o Huella digital',
+                      style: GoogleFonts.outfit(
+                          color: theme.secondaryText, fontSize: 12)),
+                  secondary:
+                      Icon(Icons.fingerprint_rounded, color: theme.primary),
+                ),
+              ],
             ],
           ),
         ),
@@ -323,40 +444,13 @@ class _SecurityWidgetState extends State<SecurityWidget> {
     );
   }
 
-  Widget _buildSessionCard(dynamic session, FlutterFlowTheme theme) {
-    final bool isCurrent = session['isCurrent'] ?? false;
-    final String deviceType = session['deviceType'] ?? 'web';
-
-    IconData deviceIcon = Icons.language_rounded;
-    if (deviceType == 'mobile') deviceIcon = Icons.smartphone_rounded;
-    if (deviceType == 'desktop') deviceIcon = Icons.laptop_rounded;
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: _cardDecoration(theme).copyWith(
-        border: Border.all(
-          color: isCurrent
-              ? theme.primary.withValues(alpha: 0.3)
-              : theme.alternate,
-          width: isCurrent ? 1.5 : 1,
-        ),
-      ),
-      child: ListTile(
-        leading: Icon(deviceIcon, color: theme.secondaryText, size: 28),
-        title: Text(
-          session['deviceName'] ?? 'Unknown Device',
-          style: GoogleFonts.outfit(
-              color: theme.primaryText, fontWeight: FontWeight.bold),
-        ),
-        subtitle: Text('${session['os']} • ${session['ipAddress']}',
-            style:
-                GoogleFonts.outfit(color: theme.secondaryText, fontSize: 12)),
-        trailing: isCurrent
-            ? Icon(Icons.circle, size: 8, color: theme.success)
-            : IconButton(
-                icon: Icon(Icons.logout_rounded, color: theme.error, size: 22),
-                onPressed: () => _revokeSession(session['sessionId']),
-              ),
+  Widget _buildSessionCard(
+      Map<String, dynamic> session, FlutterFlowTheme theme) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: DeviceSessionCard(
+        session: session,
+        onRevoke: () => _revokeSession(session['sessionId']),
       ),
     );
   }

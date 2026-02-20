@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nazi_shop/backend/admin_service.dart';
-import '../../../components/smart_back_button.dart';
-import 'package:nazi_shop/models/notification_model.dart';
+import '/backend/admin_service.dart';
+import '/models/notification_model.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
+import '/components/design_system.dart';
 
 class AdminNotificationsWidget extends StatefulWidget {
   const AdminNotificationsWidget({super.key});
@@ -55,44 +55,10 @@ class _AdminNotificationsWidgetState extends State<AdminNotificationsWidget> {
       ),
       floatingActionButton: isDesktop
           ? null
-          : Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    FlutterFlowTheme.of(context).primary,
-                    FlutterFlowTheme.of(context).secondary
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: FlutterFlowTheme.of(context)
-                        .primary
-                        .withValues(alpha: 0.4),
-                    blurRadius: 12,
-                    offset: const Offset(0, 6),
-                  ),
-                ],
-              ),
-              child: FloatingActionButton.extended(
-                onPressed: _goToCreatePage,
-                backgroundColor: FlutterFlowTheme.of(context).transparent,
-                elevation: 0,
-                highlightElevation: 0,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16)),
-                icon: Icon(Icons.add,
-                    color: FlutterFlowTheme.of(context).primaryText),
-                label: Text(
-                  'Nueva',
-                  style: GoogleFonts.outfit(
-                      color: FlutterFlowTheme.of(context).primaryText,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1),
-                ),
-              ),
+          : DSGradientFab(
+              label: 'Nueva',
+              icon: Icons.add,
+              onPressed: _goToCreatePage,
             ),
     );
   }
@@ -107,62 +73,12 @@ class _AdminNotificationsWidgetState extends State<AdminNotificationsWidget> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Notificaciones',
-                          style: GoogleFonts.outfit(
-                              color: FlutterFlowTheme.of(context).primaryText,
-                              fontSize: 32,
-                              fontWeight: FontWeight.bold)),
-                      Text('Envía mensajes push a los usuarios',
-                          style: GoogleFonts.outfit(
-                              color: FlutterFlowTheme.of(context).secondaryText,
-                              fontSize: 16)),
-                    ],
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          FlutterFlowTheme.of(context).primary,
-                          FlutterFlowTheme.of(context).secondary
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: FlutterFlowTheme.of(context)
-                              .primary
-                              .withValues(alpha: 0.4),
-                          blurRadius: 8,
-                          offset: const Offset(0, 4),
-                        )
-                      ],
-                    ),
-                    child: ElevatedButton.icon(
-                      onPressed: _goToCreatePage,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        shadowColor: Colors.transparent,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 16),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                      ),
-                      icon: const Icon(Icons.send, color: Colors.white),
-                      label: Text('Nueva Notificación',
-                          style: GoogleFonts.outfit(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold)),
-                    ),
-                  )
-                ],
+              DSAdminPageHeader(
+                title: 'Notificaciones',
+                subtitle: 'Envía mensajes push a los usuarios',
+                actionLabel: 'Nueva Notificación',
+                actionIcon: Icons.send,
+                onAction: _goToCreatePage,
               ),
               const SizedBox(height: 40),
               Expanded(child: _buildList()),
@@ -176,16 +92,7 @@ class _AdminNotificationsWidgetState extends State<AdminNotificationsWidget> {
   Widget _buildMobileLayout() {
     return CustomScrollView(
       slivers: [
-        SliverAppBar(
-          backgroundColor: Colors.transparent,
-          pinned: true,
-          title: Text('Notificaciones',
-              style: GoogleFonts.outfit(
-                  color: FlutterFlowTheme.of(context).primaryText,
-                  fontWeight: FontWeight.bold)),
-          leading:
-              SmartBackButton(color: FlutterFlowTheme.of(context).primaryText),
-        ),
+        const DSMobileAppBar(title: 'Notificaciones'),
         SliverFillRemaining(child: _buildList()),
       ],
     );

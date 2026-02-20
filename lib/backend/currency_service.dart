@@ -46,6 +46,11 @@ class CurrencyService {
 
       final data = await ApiClient.get('/api/currencies');
 
+      if (data['statusCode'] == 404) {
+        // Fail silently - use defaults/cache
+        await _loadFromCache();
+      }
+
       if (data['status'] == true && data['data'] != null) {
         _currenciesCache.clear();
 
@@ -116,7 +121,17 @@ class CurrencyService {
   static Currency _getDefaultCurrency() {
     // Buscar la moneda por defecto en el cache
     final defaultCurrency = _currenciesCache.values
-        .firstWhere((c) => c.isDefault, orElse: () => _currenciesCache['USD']!);
+        .whereType<Currency>()
+        .firstWhere((c) => c.isDefault,
+            orElse: () =>
+                _currenciesCache['USD'] ??
+                Currency(
+                  code: 'USD',
+                  symbol: '\$',
+                  name: 'US Dollar',
+                  exchangeRate: 1.0,
+                  isDefault: true,
+                ));
     return defaultCurrency;
   }
 

@@ -1,5 +1,5 @@
 import '/flutter_flow/flutter_flow_theme.dart';
-import '../../../../components/smart_back_button.dart';
+import '/components/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -49,37 +49,10 @@ class _AppearanceWidgetState extends State<AppearanceWidget> {
   // 📱 MOBILE LAYOUT (< 900px)
   // ===========================================================================
   Widget _buildMobileLayout() {
-    final theme = FlutterFlowTheme.of(context);
-
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
-        SliverAppBar(
-          backgroundColor: theme.transparent,
-          surfaceTintColor: theme.transparent,
-          pinned: true,
-          floating: true,
-          elevation: 0,
-          leadingWidth: 70,
-          leading: Container(
-            margin: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: theme.primaryBackground.withValues(alpha: 0.5),
-              shape: BoxShape.circle,
-            ),
-            child: SmartBackButton(color: theme.primaryText),
-          ),
-          centerTitle: true,
-          title: Text(
-            'Apariencia',
-            style: GoogleFonts.outfit(
-              color: theme.primaryText,
-              fontWeight: FontWeight.bold,
-              fontSize: 24,
-              letterSpacing: 1.0,
-            ),
-          ),
-        ),
+        const DSMobileAppBar(title: 'Apariencia'),
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),

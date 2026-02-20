@@ -1,11 +1,11 @@
 import '/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../components/smart_back_button.dart';
-import 'package:nazi_shop/backend/admin_service.dart';
-import 'package:nazi_shop/models/listing_model.dart';
+import '/backend/admin_service.dart';
+import '/models/listing_model.dart';
 import 'package:go_router/go_router.dart';
 import '/pages/admin/inventory/admin_inventory_widget.dart';
+import '/components/design_system.dart';
 
 class AdminListingsWidget extends StatefulWidget {
   const AdminListingsWidget({super.key});
@@ -52,36 +52,10 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
   }
 
   Future<void> _deleteOffer(String id) async {
-    final confirm = await showDialog<bool>(
-            context: context,
-            builder: (c) => AlertDialog(
-                  backgroundColor:
-                      FlutterFlowTheme.of(context).secondaryBackground,
-                  title: Text('Confirmar Eliminación',
-                      style: GoogleFonts.outfit(
-                          color: FlutterFlowTheme.of(context).primaryText,
-                          fontWeight: FontWeight.bold)),
-                  content: Text(
-                      '¿Estás seguro? Esto eliminará el listing del catálogo.',
-                      style: GoogleFonts.outfit(
-                          color: FlutterFlowTheme.of(context).secondaryText)),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(c, false),
-                      child: Text('Cancelar',
-                          style: GoogleFonts.outfit(
-                              color: FlutterFlowTheme.of(context).primaryText)),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.pop(c, true),
-                      child: Text('Eliminar',
-                          style: GoogleFonts.outfit(
-                              color: FlutterFlowTheme.of(context).error,
-                              fontWeight: FontWeight.bold)),
-                    ),
-                  ],
-                )) ??
-        false;
+    final confirm = await DSDeleteConfirmDialog.show(
+      context,
+      message: '¿Estás seguro? Esto eliminará el listing del catálogo.',
+    );
 
     if (!confirm) return;
 
@@ -118,47 +92,13 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
       ),
       floatingActionButton: isDesktop
           ? null
-          : Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    FlutterFlowTheme.of(context).primary,
-                    FlutterFlowTheme.of(context).secondary,
-                  ], // Red Gradient
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: FlutterFlowTheme.of(context)
-                        .primary
-                        .withValues(alpha: 0.4),
-                    blurRadius: 12,
-                    offset: const Offset(0, 6),
-                  ),
-                ],
-              ),
-              child: FloatingActionButton.extended(
-                onPressed: () async {
-                  await context.pushNamed('create_listing');
-                  _loadOffers();
-                },
-                backgroundColor: FlutterFlowTheme.of(context).transparent,
-                elevation: 0,
-                highlightElevation: 0,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16)),
-                icon: Icon(Icons.local_offer,
-                    color: FlutterFlowTheme.of(context).tertiary),
-                label: Text(
-                  'Nuevo Listing',
-                  style: GoogleFonts.outfit(
-                      color: FlutterFlowTheme.of(context).tertiary,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1),
-                ),
-              ),
+          : DSGradientFab(
+              label: 'Nuevo Listing',
+              icon: Icons.local_offer,
+              onPressed: () async {
+                await context.pushNamed('create_listing');
+                _loadOffers();
+              },
             ),
     );
   }
@@ -167,34 +107,7 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
-        SliverAppBar(
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
-          pinned: true,
-          floating: true,
-          elevation: 0,
-          leadingWidth: 70,
-          leading: Container(
-            margin: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: FlutterFlowTheme.of(context).secondaryBackground,
-              shape: BoxShape.circle,
-            ),
-            child: SmartBackButton(
-                color: FlutterFlowTheme.of(context).primaryText),
-          ),
-          centerTitle: true,
-          title: Text(
-            'Listings',
-            style: GoogleFonts.outfit(
-              color: FlutterFlowTheme.of(context).primaryText,
-              fontWeight: FontWeight.w900,
-              fontSize: 24,
-              letterSpacing: 1.0,
-            ),
-          ),
-          actions: [],
-        ),
+        const DSMobileAppBar(title: 'Listings'),
         SliverPadding(
           padding: const EdgeInsets.all(24),
           sliver: _isLoading
@@ -219,75 +132,15 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(40, 40, 40, 20),
               sliver: SliverToBoxAdapter(
-                child: Row(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Listings',
-                          style: GoogleFonts.outfit(
-                            color: FlutterFlowTheme.of(context).primaryText,
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Gestiona los listings de servicios activos',
-                          style: GoogleFonts.outfit(
-                              color: FlutterFlowTheme.of(context).secondaryText,
-                              fontSize: 16),
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-                    Container(
-                      height: 44,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            FlutterFlowTheme.of(context).primary,
-                            FlutterFlowTheme.of(context).secondary,
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: FlutterFlowTheme.of(context)
-                                .primary
-                                .withValues(alpha: 0.4),
-                            blurRadius: 8,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: ElevatedButton.icon(
-                        onPressed: () async {
-                          await context.pushNamed('create_listing');
-                          _loadOffers();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          shadowColor: Colors.transparent,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                        ),
-                        icon: Icon(Icons.add_circle_outline,
-                            color: FlutterFlowTheme.of(context).tertiary,
-                            size: 20),
-                        label: Text(
-                          'Nuevo Listing',
-                          style: GoogleFonts.outfit(
-                              color: FlutterFlowTheme.of(context).tertiary,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                  ],
+                child: DSAdminPageHeader(
+                  title: 'Listings',
+                  subtitle: 'Gestiona los listings de servicios activos',
+                  actionLabel: 'Nuevo Listing',
+                  actionIcon: Icons.add_circle_outline,
+                  onAction: () async {
+                    await context.pushNamed('create_listing');
+                    _loadOffers();
+                  },
                 ),
               ),
             ),
@@ -448,7 +301,7 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
                         const SizedBox(width: 8),
                         _buildIconButton(
                           Icons.delete_outline_rounded,
-                          primaryColor,
+                          FlutterFlowTheme.of(context).error,
                           () => _deleteOffer(listing.id),
                         ),
                       ],

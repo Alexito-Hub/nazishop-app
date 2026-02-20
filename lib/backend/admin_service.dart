@@ -1,14 +1,14 @@
-import 'package:nazi_shop/backend/api_client.dart';
-import 'package:nazi_shop/models/category_model.dart';
-import 'package:nazi_shop/models/service_model.dart';
-import 'package:nazi_shop/models/user_model.dart';
-import 'package:nazi_shop/models/admin_models.dart';
-import 'package:nazi_shop/models/coupon_model.dart';
-import 'package:nazi_shop/models/order.dart';
-import 'package:nazi_shop/models/notification_model.dart';
-import 'package:nazi_shop/models/listing_model.dart';
-import 'package:nazi_shop/models/promotion_model.dart';
-import 'package:nazi_shop/models/domain.dart';
+import '/backend/api_client.dart';
+import '/models/category_model.dart';
+import '/models/service_model.dart';
+import '/models/user_model.dart';
+import '/models/admin_models.dart';
+import '/models/coupon_model.dart';
+import '/models/order.dart';
+import '/models/notification_model.dart';
+import '/models/listing_model.dart';
+import '/models/promotion_model.dart';
+import '/models/domain.dart';
 
 class AdminService {
   // --- DASHBOARD ---

@@ -1,7 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:nazi_shop/backend/api_client.dart';
-import 'package:nazi_shop/auth/firebase_auth/auth_util.dart'; // Ensure we have access to current user
+import '/backend/api_client.dart';
+import '/auth/firebase_auth/auth_util.dart'; // Ensure we have access to current user
 
 class NotificationService {
   static final FirebaseMessaging _fcm = FirebaseMessaging.instance;

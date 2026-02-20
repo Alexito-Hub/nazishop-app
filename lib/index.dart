@@ -105,6 +105,11 @@ export '/auth/auth_create_profile/auth_create_profile_widget.dart'
 export '/auth/auth_profile/auth_profile_widget.dart' show AuthProfileWidget;
 export '/auth/auth_edit_profile/auth_edit_profile_widget.dart'
     show AuthEditProfileWidget;
+export '/auth/email_verification/email_verification_widget.dart'
+    show EmailVerificationWidget;
+export '/auth/set_password/set_password_widget.dart' show SetPasswordWidget;
+export '/auth/phone_verification/phone_verification_widget.dart'
+    show PhoneVerificationWidget;
 export '/pages/onboarding/onboarding_widget.dart' show OnboardingWidget;
 
 // Backend

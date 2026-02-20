@@ -10,7 +10,9 @@ import '../../components/safe_image.dart';
 import '../../backend/order_service.dart';
 import '../../auth/nazishop_auth/auth_util.dart';
 import '../../backend/wallet_service.dart';
+import '../../auth/nazishop_auth/nazishop_auth_provider.dart';
 import '../../components/smart_back_button.dart';
+import 'package:provider/provider.dart';
 
 import 'components/checkout_product_card.dart';
 import 'components/checkout_payment_methods.dart';
@@ -85,6 +87,25 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
   Future<void> _processPayment() async {
     if (!_acceptedTerms) {
       _showErrorSnackbar('Debes aceptar los términos y condiciones');
+      return;
+    }
+
+    final authProvider =
+        Provider.of<NaziShopAuthProvider>(context, listen: false);
+    if (authProvider.currentUser?.emailVerified != true) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content:
+              const Text('Debes verificar tu correo para realizar compras.'),
+          backgroundColor: FlutterFlowTheme.of(context).error,
+          action: SnackBarAction(
+            label: 'Verificar',
+            textColor: FlutterFlowTheme.of(context).primaryBackground,
+            onPressed: () => context.pushNamed('email_verification'),
+          ),
+          duration: const Duration(seconds: 5),
+        ),
+      );
       return;
     }
 
@@ -218,7 +239,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                   children: [
                     if (widget.service.branding.bannerUrl != null)
                       SafeImage(
-                        imageUrl: widget.service.branding.bannerUrl,
+                        widget.service.branding.bannerUrl,
                         fit: BoxFit.cover,
                         fallbackColor: _primaryColor,
                       )
@@ -280,8 +301,8 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                             child: widget.service.branding.logoUrl != null
                                 ? ClipRRect(
                                     borderRadius: BorderRadius.circular(16),
-                                    child: Image.network(
-                                      widget.service.branding.logoUrl!,
+                                    child: SafeImage(
+                                      widget.service.branding.logoUrl,
                                       fit: BoxFit.cover,
                                     ),
                                   )

@@ -1,12 +1,12 @@
-import 'package:nazi_shop/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../components/smart_back_button.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:nazi_shop/backend/admin_service.dart';
+import '/backend/admin_service.dart';
 import 'package:go_router/go_router.dart';
-import 'package:nazi_shop/models/coupon_model.dart';
+import '/models/coupon_model.dart';
 import 'package:intl/intl.dart';
+import '/components/design_system.dart';
 
 class AdminCouponsWidget extends StatefulWidget {
   const AdminCouponsWidget({super.key});
@@ -76,40 +76,10 @@ class _AdminCouponsWidgetState extends State<AdminCouponsWidget> {
           : _buildMobileLayout(theme, cardColor, borderColor),
       floatingActionButton: isDesktop
           ? null
-          : Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [theme.primary, theme.secondary],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                      color: FlutterFlowTheme.of(context)
-                          .primary
-                          .withValues(alpha: 0.4),
-                      blurRadius: 8,
-                      offset: const Offset(0, 4))
-                ],
-              ),
-              child: FloatingActionButton.extended(
-                onPressed: _showCreatePage,
-                backgroundColor: theme.transparent,
-                elevation: 0,
-                highlightElevation: 0,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16)),
-                icon: Icon(Icons.confirmation_number_outlined,
-                    color: theme.tertiary),
-                label: Text(
-                  'Nuevo Cupón',
-                  style: GoogleFonts.outfit(
-                      color: theme.tertiary,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1),
-                ),
-              ),
+          : DSGradientFab(
+              label: 'Nuevo Cupón',
+              icon: Icons.confirmation_number_outlined,
+              onPressed: _showCreatePage,
             ),
     );
   }
@@ -144,32 +114,7 @@ class _AdminCouponsWidgetState extends State<AdminCouponsWidget> {
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
-        SliverAppBar(
-          backgroundColor: theme.transparent,
-          surfaceTintColor: theme.transparent,
-          pinned: true,
-          floating: true,
-          elevation: 0,
-          leadingWidth: 70,
-          leading: Container(
-            margin: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: theme.primaryBackground.withValues(alpha: 0.5),
-              shape: BoxShape.circle,
-            ),
-            child: SmartBackButton(color: theme.primaryText),
-          ),
-          centerTitle: true,
-          title: Text(
-            'Cupones',
-            style: GoogleFonts.outfit(
-              color: theme.primaryText,
-              fontWeight: FontWeight.bold,
-              fontSize: 24,
-              letterSpacing: 1.0,
-            ),
-          ),
-        ),
+        const DSMobileAppBar(title: 'Cupones'),
         SliverToBoxAdapter(
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,

@@ -5,7 +5,7 @@ import '/backend/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../components/smart_back_button.dart';
+import '/components/design_system.dart';
 import 'currency_management_model.dart';
 import 'components/currency_card.dart';
 import 'components/currency_header.dart';
@@ -216,29 +216,7 @@ class _CurrencyManagementWidgetState extends State<CurrencyManagementWidget> {
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
-        SliverAppBar(
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
-          pinned: true,
-          floating: true,
-          elevation: 0,
-          expandedHeight: 80,
-          leadingWidth: 70,
-          leading:
-              SmartBackButton(color: FlutterFlowTheme.of(context).primaryText),
-          centerTitle: true,
-          flexibleSpace: FlexibleSpaceBar(
-            title: Text(
-              'Divisas',
-              style: GoogleFonts.outfit(
-                color: FlutterFlowTheme.of(context).primaryText,
-                fontWeight: FontWeight.w900,
-                fontSize: 20,
-              ),
-            ),
-            centerTitle: true,
-          ),
-        ),
+        const DSMobileAppBar(title: 'Divisas'),
 
         // Info Card Mobile
         SliverToBoxAdapter(

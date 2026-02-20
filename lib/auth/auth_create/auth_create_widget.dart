@@ -325,7 +325,7 @@ class _AuthCreateWidgetState extends State<AuthCreateWidget>
                                     if (!context.mounted) return;
 
                                     if (user != null) {
-                                      context.goNamed('complete_profile');
+                                      context.goNamed('email_verification');
                                     } else {
                                       // Error handled by AuthManager or show generic
                                     }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,6 +20,8 @@ class NaziShopUser {
   final List<String> favoriteServices;
   final double walletBalance;
 
+  final bool emailVerified;
+
   NaziShopUser({
     required this.id,
     required this.email,
@@ -32,6 +35,7 @@ class NaziShopUser {
     required this.totalSpent,
     required this.favoriteServices,
     this.walletBalance = 0.0,
+    this.emailVerified = false,
   });
 
   factory NaziShopUser.fromMap(Map<String, dynamic> data) {
@@ -48,6 +52,7 @@ class NaziShopUser {
       totalSpent: (data['totalSpent'] ?? 0).toDouble(),
       favoriteServices: List<String>.from(data['favoriteServices'] ?? []),
       walletBalance: (data['wallet_balance'] ?? 0.0).toDouble(),
+      emailVerified: data['emailVerified'] ?? false,
     );
   }
 
@@ -65,6 +70,7 @@ class NaziShopUser {
       'totalSpent': totalSpent,
       'favoriteServices': favoriteServices,
       'wallet_balance': walletBalance,
+      'emailVerified': emailVerified,
     };
   }
 
@@ -165,6 +171,8 @@ class NaziShopAuthProvider with ChangeNotifier {
       final userDoc =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
 
+      final firebaseEmailVerified = firebaseUser?.emailVerified ?? false;
+
       if (userDoc.exists) {
         final data = userDoc.data()!;
         _currentUser = NaziShopUser(
@@ -182,6 +190,7 @@ class NaziShopAuthProvider with ChangeNotifier {
           phoneNumber: data['phoneNumber'],
           photoUrl: data['photoURL'],
           walletBalance: (data['wallet_balance'] ?? 0.0).toDouble(),
+          emailVerified: firebaseEmailVerified,
         );
       } else {
         // Fallback if no doc
@@ -197,6 +206,7 @@ class NaziShopAuthProvider with ChangeNotifier {
           favoriteServices: [],
           phoneNumber: firebaseUser?.phoneNumber,
           walletBalance: 0.0,
+          emailVerified: firebaseEmailVerified,
         );
       }
     } catch (e) {
@@ -219,7 +229,8 @@ class NaziShopAuthProvider with ChangeNotifier {
       );
 
       if (result['success'] == true && result['user'] != null) {
-        final uid = result['user']!.uid;
+        final User firebaseUser = result['user']!;
+        final uid = firebaseUser.uid;
 
         // Fetch user data from Firestore
         try {
@@ -228,12 +239,14 @@ class NaziShopAuthProvider with ChangeNotifier {
               .doc(uid)
               .get();
 
+          final firebaseEmailVerified = firebaseUser.emailVerified;
+
           if (userDoc.exists) {
             final data = userDoc.data()!;
             _currentUser = NaziShopUser(
               id: uid,
               email: data['email'] ?? email,
-              displayName: data['displayName'] ?? result['user']?.displayName,
+              displayName: data['displayName'] ?? firebaseUser.displayName,
               role: data['role'] ?? 'customer',
               isActive: data['isActive'] ?? true,
               createdAt: data['createdAt'] != null
@@ -246,6 +259,7 @@ class NaziShopAuthProvider with ChangeNotifier {
               phoneNumber: data['phoneNumber'],
               photoUrl: data['photoURL'],
               walletBalance: (data['wallet_balance'] ?? 0.0).toDouble(),
+              emailVerified: firebaseEmailVerified,
             );
           } else {
             // Firestore document doesn't exist - create default user
@@ -253,15 +267,16 @@ class NaziShopAuthProvider with ChangeNotifier {
             _currentUser = NaziShopUser(
               id: uid,
               email: email,
-              displayName: result['user']?.displayName,
+              displayName: firebaseUser.displayName,
               role: 'customer',
               isActive: true,
               createdAt: DateTime.now(),
               totalPurchases: 0,
               totalSpent: 0,
               favoriteServices: [],
-              phoneNumber: result['user']?.phoneNumber,
+              phoneNumber: firebaseUser.phoneNumber,
               walletBalance: 0.0,
+              emailVerified: firebaseEmailVerified,
             );
           }
         } catch (e) {
@@ -269,15 +284,16 @@ class NaziShopAuthProvider with ChangeNotifier {
           _currentUser = NaziShopUser(
             id: uid,
             email: email,
-            displayName: result['user']?.displayName,
+            displayName: firebaseUser.displayName,
             role: 'customer',
             isActive: true,
             createdAt: DateTime.now(),
             totalPurchases: 0,
             totalSpent: 0,
             favoriteServices: [],
-            phoneNumber: result['user']?.phoneNumber,
+            phoneNumber: firebaseUser.phoneNumber,
             walletBalance: 0.0,
+            emailVerified: firebaseUser.emailVerified,
           );
         }
 
@@ -350,18 +366,21 @@ class NaziShopAuthProvider with ChangeNotifier {
       );
 
       if (result['success'] == true) {
+        // AuthService.register automatically sends email verification now (will implementation in AuthService next)
         _currentUser = NaziShopUser(
-            id: result['user']?.uid ?? 'temp_id',
-            email: email,
-            displayName: displayName,
-            role: 'USER',
-            isActive: true,
-            createdAt: DateTime.now(),
-            totalPurchases: 0,
-            totalSpent: 0,
-            favoriteServices: [],
-            phoneNumber: phoneNumber,
-            walletBalance: 0.0);
+          id: result['user']?.uid ?? 'temp_id',
+          email: email,
+          displayName: displayName,
+          role: 'customer',
+          isActive: true,
+          createdAt: DateTime.now(),
+          totalPurchases: 0,
+          totalSpent: 0,
+          favoriteServices: [],
+          phoneNumber: phoneNumber,
+          walletBalance: 0.0,
+          emailVerified: false,
+        );
         _isLoading = false;
         notifyListeners();
         return true;
@@ -377,7 +396,7 @@ class NaziShopAuthProvider with ChangeNotifier {
   }
 
   Future<void> refreshUser() async {
-    // No-op for now
+    await refreshEmailVerified();
   }
 
   Future<bool> updateProfile({
@@ -403,9 +422,7 @@ class NaziShopAuthProvider with ChangeNotifier {
             email: _currentUser!.email,
             displayName: updatedFirebaseUser.displayName ?? displayName,
             photoUrl: updatedFirebaseUser.photoURL ?? photoUrl,
-            phoneNumber: phoneNumber ??
-                _currentUser!
-                    .phoneNumber, // Phone update not yet in AuthService
+            phoneNumber: phoneNumber ?? _currentUser!.phoneNumber,
             role: _currentUser!.role,
             isActive: _currentUser!.isActive,
             createdAt: _currentUser!.createdAt,
@@ -413,6 +430,7 @@ class NaziShopAuthProvider with ChangeNotifier {
             totalSpent: _currentUser!.totalSpent,
             favoriteServices: _currentUser!.favoriteServices,
             walletBalance: _currentUser!.walletBalance,
+            emailVerified: updatedFirebaseUser.emailVerified,
           );
         }
         _isLoading = false;
@@ -463,6 +481,7 @@ class NaziShopAuthProvider with ChangeNotifier {
               totalSpent: 0,
               favoriteServices: [],
               walletBalance: 0.0,
+              emailVerified: user.emailVerified,
             );
             notifyListeners();
             return true;
@@ -472,6 +491,103 @@ class NaziShopAuthProvider with ChangeNotifier {
       return false;
     } catch (e) {
       return false;
+    }
+  }
+
+  // New Auth Methods
+  Future<void> sendEmailVerification() async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+      await AuthService.sendEmailVerification();
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      _errorMessage = e.toString();
+      _isLoading = false;
+      notifyListeners();
+      rethrow;
+    }
+  }
+
+  Future<void> refreshEmailVerified() async {
+    try {
+      final isVerified = await AuthService.reloadAndCheckEmailVerified();
+      if (_currentUser != null) {
+        _currentUser = NaziShopUser(
+          id: _currentUser!.id,
+          email: _currentUser!.email,
+          displayName: _currentUser!.displayName,
+          photoUrl: _currentUser!.photoUrl,
+          phoneNumber: _currentUser!.phoneNumber,
+          role: _currentUser!.role,
+          isActive: _currentUser!.isActive,
+          createdAt: _currentUser!.createdAt,
+          totalPurchases: _currentUser!.totalPurchases,
+          totalSpent: _currentUser!.totalSpent,
+          favoriteServices: _currentUser!.favoriteServices,
+          walletBalance: _currentUser!.walletBalance,
+          emailVerified: isVerified,
+        );
+        notifyListeners();
+      }
+    } catch (e) {
+      print('Error refreshing email verification: $e');
+    }
+  }
+
+  Future<void> setPassword(String password) async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+      await AuthService.setPassword(password);
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      _errorMessage = e.toString();
+      _isLoading = false;
+      notifyListeners();
+      rethrow;
+    }
+  }
+
+  Future<void> verifyPhone(
+    String phoneNumber, {
+    required Function(String, int?) codeSent,
+    required Function(FirebaseAuthException) verificationFailed,
+    required Function(String) codeAutoRetrievalTimeout,
+  }) async {
+    await AuthService.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      verificationCompleted: (credential) async {
+        // Auto-resolution (Android only usually)
+      },
+      verificationFailed: verificationFailed,
+      codeSent: codeSent,
+      codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
+    );
+  }
+
+  Future<void> confirmPhoneCode(
+      String verificationId, String smsCode, BuildContext context) async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+
+      await AuthService.signInWithPhoneCredential(
+          verificationId, smsCode, context);
+
+      // Update local state is handled by auth listener if user changes,
+      // but for linking/updates we might need manual refresh
+      await refreshUser();
+
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      _errorMessage = e.toString();
+      _isLoading = false;
+      notifyListeners();
+      rethrow;
     }
   }
 }

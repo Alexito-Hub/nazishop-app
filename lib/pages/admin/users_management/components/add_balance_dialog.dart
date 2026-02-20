@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/components/app_dialog.dart';
 import '/flutter_flow/custom_snackbar.dart';
 import '/backend/admin_service.dart';
-import 'package:nazi_shop/models/user_model.dart';
+import '/models/user_model.dart';
 
 class AddBalanceDialog extends StatelessWidget {
   final User user;
@@ -20,67 +21,61 @@ class AddBalanceDialog extends StatelessWidget {
     final amountController = TextEditingController();
     final noteController = TextEditingController();
 
-    return AlertDialog(
-      backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      title: Text('Cargar Saldo',
-          style: GoogleFonts.outfit(
-              color: FlutterFlowTheme.of(context).primaryText,
-              fontWeight: FontWeight.bold)),
+    final theme = FlutterFlowTheme.of(context);
+    return AppDialog(
+      title: 'Cargar Saldo',
+      icon: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: theme.primary.withValues(alpha: 0.1),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(Icons.add_card_rounded, color: theme.primary, size: 24),
+      ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Usuario: ${user.displayName}',
-              style: GoogleFonts.outfit(
-                  color: FlutterFlowTheme.of(context).secondaryText,
-                  fontSize: 13)),
+              style:
+                  GoogleFonts.outfit(color: theme.secondaryText, fontSize: 13)),
           const SizedBox(height: 24.0),
           TextField(
             controller: amountController,
             keyboardType: TextInputType.number,
-            style: GoogleFonts.outfit(
-                color: FlutterFlowTheme.of(context).primaryText),
+            style: GoogleFonts.outfit(color: theme.primaryText),
             decoration: InputDecoration(
               labelText: 'Monto a cargar',
-              labelStyle: GoogleFonts.outfit(
-                  color: FlutterFlowTheme.of(context).secondaryText),
+              labelStyle: GoogleFonts.outfit(color: theme.secondaryText),
               prefixText: '\$ ',
               prefixStyle: GoogleFonts.outfit(
-                  color: FlutterFlowTheme.of(context).primary,
-                  fontWeight: FontWeight.bold),
+                  color: theme.primary, fontWeight: FontWeight.bold),
               enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).alternate)),
+                  borderSide: BorderSide(color: theme.alternate)),
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
-                  borderSide:
-                      BorderSide(color: FlutterFlowTheme.of(context).primary)),
+                  borderSide: BorderSide(color: theme.primary)),
               filled: true,
-              fillColor: FlutterFlowTheme.of(context).secondaryBackground,
+              fillColor: theme.secondaryBackground,
             ),
           ),
           const SizedBox(height: 16.0),
           TextField(
             controller: noteController,
             maxLines: 2,
-            style: GoogleFonts.outfit(
-                color: FlutterFlowTheme.of(context).primaryText),
+            style: GoogleFonts.outfit(color: theme.primaryText),
             decoration: InputDecoration(
               labelText: 'Referencia / Nota',
-              labelStyle: GoogleFonts.outfit(
-                  color: FlutterFlowTheme.of(context).secondaryText),
+              labelStyle: GoogleFonts.outfit(color: theme.secondaryText),
               enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).alternate)),
+                  borderSide: BorderSide(color: theme.alternate)),
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
-                  borderSide:
-                      BorderSide(color: FlutterFlowTheme.of(context).primary)),
+                  borderSide: BorderSide(color: theme.primary)),
               filled: true,
-              fillColor: FlutterFlowTheme.of(context).secondaryBackground,
+              fillColor: theme.secondaryBackground,
             ),
           ),
         ],
@@ -89,9 +84,9 @@ class AddBalanceDialog extends StatelessWidget {
         TextButton(
           onPressed: () => Navigator.pop(context),
           child: Text('Cancelar',
-              style: GoogleFonts.outfit(
-                  color: FlutterFlowTheme.of(context).secondaryText)),
+              style: GoogleFonts.outfit(color: theme.secondaryText)),
         ),
+        const SizedBox(width: 8),
         ElevatedButton(
           onPressed: () async {
             final amount = double.tryParse(amountController.text);
@@ -116,11 +111,17 @@ class AddBalanceDialog extends StatelessWidget {
             }
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: FlutterFlowTheme.of(context).primary,
+            backgroundColor: theme.primary,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            elevation: 0,
           ),
-          child: const Text('Confirmar'),
+          child: Text(
+            'Confirmar',
+            style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
+          ),
         ),
       ],
     );

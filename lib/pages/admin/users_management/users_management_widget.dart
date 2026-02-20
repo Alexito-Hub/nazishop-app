@@ -3,11 +3,11 @@ import '/flutter_flow/flutter_flow_model.dart';
 
 import '/backend/admin_service.dart';
 import '../../../../backend/security_manager.dart';
-import '../../../components/smart_back_button.dart';
+import '/components/design_system.dart';
 import '../components/security_check_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nazi_shop/models/user_model.dart';
+import '/models/user_model.dart';
 import 'components/user_card.dart';
 
 import 'users_management_model.dart';
@@ -120,105 +120,231 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
       );
     }
 
+    final theme = FlutterFlowTheme.of(context);
+    final isDesktop = MediaQuery.of(context).size.width >= 900;
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-        appBar: AppBar(
-          backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
-          leading:
-              SmartBackButton(color: FlutterFlowTheme.of(context).primaryText),
-          title: Text(
-            'Gestión de Usuarios',
-            style: GoogleFonts.outfit(
-              color: FlutterFlowTheme.of(context).primaryText,
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+        backgroundColor: theme.primaryBackground,
+        body:
+            isDesktop ? _buildDesktopLayout(theme) : _buildMobileLayout(theme),
+      ),
+    );
+  }
+
+  // --- MOBILE LAYOUT ---
+  Widget _buildMobileLayout(FlutterFlowTheme theme) {
+    return CustomScrollView(
+      physics: const BouncingScrollPhysics(),
+      slivers: [
+        DSMobileAppBar(
+          title: 'Gestión de Usuarios',
           actions: [
             IconButton(
-              icon: Icon(Icons.refresh,
-                  color: FlutterFlowTheme.of(context).primaryText),
+              icon: Icon(Icons.refresh, color: theme.primaryText),
               onPressed: _loadUsers,
             ),
           ],
-          centerTitle: false,
-          elevation: 0,
         ),
-        body: SafeArea(
-          child: Column(
-            children: [
-              // Filters
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+        SliverToBoxAdapter(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              children: [
+                _buildFilterChip('Todos', null, theme),
+                const SizedBox(width: 8),
+                _buildFilterChip('Admins', 'admin', theme),
+                const SizedBox(width: 8),
+                _buildFilterChip('Soporte', 'support', theme),
+                const SizedBox(width: 8),
+                _buildFilterChip('Usuarios', 'user', theme),
+              ],
+            ),
+          ),
+        ),
+        if (_isLoading)
+          SliverFillRemaining(
+            child: Center(
+              child: CircularProgressIndicator(color: theme.primary),
+            ),
+          )
+        else if (_filteredUsers.isEmpty)
+          SliverFillRemaining(child: _buildEmptyState(theme))
+        else
+          SliverPadding(
+            padding: const EdgeInsets.all(16),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final user = _filteredUsers[index];
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: UserCard(
+                    user: user,
+                    onUpdate: _loadUsers,
+                  ),
+                );
+              }, childCount: _filteredUsers.length),
+            ),
+          ),
+        const SliverPadding(padding: EdgeInsets.only(bottom: 80)),
+      ],
+    );
+  }
+
+  // --- DESKTOP LAYOUT ---
+  Widget _buildDesktopLayout(FlutterFlowTheme theme) {
+    return Align(
+      alignment: Alignment.topCenter,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 1600),
+        child: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          slivers: [
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(40, 40, 40, 20),
+              sliver: SliverToBoxAdapter(
                 child: Row(
                   children: [
-                    _buildFilterChip('Todos', null),
-                    _buildFilterChip('Admins', 'admin'),
-                    _buildFilterChip('Soporte', 'support'),
-                    _buildFilterChip('Usuarios', 'user'),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Gestión de Usuarios',
+                          style: GoogleFonts.outfit(
+                            color: theme.primaryText,
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Administra permisos, roles y saldos de usuarios',
+                          style: GoogleFonts.outfit(
+                            color: theme.secondaryText,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
+
+                    // Filters & Refresh
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _buildFilterChip('Todos', null, theme),
+                        const SizedBox(width: 12),
+                        _buildFilterChip('Admins', 'admin', theme),
+                        const SizedBox(width: 12),
+                        _buildFilterChip('Soporte', 'support', theme),
+                        const SizedBox(width: 12),
+                        _buildFilterChip('Usuarios', 'user', theme),
+                        const SizedBox(width: 24),
+                        // Refresh Button
+                        Container(
+                          height: 44,
+                          decoration: BoxDecoration(
+                            color: theme.secondaryBackground,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: theme.alternate),
+                          ),
+                          child: IconButton(
+                            icon: Icon(Icons.refresh, color: theme.primaryText),
+                            onPressed: _loadUsers,
+                            tooltip: 'Recargar',
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
-
-              Expanded(
-                child: _isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : _filteredUsers.isEmpty
-                        ? Center(
-                            child: Text(
-                              'No se encontraron usuarios',
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyLarge
-                                  .override(
-                                    font: GoogleFonts.inter(),
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                  ),
-                            ),
-                          )
-                        : ListView.builder(
-                            padding: const EdgeInsets.all(16),
-                            itemCount: _filteredUsers.length,
-                            itemBuilder: (context, index) {
-                              final user = _filteredUsers[index];
-                              return UserCard(
-                                user: user,
-                                onUpdate: _loadUsers,
-                              );
-                            },
-                          ),
+            ),
+            if (_isLoading)
+              SliverFillRemaining(
+                child: Center(
+                  child: CircularProgressIndicator(color: theme.primary),
+                ),
+              )
+            else if (_filteredUsers.isEmpty)
+              SliverFillRemaining(child: _buildEmptyState(theme))
+            else
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(40, 0, 40, 80),
+                sliver: SliverGrid(
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 400,
+                    mainAxisSpacing: 16,
+                    crossAxisSpacing: 16,
+                    mainAxisExtent: 220, // Adjusted for User Card content
+                  ),
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    return UserCard(
+                      user: _filteredUsers[index],
+                      onUpdate: _loadUsers,
+                    );
+                  }, childCount: _filteredUsers.length),
+                ),
               ),
-            ],
-          ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildFilterChip(String label, String? role) {
-    final isSelected = _filterRole == role;
-    return Padding(
-      padding: const EdgeInsets.only(right: 8),
-      child: ChoiceChip(
-        label: Text(label),
-        selected: isSelected,
-        onSelected: (selected) {
-          setState(() {
-            _filterRole = selected ? role : null;
-          });
-        },
-        selectedColor: FlutterFlowTheme.of(context).primary,
-        labelStyle: FlutterFlowTheme.of(context).bodyMedium.override(
-              font: GoogleFonts.inter(),
-              color: isSelected
-                  ? Colors.white
-                  : FlutterFlowTheme.of(context).primaryText,
+  Widget _buildEmptyState(FlutterFlowTheme theme) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: theme.secondaryBackground,
+              shape: BoxShape.circle,
+              border: Border.all(color: theme.alternate),
             ),
-        backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+            child: Icon(
+              Icons.people_outline,
+              size: 40,
+              color: theme.secondaryText,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'No se encontraron usuarios',
+            style: GoogleFonts.outfit(color: theme.secondaryText),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFilterChip(String label, String? role, FlutterFlowTheme theme) {
+    final isSelected = _filterRole == role;
+    return InkWell(
+      onTap: () => setState(() => _filterRole = role),
+      borderRadius: BorderRadius.circular(20),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? theme.primary : theme.secondaryBackground,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isSelected ? theme.primary : theme.alternate,
+          ),
+        ),
+        child: Text(
+          label,
+          style: GoogleFonts.outfit(
+            color: isSelected ? theme.primaryText : theme.secondaryText,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
       ),
     );
   }

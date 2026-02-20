@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:nazi_shop/backend/api_client.dart';
-import 'package:nazi_shop/backend/currency_service.dart';
-import 'package:nazi_shop/models/order.dart';
+import '/backend/api_client.dart';
+import '/backend/currency_service.dart';
+import '/models/order.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/auth/nazishop_auth/auth_util.dart';
 import '../../../components/smart_back_button.dart';

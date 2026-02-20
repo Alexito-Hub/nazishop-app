@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui'; // Add for ImageFilter
 import '/flutter_flow/flutter_flow_theme.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nazi_shop/backend/admin_service.dart';
+import '/backend/admin_service.dart';
 import '../../../components/smart_back_button.dart';
 
 class CreateNotificationWidget extends StatefulWidget {

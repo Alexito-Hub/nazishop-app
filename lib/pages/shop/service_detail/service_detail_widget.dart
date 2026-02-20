@@ -4,10 +4,10 @@ import 'package:go_router/go_router.dart';
 
 import '/flutter_flow/flutter_flow_theme.dart';
 
-import 'package:nazi_shop/models/service_model.dart';
-import 'package:nazi_shop/models/listing_model.dart';
-import 'package:nazi_shop/backend/favorites_service.dart';
-import 'package:nazi_shop/utils/color_utils.dart';
+import '/models/service_model.dart';
+import '/models/listing_model.dart';
+import '/backend/favorites_service.dart';
+import '/utils/color_utils.dart';
 import '../../../components/smart_back_button.dart';
 
 // Modular Components

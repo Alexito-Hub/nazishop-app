@@ -3,7 +3,7 @@ import '/backend/admin_service.dart';
 import 'admin_widget.dart' show AdminWidget;
 import 'package:flutter/material.dart';
 
-import 'package:nazi_shop/models/admin_models.dart';
+import '/models/admin_models.dart';
 
 class AdminModel extends FlutterFlowModel<AdminWidget> {
   DashboardStats? dashboardStats;

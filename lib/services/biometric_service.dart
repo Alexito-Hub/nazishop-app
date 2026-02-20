@@ -33,8 +33,9 @@ class BiometricService {
   /// Realiza la autenticación biométrica
   static Future<bool> authenticate() async {
     try {
-      if (!await isEnabled())
-        return true; // Si no está activado, no bloqueamos (o según lógica deseada)
+      if (!await isEnabled()) {
+        return true; // Si no está activado, no bloqueamos
+      }
 
       return await _auth.authenticate(
         localizedReason: 'Por favor, autentícate para acceder a tu cuenta',

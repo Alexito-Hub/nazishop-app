@@ -190,6 +190,8 @@ class MyAppState extends State<MyApp> {
       supportedLocales: const [
         Locale('es'),
       ],
+      theme: FlutterFlowTheme.lightThemeData,
+      darkTheme: FlutterFlowTheme.darkThemeData,
       themeMode: FlutterFlowTheme.themeMode,
       routerConfig: _router,
     );

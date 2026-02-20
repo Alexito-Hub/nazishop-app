@@ -29,6 +29,9 @@ class AppRoutes {
   static const String login = '/auth/login';
   static const String register = '/auth/register';
   static const String forgotPassword = '/auth/forgot-password';
+  static const String emailVerification = '/auth/email-verification';
+  static const String phoneVerification = '/auth/phone-verification';
+  static const String setPassword = '/auth/set-password';
   static const String onboarding = '/onboarding';
 
   // User routes
@@ -116,6 +119,21 @@ class AppRoutes {
           path: forgotPassword,
           name: 'auth_forgot_password',
           builder: (context, state) => const AuthForgotPasswordWidget(),
+        ),
+        GoRoute(
+          path: emailVerification,
+          name: 'email_verification',
+          builder: (context, state) => const EmailVerificationWidget(),
+        ),
+        GoRoute(
+          path: phoneVerification,
+          name: 'phone_verification',
+          builder: (context, state) => const PhoneVerificationWidget(),
+        ),
+        GoRoute(
+          path: setPassword,
+          name: 'set_password',
+          builder: (context, state) => const SetPasswordWidget(),
         ),
         GoRoute(
           path: onboarding,

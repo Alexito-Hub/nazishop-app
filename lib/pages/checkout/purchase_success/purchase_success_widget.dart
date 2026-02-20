@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nazi_shop/backend/order_service.dart';
+import '/backend/order_service.dart';
 
 import 'purchase_success_model.dart';
 export 'purchase_success_model.dart';

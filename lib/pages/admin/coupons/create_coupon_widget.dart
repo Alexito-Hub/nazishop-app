@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../components/smart_back_button.dart';
-import 'package:nazi_shop/backend/admin_service.dart';
+import '/backend/admin_service.dart';
 import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -80,68 +79,134 @@ class _CreateCouponWidgetState extends State<CreateCouponWidget> {
                     fontWeight: FontWeight.bold),
               ),
             ),
-      body: Stack(
-        children: [
-          // Background Gradient
-          Positioned(
-            top: -100,
-            left: -100,
-            child: Container(
-              width: 500,
-              height: 500,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: theme.primary.withValues(alpha: 0.5),
-              ),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
-                child: Container(color: Colors.transparent),
-              ),
-            ),
-          ),
-
-          Align(
-            alignment: Alignment.topCenter,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1600),
-              child: Form(
-                key: _formKey,
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  padding: isDesktop
-                      ? const EdgeInsets.fromLTRB(40, 40, 40, 40)
-                      : EdgeInsets.only(
-                          top: kToolbarHeight + 20,
-                          bottom: 40,
-                          left: 20,
-                          right: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      if (isDesktop)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 30),
-                          child: Text(
-                            widget.coupon != null
-                                ? 'Editar Cupón'
-                                : 'Nuevo Cupón',
-                            style: GoogleFonts.outfit(
-                              color: theme.tertiary,
-                              fontSize: 32,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1600),
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: isDesktop
+                  ? const EdgeInsets.fromLTRB(40, 40, 40, 40)
+                  : EdgeInsets.only(
+                      top: kToolbarHeight + 20,
+                      bottom: 40,
+                      left: 20,
+                      right: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (isDesktop)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 30),
+                      child: Text(
+                        widget.coupon != null ? 'Editar Cupón' : 'Nuevo Cupón',
+                        style: GoogleFonts.outfit(
+                          color: theme.tertiary,
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
                         ),
-                      LayoutBuilder(
-                        builder: (context, constraints) {
-                          if (isDesktop) {
-                            return Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Left Column: General Info
-                                Expanded(
-                                  flex: 3,
-                                  child: Container(
+                      ),
+                    ),
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      if (isDesktop) {
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Left Column: General Info
+                            Expanded(
+                              flex: 3,
+                              child: Container(
+                                padding: const EdgeInsets.all(24),
+                                decoration: BoxDecoration(
+                                  color: theme.secondaryBackground,
+                                  borderRadius: BorderRadius.circular(24),
+                                  border: Border.all(
+                                      color: FlutterFlowTheme.of(context)
+                                          .alternate),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Información General',
+                                      style: GoogleFonts.outfit(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 24),
+                                    _buildInput(_codeCtrl, 'CÓDIGO',
+                                        Icons.confirmation_number_outlined),
+                                    const SizedBox(height: 24),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text('TIPO DESCUENTO',
+                                                  style: GoogleFonts.outfit(
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .secondaryText,
+                                                      fontSize: 13,
+                                                      fontWeight:
+                                                          FontWeight.bold)),
+                                              const SizedBox(height: 8),
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  color:
+                                                      theme.primaryBackground,
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  border: Border.all(
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .alternate),
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                        child: _buildTypeOption(
+                                                            'percentage',
+                                                            '% Porcentaje')),
+                                                    Expanded(
+                                                        child: _buildTypeOption(
+                                                            'fixed',
+                                                            '\$ Monto Fijo')),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(width: 16),
+                                        Expanded(
+                                          child: _buildInput(_valueCtrl,
+                                              'VALOR', Icons.attach_money,
+                                              isNumber: true),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 24),
+                            // Right Column: Restrictions & Actions
+                            Expanded(
+                              flex: 2,
+                              child: Column(
+                                children: [
+                                  Container(
                                     padding: const EdgeInsets.all(24),
                                     decoration: BoxDecoration(
                                       color: theme.secondaryBackground,
@@ -155,213 +220,119 @@ class _CreateCouponWidgetState extends State<CreateCouponWidget> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'Información General',
+                                          'Restricciones',
                                           style: GoogleFonts.outfit(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
+                                            color: theme.primaryText,
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                         const SizedBox(height: 24),
-                                        _buildInput(_codeCtrl, 'CÓDIGO',
-                                            Icons.confirmation_number_outlined),
+                                        _buildInput(_limitCtrl,
+                                            'LÍMITE USUARIOS', Icons.group,
+                                            isNumber: true),
                                         const SizedBox(height: 24),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text('TIPO DESCUENTO',
-                                                      style: GoogleFonts.outfit(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .secondaryText,
-                                                          fontSize: 13,
-                                                          fontWeight:
-                                                              FontWeight.bold)),
-                                                  const SizedBox(height: 8),
-                                                  Container(
-                                                    decoration: BoxDecoration(
-                                                      color: theme
-                                                          .primaryBackground,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              12),
-                                                      border: Border.all(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .alternate),
-                                                    ),
-                                                    child: Row(
-                                                      children: [
-                                                        Expanded(
-                                                            child: _buildTypeOption(
-                                                                'percentage',
-                                                                '% Porcentaje')),
-                                                        Expanded(
-                                                            child: _buildTypeOption(
-                                                                'fixed',
-                                                                '\$ Monto Fijo')),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            const SizedBox(width: 16),
-                                            Expanded(
-                                              child: _buildInput(_valueCtrl,
-                                                  'VALOR', Icons.attach_money,
-                                                  isNumber: true),
-                                            ),
-                                          ],
-                                        ),
+                                        _buildDateInput(),
                                       ],
                                     ),
                                   ),
-                                ),
-                                const SizedBox(width: 24),
-                                // Right Column: Restrictions & Actions
-                                Expanded(
-                                  flex: 2,
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(24),
-                                        decoration: BoxDecoration(
-                                          color: theme.secondaryBackground,
-                                          borderRadius:
-                                              BorderRadius.circular(24),
-                                          border: Border.all(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .alternate),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Restricciones',
-                                              style: GoogleFonts.outfit(
-                                                color: theme.primaryText,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 24),
-                                            _buildInput(_limitCtrl,
-                                                'LÍMITE USUARIOS', Icons.group,
-                                                isNumber: true),
-                                            const SizedBox(height: 24),
-                                            _buildDateInput(),
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(height: 24),
-                                      SizedBox(
-                                        width: double.infinity,
-                                        child: _buildSubmitButton(),
-                                      ),
-                                    ],
+                                  const SizedBox(height: 24),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: _buildSubmitButton(),
                                   ),
-                                ),
-                              ],
-                            );
-                          } else {
-                            // Mobile View
-                            return Column(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(24),
-                                  decoration: BoxDecoration(
-                                    color: theme.secondaryBackground,
-                                    borderRadius: BorderRadius.circular(24),
-                                    border: Border.all(color: theme.alternate),
+                                ],
+                              ),
+                            ),
+                          ],
+                        );
+                      } else {
+                        // Mobile View
+                        return Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(24),
+                              decoration: BoxDecoration(
+                                color: theme.secondaryBackground,
+                                borderRadius: BorderRadius.circular(24),
+                                border: Border.all(color: theme.alternate),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Información',
+                                    style: GoogleFonts.outfit(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                  child: Column(
+                                  const SizedBox(height: 24),
+                                  _buildInput(_codeCtrl, 'CÓDIGO',
+                                      Icons.confirmation_number_outlined),
+                                  const SizedBox(height: 24),
+                                  Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        'Información',
-                                        style: GoogleFonts.outfit(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
+                                      Text('TIPO DESCUENTO',
+                                          style: GoogleFonts.outfit(
+                                              color: theme.secondaryText,
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.bold)),
+                                      const SizedBox(height: 8),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: theme.primaryBackground,
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          border: Border.all(
+                                              color: theme.alternate),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                                child: _buildTypeOption(
+                                                    'percentage',
+                                                    '% Porcentaje')),
+                                            Expanded(
+                                                child: _buildTypeOption(
+                                                    'fixed', '\$ Monto Fijo')),
+                                          ],
                                         ),
                                       ),
-                                      const SizedBox(height: 24),
-                                      _buildInput(_codeCtrl, 'CÓDIGO',
-                                          Icons.confirmation_number_outlined),
-                                      const SizedBox(height: 24),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text('TIPO DESCUENTO',
-                                              style: GoogleFonts.outfit(
-                                                  color: theme.secondaryText,
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.bold)),
-                                          const SizedBox(height: 8),
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              color: theme.primaryBackground,
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              border: Border.all(
-                                                  color: theme.alternate),
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Expanded(
-                                                    child: _buildTypeOption(
-                                                        'percentage',
-                                                        '% Porcentaje')),
-                                                Expanded(
-                                                    child: _buildTypeOption(
-                                                        'fixed',
-                                                        '\$ Monto Fijo')),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 24),
-                                      _buildInput(_valueCtrl, 'VALOR',
-                                          Icons.attach_money,
-                                          isNumber: true),
-                                      const SizedBox(height: 24),
-                                      _buildInput(_limitCtrl, 'LÍMITE USUARIOS',
-                                          Icons.group,
-                                          isNumber: true),
-                                      const SizedBox(height: 24),
-                                      _buildDateInput(),
                                     ],
                                   ),
-                                ),
-                                const SizedBox(height: 24),
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: 56,
-                                  child: _buildSubmitButton(),
-                                ),
-                              ],
-                            );
-                          }
-                        },
-                      ),
-                    ],
+                                  const SizedBox(height: 24),
+                                  _buildInput(
+                                      _valueCtrl, 'VALOR', Icons.attach_money,
+                                      isNumber: true),
+                                  const SizedBox(height: 24),
+                                  _buildInput(_limitCtrl, 'LÍMITE USUARIOS',
+                                      Icons.group,
+                                      isNumber: true),
+                                  const SizedBox(height: 24),
+                                  _buildDateInput(),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+                            SizedBox(
+                              width: double.infinity,
+                              height: 56,
+                              child: _buildSubmitButton(),
+                            ),
+                          ],
+                        );
+                      }
+                    },
                   ),
-                ),
+                ],
               ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -485,25 +456,47 @@ class _CreateCouponWidgetState extends State<CreateCouponWidget> {
   }
 
   Widget _buildSubmitButton() {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: FlutterFlowTheme.of(context).primary,
-        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        elevation: 0,
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            FlutterFlowTheme.of(context).primary,
+            FlutterFlowTheme.of(context).secondary
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: FlutterFlowTheme.of(context).primary.withValues(alpha: 0.4),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      onPressed: _isSubmitting ? null : _submit,
-      child: _isSubmitting
-          ? const SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                  color: Colors.white, strokeWidth: 2))
-          : Text(
-              widget.coupon != null ? 'Guardar Cambios' : 'Crear Cupón',
-              style: GoogleFonts.outfit(
-                  color: Colors.white, fontWeight: FontWeight.bold),
-            ),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          elevation: 0,
+        ),
+        onPressed: _isSubmitting ? null : _submit,
+        child: _isSubmitting
+            ? const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                    color: Colors.white, strokeWidth: 2))
+            : Text(
+                widget.coupon != null ? 'Guardar Cambios' : 'Crear Cupón',
+                style: GoogleFonts.outfit(
+                    color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+      ),
     );
   }
 

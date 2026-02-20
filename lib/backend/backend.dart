@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:nazi_shop/backend/api_client.dart';
+import '/backend/api_client.dart';
 
 /// Backend service wrapper for the app
 /// Now strictly aligned with new architecture.

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
-import 'package:nazi_shop/models/promotion_model.dart';
+import '/models/promotion_model.dart';
 
 class PromotionCard extends StatelessWidget {
   final Promotion item;

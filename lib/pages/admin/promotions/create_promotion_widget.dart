@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../components/smart_back_button.dart';
-import 'package:nazi_shop/backend/admin_service.dart';
+import '/backend/admin_service.dart';
 import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
-import 'package:nazi_shop/models/listing_model.dart';
+import '/models/listing_model.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 
 class CreatePromotionWidget extends StatefulWidget {
@@ -102,141 +101,116 @@ class _CreatePromotionWidgetState extends State<CreatePromotionWidget> {
                     color: theme.primaryText, fontWeight: FontWeight.bold),
               ),
             ),
-      body: Stack(
-        children: [
-          // Background Gradient
-          Positioned(
-            top: -100,
-            left: -100,
-            child: Container(
-              width: 500,
-              height: 500,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: theme.primary.withValues(alpha: 0.05),
-              ),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
-                child: Container(color: theme.transparent),
-              ),
-            ),
-          ),
-
-          Align(
-            alignment: Alignment.topCenter,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1600),
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                padding: isDesktop
-                    ? const EdgeInsets.fromLTRB(40, 40, 40, 40)
-                    : EdgeInsets.only(
-                        top: kToolbarHeight + 20,
-                        bottom: 40,
-                        left: 20,
-                        right: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    if (isDesktop)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 30),
-                        child: Text(
-                          widget.promotion != null
-                              ? 'Editar Promoción'
-                              : 'Nueva Promoción',
-                          style: GoogleFonts.outfit(
-                            color: theme.primaryText,
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1600),
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: isDesktop
+                ? const EdgeInsets.fromLTRB(40, 40, 40, 40)
+                : EdgeInsets.only(
+                    top: kToolbarHeight + 20, bottom: 40, left: 20, right: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (isDesktop)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 30),
+                    child: Text(
+                      widget.promotion != null
+                          ? 'Editar Promoción'
+                          : 'Nueva Promoción',
+                      style: GoogleFonts.outfit(
+                        color: theme.primaryText,
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
                       ),
-// ... (omitting unchanged layout builder parts)
-                    LayoutBuilder(
-                      builder: (context, constraints) {
-                        if (isDesktop) {
-                          return Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Left Column: General & Pricing
-                              Expanded(
-                                flex: 3,
-                                child: Column(
-                                  children: [
-                                    _buildGeneralInfoCard(),
-                                    const SizedBox(height: 24),
-                                    _buildPricingCard(),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(width: 24),
-                              // Right Column: Listings & Actions
-                              Expanded(
-                                flex: 2,
-                                child: Column(
-                                  children: [
-                                    _buildListingsCard(maxHeight: 500),
-                                    const SizedBox(height: 24),
-                                    // Buttons
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        TextButton(
-                                          onPressed: () => context.pop(),
-                                          child: Text(
-                                            'Cancelar',
-                                            style: GoogleFonts.outfit(
-                                                color: theme.secondaryText,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 16),
-                                        _buildSubmitButton(),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          );
-                        } else {
-                          // Mobile Layout
-                          return Column(
-                            children: [
-                              _buildGeneralInfoCard(),
-                              const SizedBox(height: 24),
-                              _buildPricingCard(),
-                              const SizedBox(height: 24),
-                              _buildListingsCard(maxHeight: 300),
-                              const SizedBox(height: 32),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  TextButton(
-                                    onPressed: () => context.pop(),
-                                    child: Text(
-                                      'Cancelar',
-                                      style: GoogleFonts.outfit(
-                                          color: theme.secondaryText,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  _buildSubmitButton(),
-                                ],
-                              ),
-                            ],
-                          );
-                        }
-                      },
                     ),
-                  ],
+                  ),
+// ... (omitting unchanged layout builder parts)
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    if (isDesktop) {
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Left Column: General & Pricing
+                          Expanded(
+                            flex: 3,
+                            child: Column(
+                              children: [
+                                _buildGeneralInfoCard(),
+                                const SizedBox(height: 24),
+                                _buildPricingCard(),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 24),
+                          // Right Column: Listings & Actions
+                          Expanded(
+                            flex: 2,
+                            child: Column(
+                              children: [
+                                _buildListingsCard(maxHeight: 500),
+                                const SizedBox(height: 24),
+                                // Buttons
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () => context.pop(),
+                                      child: Text(
+                                        'Cancelar',
+                                        style: GoogleFonts.outfit(
+                                            color: theme.secondaryText,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    _buildSubmitButton(),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    } else {
+                      // Mobile Layout
+                      return Column(
+                        children: [
+                          _buildGeneralInfoCard(),
+                          const SizedBox(height: 24),
+                          _buildPricingCard(),
+                          const SizedBox(height: 24),
+                          _buildListingsCard(maxHeight: 300),
+                          const SizedBox(height: 32),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                onPressed: () => context.pop(),
+                                child: Text(
+                                  'Cancelar',
+                                  style: GoogleFonts.outfit(
+                                      color: theme.secondaryText,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              _buildSubmitButton(),
+                            ],
+                          ),
+                        ],
+                      );
+                    }
+                  },
                 ),
-              ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -509,26 +483,50 @@ class _CreatePromotionWidgetState extends State<CreatePromotionWidget> {
   }
 
   Widget _buildSubmitButton() {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: FlutterFlowTheme.of(context).primary,
-        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        elevation: 0,
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            FlutterFlowTheme.of(context).primary,
+            FlutterFlowTheme.of(context).secondary
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: FlutterFlowTheme.of(context).primary.withValues(alpha: 0.4),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      onPressed: _isSubmitting ? null : _submit,
-      child: _isSubmitting
-          ? SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                  color: FlutterFlowTheme.of(context).info, strokeWidth: 2))
-          : Text(
-              widget.promotion != null ? 'Guardar Cambios' : 'Crear Promoción',
-              style: GoogleFonts.outfit(
-                  color: FlutterFlowTheme.of(context).info,
-                  fontWeight: FontWeight.bold),
-            ),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          elevation: 0,
+        ),
+        onPressed: _isSubmitting ? null : _submit,
+        child: _isSubmitting
+            ? SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                    color: FlutterFlowTheme.of(context).info, strokeWidth: 2))
+            : Text(
+                widget.promotion != null
+                    ? 'Guardar Cambios'
+                    : 'Crear Promoción',
+                style: GoogleFonts.outfit(
+                    color: FlutterFlowTheme.of(context).info,
+                    fontWeight: FontWeight.bold),
+              ),
+      ),
     );
   }
 

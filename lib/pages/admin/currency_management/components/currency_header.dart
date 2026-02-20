@@ -68,12 +68,12 @@ class CurrencyHeader extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                   ),
-                  icon: const Icon(Icons.save_rounded,
-                      color: Colors.white, size: 20),
+                  icon: Icon(Icons.save_rounded,
+                      color: FlutterFlowTheme.of(context).tertiary, size: 20),
                   label: Text(
                     'Guardar Cambios',
                     style: GoogleFonts.outfit(
-                      color: Colors.white,
+                      color: FlutterFlowTheme.of(context).tertiary,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),

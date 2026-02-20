@@ -107,6 +107,21 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           path: '/onboarding',
           builder: (context, params) => const OnboardingWidget(),
         ).toRoute(appStateNotifier),
+        FFRoute(
+          name: 'email_verification',
+          path: '/auth/verify-email',
+          builder: (context, params) => const EmailVerificationWidget(),
+        ).toRoute(appStateNotifier),
+        FFRoute(
+          name: 'set_password',
+          path: '/auth/set-password',
+          builder: (context, params) => const SetPasswordWidget(),
+        ).toRoute(appStateNotifier),
+        FFRoute(
+          name: 'phone_verification',
+          path: '/auth/verify-phone',
+          builder: (context, params) => const PhoneVerificationWidget(),
+        ).toRoute(appStateNotifier),
 
         // ShellRoute for Static Sidebar Layout
         ShellRoute(

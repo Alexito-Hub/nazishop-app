@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:nazi_shop/backend/order_service.dart';
+import '/backend/order_service.dart';
 import 'package:go_router/go_router.dart';
 
 import '/flutter_flow/flutter_flow_theme.dart';
-import '../../../components/smart_back_button.dart';
+import '/components/design_system.dart';
 import '../../../components/purchase_card.dart';
 
 class MyPurchasesWidget extends StatefulWidget {
@@ -127,39 +127,10 @@ class _MyPurchasesWidgetState extends State<MyPurchasesWidget> {
   // 📱 MOBILE LAYOUT (ESTILO HOME/SERVICE DETAIL)
   // ===========================================================================
   Widget _buildMobileLayout() {
-    final theme = FlutterFlowTheme.of(context);
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
-        SliverAppBar(
-          backgroundColor: theme.transparent,
-          surfaceTintColor: theme.transparent,
-          pinned: true,
-          floating: true,
-          elevation: 0,
-          leadingWidth: 70,
-          automaticallyImplyLeading: false,
-          leading: Container(
-            margin: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: theme.secondaryBackground,
-              shape: BoxShape.circle,
-            ),
-            child: SmartBackButton(
-              color: theme.primaryText,
-            ),
-          ),
-          centerTitle: true,
-          title: Text(
-            'Mis Compras',
-            style: GoogleFonts.outfit(
-              color: theme.primaryText,
-              fontWeight: FontWeight.w900,
-              fontSize: 24,
-              letterSpacing: 1.0,
-            ),
-          ),
-        ),
+        const DSMobileAppBar(title: 'Mis Compras'),
         SliverPadding(
           padding: const EdgeInsets.all(12),
           sliver: FutureBuilder<List<dynamic>>(
@@ -263,7 +234,7 @@ class _MyPurchasesWidgetState extends State<MyPurchasesWidget> {
             onPressed: () => context.goNamed('home'),
             style: ElevatedButton.styleFrom(
               backgroundColor: _primaryColor,
-              foregroundColor: Colors.white,
+              foregroundColor: theme.tertiary,
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)),

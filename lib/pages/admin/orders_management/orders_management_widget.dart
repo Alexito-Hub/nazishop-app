@@ -1,14 +1,16 @@
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/flutter_flow_widgets.dart';
+import '/components/safe_image.dart';
 import '/pages/admin/admin_auth_guard.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import '../../../components/smart_back_button.dart';
+import '/components/design_system.dart';
 import 'orders_management_model.dart';
-import 'package:nazi_shop/models/order.dart';
-import 'package:nazi_shop/backend/currency_service.dart';
+import '/models/order.dart';
+import '/backend/currency_service.dart';
 
 export 'orders_management_model.dart';
 
@@ -65,32 +67,8 @@ class _OrdersManagementWidgetState extends State<OrdersManagementWidget> {
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
-        SliverAppBar(
-          backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-          surfaceTintColor: FlutterFlowTheme.of(context).transparent,
-          pinned: true,
-          floating: true,
-          elevation: 0,
-          leadingWidth: 70,
-          leading: Container(
-            margin: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: FlutterFlowTheme.of(context).secondaryBackground,
-              shape: BoxShape.circle,
-            ),
-            child: SmartBackButton(
-                color: FlutterFlowTheme.of(context).primaryText),
-          ),
-          centerTitle: true,
-          title: Text(
-            'Pedidos',
-            style: GoogleFonts.outfit(
-              color: FlutterFlowTheme.of(context).primaryText,
-              fontWeight: FontWeight.w900,
-              fontSize: 24,
-              letterSpacing: 1.0,
-            ),
-          ),
+        DSMobileAppBar(
+          title: 'Pedidos',
           actions: [
             IconButton(
               icon: Icon(Icons.refresh,
@@ -584,26 +562,22 @@ class _AdminOrderCardState extends State<AdminOrderCard> {
                 child: Stack(
                   children: [
                     // Background Image or Pattern
+                    // Background Image or Pattern
                     Container(
-                      decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).primaryBackground,
-                        image: DecorationImage(
-                            image: logoUrl != null
-                                ? NetworkImage(logoUrl)
-                                : const NetworkImage(
-                                    "https://www.transparenttextures.com/patterns/cubes.png"),
-                            colorFilter: logoUrl != null
-                                ? null
-                                : ColorFilter.mode(
-                                    Colors.black.withValues(alpha: 0.5),
-                                    BlendMode.dstATop),
-                            fit: logoUrl != null ? BoxFit.cover : BoxFit.cover),
-                      ),
-                      child: logoUrl == null
-                          ? Center(
+                      color: FlutterFlowTheme.of(context).primaryBackground,
+                      child: logoUrl != null
+                          ? SafeImage(
+                              logoUrl,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: double.infinity,
+                              placeholder: const Center(
+                                  child: Icon(Icons.shopping_bag_outlined,
+                                      color: Colors.white24, size: 40)),
+                            )
+                          : const Center(
                               child: Icon(Icons.shopping_bag_outlined,
-                                  color: Colors.white24, size: 40))
-                          : null,
+                                  color: Colors.white24, size: 40)),
                     ),
 
                     // Gradient Overlay

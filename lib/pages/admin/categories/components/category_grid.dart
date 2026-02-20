@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
-import 'package:nazi_shop/models/category_model.dart';
+import '/models/category_model.dart';
 import 'category_card.dart';
 
 class CategoryGrid extends StatelessWidget {

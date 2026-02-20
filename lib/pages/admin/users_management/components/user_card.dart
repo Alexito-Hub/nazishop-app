@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/custom_snackbar.dart';
 import '/backend/admin_service.dart';
-import 'package:nazi_shop/models/user_model.dart';
+import '/models/user_model.dart';
 import 'add_balance_dialog.dart';
 
 class UserCard extends StatelessWidget {
@@ -109,15 +109,21 @@ class UserCard extends StatelessWidget {
                       horizontal: 8.0, vertical: 4.0),
                   decoration: BoxDecoration(
                     color: isActive
-                        ? FlutterFlowTheme.of(context).success.withValues(alpha: 0.1)
-                        : FlutterFlowTheme.of(context).error.withValues(alpha: 0.1),
+                        ? FlutterFlowTheme.of(context)
+                            .success
+                            .withValues(alpha: 0.1)
+                        : FlutterFlowTheme.of(context)
+                            .error
+                            .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8.0),
                     border: Border.all(
                       color: isActive
                           ? FlutterFlowTheme.of(context)
                               .success
                               .withValues(alpha: 0.2)
-                          : FlutterFlowTheme.of(context).error.withValues(alpha: 0.2),
+                          : FlutterFlowTheme.of(context)
+                              .error
+                              .withValues(alpha: 0.2),
                     ),
                   ),
                   child: Text(
@@ -133,7 +139,7 @@ class UserCard extends StatelessWidget {
                 ),
               ],
             ),
-            const Spacer(),
+            const SizedBox(height: 12),
             Row(
               children: [
                 _buildStatBadge(

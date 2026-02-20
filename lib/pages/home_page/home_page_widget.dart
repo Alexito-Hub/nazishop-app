@@ -12,6 +12,7 @@ import '../../components/service_card.dart';
 import '../../components/modern_search_bar.dart';
 import '../../components/category_selector.dart';
 import '../../components/desktop_banner.dart';
+import '/components/app_responsive_layout.dart';
 
 class HomePageWidget extends StatefulWidget {
   const HomePageWidget({super.key});
@@ -85,8 +86,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     return list;
   }
 
-  bool get _isDesktop => MediaQuery.of(context).size.width >= 900;
-
   Color? _parseColor(String? colorString) {
     if (colorString == null) return null;
     try {
@@ -100,25 +99,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-      body: Stack(
-        children: [
-          // 1. Fondo Base (Sólido o Gradiente sutil del tema)
-          Positioned.fill(
-            child: Container(
-              color: FlutterFlowTheme.of(context).primaryBackground,
-            ),
-          ),
-
-          RefreshIndicator(
-            color: FlutterFlowTheme.of(context).primary,
-            backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
-            onRefresh: _loadData,
-            child: _isDesktop ? _buildDesktopLayout() : _buildMobileLayout(),
-          ),
-        ],
-      ),
+    return AppResponsiveLayout(
+      mobileBody: _buildMobileLayout(),
+      desktopBody: _buildDesktopLayout(),
     );
   }
 

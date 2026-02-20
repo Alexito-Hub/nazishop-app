@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
-import 'package:nazi_shop/models/category_model.dart';
-import 'package:nazi_shop/utils/icon_utils.dart';
+import '/models/category_model.dart';
+import '/utils/icon_utils.dart';
 
 class CategoryCard extends StatelessWidget {
   final Category category;

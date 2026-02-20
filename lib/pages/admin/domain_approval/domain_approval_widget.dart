@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nazi_shop/backend/admin_service.dart';
-import 'package:nazi_shop/models/domain.dart';
+import '/backend/admin_service.dart';
+import '/models/domain.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '../../../components/smart_back_button.dart';

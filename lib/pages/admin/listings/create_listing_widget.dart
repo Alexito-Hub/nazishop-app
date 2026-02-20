@@ -1,10 +1,9 @@
-import 'dart:ui';
 import '/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nazi_shop/backend/admin_service.dart';
-import 'package:nazi_shop/models/offer_model.dart';
-import 'package:nazi_shop/models/service_model.dart';
+import '/backend/admin_service.dart';
+import '/models/offer_model.dart';
+import '/models/service_model.dart';
 import '../../../components/smart_back_button.dart';
 
 class CreateListingWidget extends StatefulWidget {
@@ -300,81 +299,74 @@ class _CreateListingWidgetState extends State<CreateListingWidget> {
     return Scaffold(
       backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
       // No appbar property
-      body: Stack(
-        children: [
-          Positioned(
-            top: -100,
-            left: -100,
-            child: Container(
-              width: 500,
-              height: 500,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: FlutterFlowTheme.of(context)
-                    .primary
-                    .withValues(alpha: 0.05),
-              ),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
-                child:
-                    Container(color: FlutterFlowTheme.of(context).transparent),
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1600),
-              child: Form(
-                key: _formKey,
-                child: isDesktop
-                    ? SingleChildScrollView(
-                        physics: const BouncingScrollPhysics(),
-                        padding: const EdgeInsets.all(40),
-                        child: content,
-                      )
-                    : CustomScrollView(
-                        physics: const BouncingScrollPhysics(),
-                        slivers: [
-                          SliverAppBar(
-                            backgroundColor: Colors.transparent,
-                            elevation: 0,
-                            pinned: true,
-                            floating: true,
-                            leading: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: SmartBackButton(
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText),
-                            ),
-                            centerTitle: true,
-                            title: Text(
-                              widget.offer != null
-                                  ? 'Editar Oferta'
-                                  : 'Nueva Oferta',
-                              style: GoogleFonts.outfit(
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          SliverPadding(
-                            padding: const EdgeInsets.fromLTRB(20, 10, 20, 40),
-                            sliver: SliverToBoxAdapter(child: content),
-                          ),
-                        ],
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1600),
+          child: Form(
+            key: _formKey,
+            child: isDesktop
+                ? SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.all(40),
+                    child: content,
+                  )
+                : CustomScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    slivers: [
+                      SliverAppBar(
+                        backgroundColor: Colors.transparent,
+                        elevation: 0,
+                        pinned: true,
+                        floating: true,
+                        leading: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SmartBackButton(
+                              color: FlutterFlowTheme.of(context).primaryText),
+                        ),
+                        centerTitle: true,
+                        title: Text(
+                          widget.offer != null
+                              ? 'Editar Oferta'
+                              : 'Nueva Oferta',
+                          style: GoogleFonts.outfit(
+                              color: FlutterFlowTheme.of(context).primaryText,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
-              ),
-            ),
-          )
-        ],
+                      SliverPadding(
+                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 40),
+                        sliver: SliverToBoxAdapter(child: content),
+                      ),
+                    ],
+                  ),
+          ),
+        ),
       ),
     );
   }
 
   Widget _buildSaveButton(Color color) {
-    return SizedBox(
+    return Container(
       height: 48,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            FlutterFlowTheme.of(context).primary,
+            FlutterFlowTheme.of(context).secondary
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: FlutterFlowTheme.of(context).primary.withValues(alpha: 0.4),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
       child: ElevatedButton.icon(
         onPressed: _isSaving ? null : _save,
         icon: _isSaving
@@ -382,12 +374,14 @@ class _CreateListingWidgetState extends State<CreateListingWidget> {
                 width: 20,
                 height: 20,
                 child: CircularProgressIndicator(
-                    strokeWidth: 2, color: FlutterFlowTheme.of(context).info))
+                    strokeWidth: 2,
+                    color: FlutterFlowTheme.of(context).primaryText))
             : const Icon(Icons.check),
         label: Text(_isSaving ? 'Guardando...' : 'Publicar Oferta'),
         style: ElevatedButton.styleFrom(
-          backgroundColor: color,
-          foregroundColor: FlutterFlowTheme.of(context).info,
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          foregroundColor: FlutterFlowTheme.of(context).primaryText,
           padding: const EdgeInsets.symmetric(horizontal: 24),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'dart:ui'; // Add for ImageFilter
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nazi_shop/backend/admin_service.dart';
-import 'package:nazi_shop/models/listing_model.dart';
+import '/backend/admin_service.dart';
+import '/models/listing_model.dart';
 import '../../../components/smart_back_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 
@@ -100,112 +99,86 @@ class _CreateInventoryWidgetState extends State<CreateInventoryWidget> {
                     fontWeight: FontWeight.bold),
               ),
             ),
-      body: Stack(
-        children: [
-          // Background Gradient (Same as MyPurchases)
-          Positioned(
-            top: -100,
-            left: -100,
-            child: Container(
-              width: 500,
-              height: 500,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: FlutterFlowTheme.of(context)
-                    .primary
-                    .withValues(alpha: 0.05),
-              ),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
-                child: Container(color: Colors.transparent),
-              ),
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1600),
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: isDesktop
+                ? const EdgeInsets.fromLTRB(40, 40, 40, 40)
+                : EdgeInsets.only(
+                    top: kToolbarHeight + 20, bottom: 40, left: 20, right: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (isDesktop)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 30),
+                    child: Text(
+                      'Nueva Cuenta',
+                      style: GoogleFonts.outfit(
+                        color: FlutterFlowTheme.of(context).primaryText,
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    if (isDesktop) {
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Left Column: Credentials
+                          Expanded(
+                            flex: 3,
+                            child: _buildAccessDataCard(),
+                          ),
+                          const SizedBox(width: 24),
+                          // Right Column: Options & Submit
+                          Expanded(
+                            flex: 2,
+                            child: Column(
+                              children: [
+                                _buildAdvancedOptionsCard(),
+                                const SizedBox(height: 32),
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 56,
+                                  child: _buildSubmitButton(),
+                                ),
+                                const SizedBox(height: 24),
+                                _buildInfoText(),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    } else {
+                      // Mobile Layout
+                      return Column(
+                        children: [
+                          _buildAccessDataCard(),
+                          const SizedBox(height: 24),
+                          _buildAdvancedOptionsCard(),
+                          const SizedBox(height: 32),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 56,
+                            child: _buildSubmitButton(),
+                          ),
+                          const SizedBox(height: 24),
+                          _buildInfoText(),
+                        ],
+                      );
+                    }
+                  },
+                ),
+              ],
             ),
           ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1600),
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                padding: isDesktop
-                    ? const EdgeInsets.fromLTRB(40, 40, 40, 40)
-                    : EdgeInsets.only(
-                        top: kToolbarHeight + 20,
-                        bottom: 40,
-                        left: 20,
-                        right: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    if (isDesktop)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 30),
-                        child: Text(
-                          'Nueva Cuenta',
-                          style: GoogleFonts.outfit(
-                            color: FlutterFlowTheme.of(context).primaryText,
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    LayoutBuilder(
-                      builder: (context, constraints) {
-                        if (isDesktop) {
-                          return Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Left Column: Credentials
-                              Expanded(
-                                flex: 3,
-                                child: _buildAccessDataCard(),
-                              ),
-                              const SizedBox(width: 24),
-                              // Right Column: Options & Submit
-                              Expanded(
-                                flex: 2,
-                                child: Column(
-                                  children: [
-                                    _buildAdvancedOptionsCard(),
-                                    const SizedBox(height: 32),
-                                    SizedBox(
-                                      width: double.infinity,
-                                      height: 56,
-                                      child: _buildSubmitButton(),
-                                    ),
-                                    const SizedBox(height: 24),
-                                    _buildInfoText(),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          );
-                        } else {
-                          // Mobile Layout
-                          return Column(
-                            children: [
-                              _buildAccessDataCard(),
-                              const SizedBox(height: 24),
-                              _buildAdvancedOptionsCard(),
-                              const SizedBox(height: 32),
-                              SizedBox(
-                                width: double.infinity,
-                                height: 56,
-                                child: _buildSubmitButton(),
-                              ),
-                              const SizedBox(height: 24),
-                              _buildInfoText(),
-                            ],
-                          );
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ), // End Center container
-        ],
+        ),
       ),
     );
   }
@@ -304,30 +277,51 @@ class _CreateInventoryWidgetState extends State<CreateInventoryWidget> {
   }
 
   Widget _buildSubmitButton() {
-    return ElevatedButton(
-      onPressed: _isSubmitting ? null : () => _submitSingleItem(),
-      style: ElevatedButton.styleFrom(
-          backgroundColor: FlutterFlowTheme.of(context).primary,
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          elevation: 0),
-      child: _isSubmitting
-          ? SizedBox(
-              width: 24,
-              height: 24,
-              child: CircularProgressIndicator(
-                  color: Colors.white, strokeWidth: 2))
-          : Text(
-              _selectedListingTitle != null
-                  ? 'AÑADIR A "${_selectedListingTitle!.toUpperCase()}"'
-                  : 'GUARDAR NUEVA CUENTA',
-              style: GoogleFonts.outfit(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            FlutterFlowTheme.of(context).primary,
+            FlutterFlowTheme.of(context).secondary
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: FlutterFlowTheme.of(context).primary.withValues(alpha: 0.4),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ElevatedButton(
+        onPressed: _isSubmitting ? null : () => _submitSingleItem(),
+        style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            elevation: 0),
+        child: _isSubmitting
+            ? SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(
+                    color: Colors.white, strokeWidth: 2))
+            : Text(
+                _selectedListingTitle != null
+                    ? 'AÑADIR A "${_selectedListingTitle!.toUpperCase()}"'
+                    : 'GUARDAR NUEVA CUENTA',
+                style: GoogleFonts.outfit(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+      ),
     );
   }
 

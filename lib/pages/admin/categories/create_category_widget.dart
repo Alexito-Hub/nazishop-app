@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'dart:ui'; // Add for ImageFilter
 import '/flutter_flow/flutter_flow_theme.dart';
-import 'package:nazi_shop/backend/admin_service.dart';
-import 'package:nazi_shop/models/category_model.dart'
+import '/backend/admin_service.dart';
+import '/models/category_model.dart'
     as model; // Alias for UI class
 import 'package:google_fonts/google_fonts.dart';
 import '../../../components/smart_back_button.dart';
@@ -20,7 +19,6 @@ class CreateCategoryWidgetState extends State<CreateCategoryWidget> {
   final _formKey = GlobalKey<FormState>();
 
   late TextEditingController _nameCtrl;
-  late TextEditingController _codeCtrl;
   late TextEditingController _colorCtrl;
   late TextEditingController _iconCtrl;
   late TextEditingController _imageUrlCtrl;
@@ -33,7 +31,6 @@ class CreateCategoryWidgetState extends State<CreateCategoryWidget> {
     super.initState();
     final c = widget.category;
     _nameCtrl = TextEditingController(text: c?.name ?? '');
-    _codeCtrl = TextEditingController(text: c?.code ?? '');
     _colorCtrl = TextEditingController(text: c?.ui.color ?? '0xff2196f3');
     _iconCtrl = TextEditingController(text: c?.ui.icon ?? 'category');
     _imageUrlCtrl = TextEditingController(text: c?.ui.imageUrl ?? '');
@@ -43,7 +40,6 @@ class CreateCategoryWidgetState extends State<CreateCategoryWidget> {
   @override
   void dispose() {
     _nameCtrl.dispose();
-    _codeCtrl.dispose();
     _colorCtrl.dispose();
     _iconCtrl.dispose();
     _imageUrlCtrl.dispose();
@@ -57,7 +53,6 @@ class CreateCategoryWidgetState extends State<CreateCategoryWidget> {
 
     final data = {
       'name': _nameCtrl.text.trim(),
-      'code': _codeCtrl.text.trim(),
       'isActive': _isActive,
       'ui': {
         'color': _colorCtrl.text.trim(),
@@ -96,11 +91,10 @@ class CreateCategoryWidgetState extends State<CreateCategoryWidget> {
 
     return Scaffold(
       backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-      extendBodyBehindAppBar: true,
       appBar: isDesktop
           ? null
           : AppBar(
-              backgroundColor: FlutterFlowTheme.of(context).transparent,
+              backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
               elevation: 0,
               leading: SmartBackButton(
                   color: FlutterFlowTheme.of(context).primaryText),
@@ -114,111 +108,86 @@ class CreateCategoryWidgetState extends State<CreateCategoryWidget> {
                     fontWeight: FontWeight.bold),
               ),
             ),
-      body: Stack(
-        children: [
-          // Background Gradient (Same as MyPurchases)
-          Positioned(
-            top: -100,
-            left: -100,
-            child: Container(
-              width: 500,
-              height: 500,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: FlutterFlowTheme.of(context)
-                    .primary
-                    .withValues(alpha: 0.05),
-              ),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
-                child:
-                    Container(color: FlutterFlowTheme.of(context).transparent),
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1600),
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: isDesktop
+                  ? const EdgeInsets.fromLTRB(40, 40, 40, 40)
+                  : EdgeInsets.only(
+                      top: kToolbarHeight + 20,
+                      bottom: 40,
+                      left: 20,
+                      right: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (isDesktop)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 30),
+                      child: Row(
+                        children: [
+                          Text(
+                            widget.category != null
+                                ? 'Editar Categoría'
+                                : 'Nueva Categoría',
+                            style: GoogleFonts.outfit(
+                                color: FlutterFlowTheme.of(context).primaryText,
+                                fontSize: 32,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          const Spacer(),
+                          _buildSaveButton(
+                              FlutterFlowTheme.of(context).primary),
+                        ],
+                      ),
+                    ),
+                  LayoutBuilder(builder: (context, constraints) {
+                    if (constraints.maxWidth >= 900) {
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                              flex: 2,
+                              child: _buildMainColumn(
+                                  FlutterFlowTheme.of(context)
+                                      .secondaryBackground)),
+                          const SizedBox(width: 24),
+                          Expanded(
+                              flex: 1,
+                              child: _buildSideColumn(
+                                  FlutterFlowTheme.of(context)
+                                      .secondaryBackground,
+                                  FlutterFlowTheme.of(context).primary)),
+                        ],
+                      );
+                    } else {
+                      return Column(
+                        children: [
+                          _buildMainColumn(
+                              FlutterFlowTheme.of(context).secondaryBackground),
+                          const SizedBox(height: 24),
+                          _buildSideColumn(
+                              FlutterFlowTheme.of(context).secondaryBackground,
+                              FlutterFlowTheme.of(context).primary),
+                          if (!isDesktop) ...[
+                            const SizedBox(height: 32),
+                            _buildSaveButton(
+                                FlutterFlowTheme.of(context).primary),
+                          ],
+                        ],
+                      );
+                    }
+                  }),
+                ],
               ),
             ),
           ),
-          Align(
-              alignment: Alignment.topCenter,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1600),
-                child: Form(
-                  key: _formKey,
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    padding: isDesktop
-                        ? const EdgeInsets.fromLTRB(40, 40, 40, 40)
-                        : EdgeInsets.only(
-                            top: kToolbarHeight + 20,
-                            bottom: 40,
-                            left: 20,
-                            right: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        if (isDesktop)
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 30),
-                            child: Row(
-                              children: [
-                                Text(
-                                  widget.category != null
-                                      ? 'Editar Categoría'
-                                      : 'Nueva Categoría',
-                                  style: GoogleFonts.outfit(
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                      fontSize: 32,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const Spacer(),
-                                _buildSaveButton(
-                                    FlutterFlowTheme.of(context).primary),
-                              ],
-                            ),
-                          ),
-                        LayoutBuilder(builder: (context, constraints) {
-                          if (constraints.maxWidth >= 900) {
-                            return Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                    flex: 2,
-                                    child: _buildMainColumn(
-                                        FlutterFlowTheme.of(context)
-                                            .secondaryBackground)),
-                                const SizedBox(width: 24),
-                                Expanded(
-                                    flex: 1,
-                                    child: _buildSideColumn(
-                                        FlutterFlowTheme.of(context)
-                                            .secondaryBackground,
-                                        FlutterFlowTheme.of(context).primary)),
-                              ],
-                            );
-                          } else {
-                            return Column(
-                              children: [
-                                _buildMainColumn(FlutterFlowTheme.of(context)
-                                    .secondaryBackground),
-                                const SizedBox(height: 24),
-                                _buildSideColumn(
-                                    FlutterFlowTheme.of(context)
-                                        .secondaryBackground,
-                                    FlutterFlowTheme.of(context).primary),
-                                if (!isDesktop) ...[
-                                  const SizedBox(height: 32),
-                                  _buildSaveButton(
-                                      FlutterFlowTheme.of(context).primary),
-                                ],
-                              ],
-                            );
-                          }
-                        }),
-                      ],
-                    ),
-                  ),
-                ),
-              )),
-        ],
+        ),
       ),
     );
   }
@@ -241,8 +210,6 @@ class CreateCategoryWidgetState extends State<CreateCategoryWidget> {
                   fontWeight: FontWeight.bold)),
           const SizedBox(height: 24),
           _buildInput(_nameCtrl, 'Nombre de la Categoría', Icons.category),
-          const SizedBox(height: 16),
-          _buildInput(_codeCtrl, 'Código Único (Slug)', Icons.code),
         ],
       ),
     );
@@ -330,8 +297,26 @@ class CreateCategoryWidgetState extends State<CreateCategoryWidget> {
   }
 
   Widget _buildSaveButton(Color kPrimaryColor) {
-    return SizedBox(
+    return Container(
       height: 48,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            FlutterFlowTheme.of(context).primary,
+            FlutterFlowTheme.of(context).secondary
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: FlutterFlowTheme.of(context).primary.withValues(alpha: 0.4),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
       child: ElevatedButton.icon(
         onPressed: _isSaving ? null : _save,
         icon: _isSaving
@@ -343,7 +328,8 @@ class CreateCategoryWidgetState extends State<CreateCategoryWidget> {
             : Icon(Icons.check, color: FlutterFlowTheme.of(context).info),
         label: Text(_isSaving ? 'Guardando...' : 'Guardar Datos'),
         style: ElevatedButton.styleFrom(
-          backgroundColor: FlutterFlowTheme.of(context).primary,
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
           foregroundColor: FlutterFlowTheme.of(context).info,
           padding: const EdgeInsets.symmetric(horizontal: 24),
           shape:
@@ -365,7 +351,8 @@ class CreateCategoryWidgetState extends State<CreateCategoryWidget> {
     }
   }
 
-  Widget _buildInput(TextEditingController ctrl, String label, IconData icon) {
+  Widget _buildInput(TextEditingController ctrl, String label, IconData icon,
+      {bool required = true}) {
     final kBgColor = FlutterFlowTheme.of(context).primaryBackground;
     final kPrimaryColor = FlutterFlowTheme.of(context).primary;
     final kErrorColor = FlutterFlowTheme.of(context).error;
@@ -399,7 +386,10 @@ class CreateCategoryWidgetState extends State<CreateCategoryWidget> {
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
-      validator: (v) => (v == null || v.isEmpty) ? 'Requerido' : null,
+      validator: (v) {
+        if (required && (v == null || v.isEmpty)) return 'Requerido';
+        return null;
+      },
     );
   }
 }

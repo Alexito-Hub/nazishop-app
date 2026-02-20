@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/components/safe_image.dart';
 import '/models/service_model.dart';
 import '/models/listing_model.dart';
 import '/utils/color_utils.dart';
@@ -57,8 +58,10 @@ class CheckoutProductCard extends StatelessWidget {
             child: service.branding.logoUrl != null
                 ? ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: Image.network(service.branding.logoUrl!,
-                        fit: BoxFit.contain),
+                    child: SafeImage(
+                      service.branding.logoUrl,
+                      fit: BoxFit.contain,
+                    ),
                   )
                 : Icon(Icons.subscriptions, color: primaryColor, size: 24),
           ),
@@ -145,8 +148,10 @@ class CheckoutProductCard extends StatelessWidget {
             child: service.branding.logoUrl != null
                 ? ClipRRect(
                     borderRadius: BorderRadius.circular(16),
-                    child: Image.network(service.branding.logoUrl!,
-                        fit: BoxFit.contain),
+                    child: SafeImage(
+                      service.branding.logoUrl,
+                      fit: BoxFit.contain,
+                    ),
                   )
                 : Icon(Icons.subscriptions, color: primaryColor, size: 36),
           ),

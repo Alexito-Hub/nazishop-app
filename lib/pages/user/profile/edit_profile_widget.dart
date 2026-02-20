@@ -4,12 +4,13 @@ import '/backend/firebase_storage/storage.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/upload_data.dart';
-import '../../../flutter_flow/safe_image.dart';
+import '../../../components/safe_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui';
-import '../../../components/smart_back_button.dart';
+
+import '/components/design_system.dart';
 
 class EditProfileWidget extends StatefulWidget {
   const EditProfileWidget({
@@ -38,11 +39,6 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
   TextEditingController? descriptionController;
   TextEditingController? phoneController;
 
-  // Focus nodes
-  FocusNode? nameFocusNode;
-  FocusNode? descriptionFocusNode;
-  FocusNode? phoneFocusNode;
-
   // State
   bool isDataUploading = false;
   FFUploadedFile uploadedLocalFile =
@@ -60,10 +56,6 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
     phoneController = TextEditingController(
         text: _extractPhoneNumber(currentUserPhoneNumber));
     selectedCountryCode = _extractCountryCode(currentUserPhoneNumber);
-
-    nameFocusNode = FocusNode();
-    descriptionFocusNode = FocusNode();
-    phoneFocusNode = FocusNode();
   }
 
   String _extractCountryCode(String? phoneNumber) {
@@ -86,16 +78,10 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
     nameController?.dispose();
     descriptionController?.dispose();
     phoneController?.dispose();
-    nameFocusNode?.dispose();
-    descriptionFocusNode?.dispose();
-    phoneFocusNode?.dispose();
     super.dispose();
   }
 
   void _safeUnfocus() {
-    if (nameFocusNode?.hasFocus == true) nameFocusNode?.unfocus();
-    if (descriptionFocusNode?.hasFocus == true) descriptionFocusNode?.unfocus();
-    if (phoneFocusNode?.hasFocus == true) phoneFocusNode?.unfocus();
     FocusScope.of(context).unfocus();
   }
 
@@ -131,36 +117,10 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
   }
 
   Widget _buildMobileLayout() {
-    final theme = FlutterFlowTheme.of(context);
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
-        SliverAppBar(
-          backgroundColor: theme.transparent,
-          surfaceTintColor: theme.transparent,
-          pinned: true,
-          floating: true,
-          elevation: 0,
-          leadingWidth: 70,
-          leading: Container(
-            margin: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: theme.alternate,
-              shape: BoxShape.circle,
-            ),
-            child: SmartBackButton(color: theme.primaryText),
-          ),
-          centerTitle: true,
-          title: Text(
-            widget.title,
-            style: GoogleFonts.outfit(
-              color: theme.primaryText,
-              fontWeight: FontWeight.w900,
-              fontSize: 24,
-              letterSpacing: 1.0,
-            ),
-          ),
-        ),
+        DSMobileAppBar(title: widget.title),
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.all(24.0),
@@ -269,20 +229,12 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                TextButton.icon(
+                DSButton(
+                  label: 'Cambiar Foto',
+                  icon: Icons.camera_alt_outlined,
                   onPressed: _uploadProfilePhoto,
-                  icon: Icon(Icons.camera_alt_outlined,
-                      size: 18, color: _primaryColor),
-                  label: Text('Cambiar Foto',
-                      style: GoogleFonts.outfit(
-                          color: _primaryColor, fontWeight: FontWeight.bold)),
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 12),
-                    backgroundColor: _primaryColor.withValues(alpha: 0.1),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                  ),
+                  isSecondary: true,
+                  width: 200,
                 ),
               ],
             ),
@@ -294,12 +246,11 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildTextField(
-                  controller: nameController!,
-                  focusNode: nameFocusNode,
+                DSInput(
+                  controller: nameController,
                   label: 'Nombre Completo',
                   hint: 'Tu nombre visible',
-                  icon: Icons.person_outline,
+                  prefixIcon: Icons.person_outline,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'El nombre es requerido';
@@ -311,16 +262,23 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                   },
                 ),
                 const SizedBox(height: 20),
-                _buildTextField(
-                  controller: descriptionController!,
-                  focusNode: descriptionFocusNode,
+                DSInput(
+                  controller: descriptionController,
                   label: 'Bio / Descripción',
                   hint: 'Cuéntanos sobre ti...',
-                  icon: Icons.info_outline,
+                  prefixIcon: Icons.info_outline,
                   maxLines: 4,
-                  maxLength: 500,
                 ),
                 const SizedBox(height: 20),
+                Text(
+                  'Teléfono',
+                  style: GoogleFonts.outfit(
+                    color: theme.primaryText,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 8),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -335,12 +293,12 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: DropdownButtonFormField<String>(
-                        initialValue: selectedCountryCode,
+                        value: selectedCountryCode,
                         dropdownColor: theme.secondaryBackground,
                         decoration: const InputDecoration(
                           contentPadding: EdgeInsets.symmetric(
                             horizontal: 12,
-                            vertical: 16,
+                            vertical: 14,
                           ),
                           border: InputBorder.none,
                         ),
@@ -369,13 +327,11 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: _buildTextField(
-                        controller: phoneController!,
-                        focusNode: phoneFocusNode,
-                        label: 'Teléfono',
+                      child: DSInput(
+                        controller: phoneController,
                         hint: '987654321',
                         keyboardType: TextInputType.phone,
-                        icon: Icons.phone_outlined,
+                        prefixIcon: Icons.phone_outlined,
                         validator: (value) {
                           if (value != null && value.isNotEmpty) {
                             if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
@@ -393,8 +349,9 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                 Row(
                   children: [
                     SizedBox(
-                      width: 140,
-                      child: OutlinedButton(
+                      width: 160,
+                      child: DSButton(
+                        label: 'Cancelar',
                         onPressed: () async {
                           _safeUnfocus();
                           if (widget.navigateAction != null) {
@@ -403,35 +360,16 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                             Navigator.of(context).pop();
                           }
                         },
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 22),
-                          side: BorderSide(color: theme.alternate),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                          foregroundColor: theme.primaryText,
-                        ),
-                        child: Text('Cancelar',
-                            style: GoogleFonts.outfit(fontSize: 16)),
+                        isOutline: true,
+                        isSecondary: true,
                       ),
                     ),
                     const SizedBox(width: 20),
                     Expanded(
-                      child: ElevatedButton(
+                      child: DSButton(
+                        label: widget.confirmButtonText,
                         onPressed: _saveChanges,
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 22),
-                          backgroundColor: _primaryColor,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                        ),
-                        child: Text(
-                          widget.confirmButtonText,
-                          style: GoogleFonts.outfit(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: FlutterFlowTheme.of(context).tertiary),
-                        ),
+                        isLoading: isDataUploading,
                       ),
                     ),
                   ],
@@ -484,20 +422,13 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                TextButton.icon(
+                DSButton(
+                  label: 'Cambiar Foto',
+                  icon: Icons.camera_alt_outlined,
                   onPressed: _uploadProfilePhoto,
-                  icon: Icon(Icons.camera_alt_outlined,
-                      size: 18, color: _primaryColor),
-                  label: Text('Cambiar Foto',
-                      style: GoogleFonts.outfit(
-                          color: _primaryColor, fontWeight: FontWeight.bold)),
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 12),
-                    backgroundColor: _primaryColor.withValues(alpha: 0.1),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                  ),
+                  isSecondary: true,
+                  width: 160,
+                  height: 40,
                 ),
               ],
             ),
@@ -506,12 +437,11 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
           const SizedBox(height: 40),
 
           // Información básica
-          _buildTextField(
-            controller: nameController!,
-            focusNode: nameFocusNode,
+          DSInput(
+            controller: nameController,
             label: 'Nombre Completo',
             hint: 'Tu nombre visible',
-            icon: Icons.person_outline,
+            prefixIcon: Icons.person_outline,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'El nombre es requerido';
@@ -525,19 +455,26 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
 
           const SizedBox(height: 20),
 
-          _buildTextField(
-            controller: descriptionController!,
-            focusNode: descriptionFocusNode,
+          DSInput(
+            controller: descriptionController,
             label: 'Bio / Descripción',
             hint: 'Cuéntanos sobre ti...',
-            icon: Icons.info_outline,
+            prefixIcon: Icons.info_outline,
             maxLines: 3,
-            maxLength: 500,
           ),
 
           const SizedBox(height: 20),
 
           // Teléfono con código de país
+          Text(
+            'Teléfono',
+            style: GoogleFonts.outfit(
+              color: theme.primaryText,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 8),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -552,12 +489,12 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: DropdownButtonFormField<String>(
-                  initialValue: selectedCountryCode,
+                  value: selectedCountryCode,
                   dropdownColor: theme.secondaryBackground,
                   decoration: const InputDecoration(
                     contentPadding: EdgeInsets.symmetric(
                       horizontal: 12,
-                      vertical: 16,
+                      vertical: 14,
                     ),
                     border: InputBorder.none,
                   ),
@@ -586,13 +523,11 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: _buildTextField(
-                  controller: phoneController!,
-                  focusNode: phoneFocusNode,
-                  label: 'Teléfono',
+                child: DSInput(
+                  controller: phoneController,
                   hint: '987654321',
                   keyboardType: TextInputType.phone,
-                  icon: Icons.phone_outlined,
+                  prefixIcon: Icons.phone_outlined,
                   validator: (value) {
                     if (value != null && value.isNotEmpty) {
                       if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
@@ -609,10 +544,21 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
           const SizedBox(height: 40),
 
           // Botones
-          Row(
+          Column(
             children: [
-              Expanded(
-                child: OutlinedButton(
+              SizedBox(
+                width: double.infinity,
+                child: DSButton(
+                  label: widget.confirmButtonText,
+                  onPressed: _saveChanges,
+                  isLoading: isDataUploading,
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: DSButton(
+                  label: 'Cancelar',
                   onPressed: () async {
                     _safeUnfocus();
                     if (widget.navigateAction != null) {
@@ -621,35 +567,8 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                       Navigator.of(context).pop();
                     }
                   },
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 18),
-                    side: BorderSide(color: theme.alternate),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                    foregroundColor: theme.primaryText,
-                  ),
-                  child:
-                      Text('Cancelar', style: GoogleFonts.outfit(fontSize: 16)),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: _saveChanges,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 18),
-                    backgroundColor: _primaryColor,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                  ),
-                  child: Text(
-                    widget.confirmButtonText,
-                    style: GoogleFonts.outfit(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: theme.tertiary),
-                  ),
+                  isOutline: true,
+                  isSecondary: true,
                 ),
               ),
             ],
@@ -689,61 +608,6 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
           color: _primaryColor.withValues(alpha: 0.5),
         ),
       ),
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    FocusNode? focusNode,
-    required String label,
-    String? hint,
-    IconData? icon,
-    TextInputType? keyboardType,
-    int maxLines = 1,
-    int? maxLength,
-    String? Function(String?)? validator,
-  }) {
-    final theme = FlutterFlowTheme.of(context);
-    return TextFormField(
-      controller: controller,
-      focusNode: focusNode,
-      style: GoogleFonts.outfit(color: theme.primaryText, fontSize: 15),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: GoogleFonts.outfit(color: theme.secondaryText),
-        hintText: hint,
-        hintStyle: GoogleFonts.outfit(
-            color: theme.secondaryText.withValues(alpha: 0.5)),
-        prefixIcon:
-            icon != null ? Icon(icon, color: theme.secondaryText) : null,
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: theme.alternate, width: 1),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: _primaryColor, width: 2),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-              color: FlutterFlowTheme.of(context).error.withValues(alpha: 0.5),
-              width: 1),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderSide:
-              BorderSide(color: FlutterFlowTheme.of(context).error, width: 1),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        filled: true,
-        fillColor: theme.secondaryBackground,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      ),
-      keyboardType: keyboardType,
-      maxLines: maxLines,
-      maxLength: maxLength,
-      validator: validator,
     );
   }
 

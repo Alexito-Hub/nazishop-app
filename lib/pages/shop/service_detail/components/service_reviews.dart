@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/models/review_model.dart';
+import '/components/app_dialog.dart';
 import '/backend/review_service.dart';
 import '/backend/order_service.dart';
 import '/auth/firebase_auth/auth_util.dart';
@@ -84,17 +85,14 @@ class _ServiceReviewsState extends State<ServiceReviews> {
       context: context,
       builder: (context) {
         return StatefulBuilder(builder: (context, setStateDialog) {
-          return AlertDialog(
-            backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
-            title: Text('Escribir Reseña',
-                style: GoogleFonts.outfit(
-                    color: FlutterFlowTheme.of(context).primaryText)),
+          final theme = FlutterFlowTheme.of(context);
+          return AppDialog(
+            title: 'Escribir Reseña',
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text('Califica este servicio',
-                    style: GoogleFonts.outfit(
-                        color: FlutterFlowTheme.of(context).secondaryText)),
+                    style: GoogleFonts.outfit(color: theme.secondaryText)),
                 const SizedBox(height: 12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -118,18 +116,16 @@ class _ServiceReviewsState extends State<ServiceReviews> {
                   controller: commentController,
                   decoration: InputDecoration(
                     hintText: 'Tu opinión (opcional)',
-                    hintStyle: GoogleFonts.outfit(
-                        color: FlutterFlowTheme.of(context).secondaryText),
+                    hintStyle: GoogleFonts.outfit(color: theme.secondaryText),
                     filled: true,
-                    fillColor: FlutterFlowTheme.of(context).primaryBackground,
+                    fillColor: theme.primaryBackground,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
                     ),
                   ),
                   maxLines: 3,
-                  style: GoogleFonts.outfit(
-                      color: FlutterFlowTheme.of(context).primaryText),
+                  style: GoogleFonts.outfit(color: theme.primaryText),
                 ),
               ],
             ),
@@ -137,9 +133,9 @@ class _ServiceReviewsState extends State<ServiceReviews> {
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: Text('Cancelar',
-                    style: GoogleFonts.outfit(
-                        color: FlutterFlowTheme.of(context).secondaryText)),
+                    style: GoogleFonts.outfit(color: theme.secondaryText)),
               ),
+              const SizedBox(width: 8),
               ElevatedButton(
                 onPressed: () async {
                   if (_validOrderId == null) return;
@@ -169,16 +165,23 @@ class _ServiceReviewsState extends State<ServiceReviews> {
                         SnackBar(
                             content: Text(res['msg'] ?? 'Error',
                                 style: GoogleFonts.outfit(color: Colors.white)),
-                            backgroundColor:
-                                FlutterFlowTheme.of(context).error),
+                            backgroundColor: theme.error),
                       );
                     }
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: widget.primaryColor),
+                  backgroundColor: widget.primaryColor,
+                  foregroundColor: Colors.white,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 0,
+                ),
                 child: Text('Publicar',
-                    style: GoogleFonts.outfit(color: Colors.white)),
+                    style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
               ),
             ],
           );

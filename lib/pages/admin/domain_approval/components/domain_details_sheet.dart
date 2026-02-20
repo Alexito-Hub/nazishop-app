@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
-import 'package:nazi_shop/models/domain.dart';
+import '/models/domain.dart';
 
 class DomainDetailsSheet extends StatelessWidget {
   final Domain domain;

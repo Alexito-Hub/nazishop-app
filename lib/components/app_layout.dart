@@ -62,7 +62,7 @@ class _AppLayoutState extends State<AppLayout> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     // Bajamos el breakpoint a 900 para soportar tablets en landscape (iPad, etc)
-    final isDesktop = screenWidth > 900;
+    final isDesktop = screenWidth >= 900;
 
     if (!isDesktop) {
       // En móvil, solo mostramos el child sin sidebar

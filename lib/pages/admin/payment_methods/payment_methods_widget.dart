@@ -4,7 +4,7 @@ import '/flutter_flow/custom_snackbar.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../components/smart_back_button.dart';
+import '/components/design_system.dart';
 import 'payment_methods_model.dart';
 export 'payment_methods_model.dart';
 
@@ -76,46 +76,7 @@ class _PaymentMethodsWidgetState extends State<PaymentMethodsWidget> {
   Widget _buildMobileLayout() {
     return CustomScrollView(
       slivers: [
-        SliverAppBar(
-          backgroundColor: FlutterFlowTheme.of(context).transparent,
-          expandedHeight: 120,
-          pinned: true,
-          leading: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: FlutterFlowTheme.of(context)
-                    .primaryBackground
-                    .withValues(alpha: 0.4),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: SmartBackButton(
-                  color: FlutterFlowTheme.of(context).primaryText),
-            ),
-          ),
-          flexibleSpace: FlexibleSpaceBar(
-            title: Text(
-              'Métodos de Pago',
-              style: GoogleFonts.outfit(
-                color: FlutterFlowTheme.of(context).primaryText,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            background: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    FlutterFlowTheme.of(context).primary.withValues(alpha: 0.2),
-                    FlutterFlowTheme.of(context).transparent,
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
-            ),
-          ),
-        ),
+        const DSMobileAppBar(title: 'Métodos de Pago'),
         SliverPadding(
           padding: const EdgeInsets.all(24.0),
           sliver: SliverList(
@@ -258,7 +219,7 @@ class _PaymentMethodsWidgetState extends State<PaymentMethodsWidget> {
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: FlutterFlowTheme.of(context).primary,
-              foregroundColor: Colors.white,
+              foregroundColor: FlutterFlowTheme.of(context).tertiary,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)),
             ),
@@ -273,18 +234,17 @@ class _PaymentMethodsWidgetState extends State<PaymentMethodsWidget> {
 
   Widget _buildPaymentMethod(
       String name, String description, IconData icon, bool enabled) {
+    final theme = FlutterFlowTheme.of(context);
     return Container(
       margin: const EdgeInsets.only(bottom: 12.0),
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).primaryText.withValues(alpha: 0.05),
+        color: theme.primaryText.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(16.0),
         border: Border.all(
             color: enabled
-                ? FlutterFlowTheme.of(context).primary.withValues(alpha: 0.3)
-                : FlutterFlowTheme.of(context)
-                    .primaryText
-                    .withValues(alpha: 0.1)),
+                ? theme.primary.withValues(alpha: 0.3)
+                : theme.primaryText.withValues(alpha: 0.1)),
       ),
       child: Row(
         children: [
@@ -293,16 +253,12 @@ class _PaymentMethodsWidgetState extends State<PaymentMethodsWidget> {
             height: 56.0,
             decoration: BoxDecoration(
               color: enabled
-                  ? FlutterFlowTheme.of(context).primary.withValues(alpha: 0.1)
-                  : FlutterFlowTheme.of(context)
-                      .primaryText
-                      .withValues(alpha: 0.05),
+                  ? theme.primary.withValues(alpha: 0.1)
+                  : theme.primaryText.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(14.0),
             ),
             child: Icon(icon,
-                color: enabled
-                    ? FlutterFlowTheme.of(context).primary
-                    : FlutterFlowTheme.of(context).secondaryText,
+                color: enabled ? theme.primary : theme.secondaryText,
                 size: 28.0),
           ),
           const SizedBox(width: 16.0),
@@ -312,30 +268,26 @@ class _PaymentMethodsWidgetState extends State<PaymentMethodsWidget> {
               children: [
                 Text(name,
                     style: GoogleFonts.outfit(
-                        color: FlutterFlowTheme.of(context).primaryText,
+                        color: theme.primaryText,
                         fontWeight: FontWeight.bold,
                         fontSize: 16)),
                 Text(description,
                     style: GoogleFonts.outfit(
-                        color: FlutterFlowTheme.of(context).secondaryText,
-                        fontSize: 12)),
+                        color: theme.secondaryText, fontSize: 12)),
               ],
             ),
           ),
           Switch(
               value: enabled,
               onChanged: (val) {},
-              activeThumbColor: FlutterFlowTheme.of(context).primary,
-              activeTrackColor:
-                  FlutterFlowTheme.of(context).primary.withValues(alpha: 0.3),
-              inactiveTrackColor: FlutterFlowTheme.of(context)
-                  .primaryText
-                  .withValues(alpha: 0.1),
+              activeThumbColor: theme.primary,
+              activeTrackColor: theme.primary.withValues(alpha: 0.3),
+              inactiveTrackColor: theme.primaryText.withValues(alpha: 0.1),
               thumbColor: WidgetStateProperty.resolveWith<Color>((states) {
                 if (states.contains(WidgetState.selected)) {
-                  return FlutterFlowTheme.of(context).secondaryText;
+                  return theme.tertiary;
                 }
-                return Colors.white38;
+                return theme.secondaryText.withValues(alpha: 0.5);
               })),
         ],
       ),

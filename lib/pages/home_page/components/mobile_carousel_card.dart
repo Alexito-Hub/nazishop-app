@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nazi_shop/models/service_model.dart';
+import '/models/service_model.dart';
 import '../../../flutter_flow/flutter_flow_theme.dart';
-import '../../../flutter_flow/safe_image.dart';
+import '../../../components/safe_image.dart';
 
-import 'package:nazi_shop/backend/currency_service.dart';
+import '/backend/currency_service.dart';
 
 class MobileCarouselCard extends StatelessWidget {
   final Service service;

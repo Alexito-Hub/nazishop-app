@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'dart:ui'; // Add for ImageFilter
 import '/flutter_flow/flutter_flow_theme.dart';
-import 'package:nazi_shop/backend/admin_service.dart';
-import 'package:nazi_shop/models/service_model.dart';
-import 'package:nazi_shop/models/category_model.dart';
+import '/backend/admin_service.dart';
+import '/models/service_model.dart';
+import '/models/category_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../components/smart_back_button.dart';
 
@@ -20,7 +19,6 @@ class CreateServiceWidgetState extends State<CreateServiceWidget> {
   final _formKey = GlobalKey<FormState>();
 
   late TextEditingController _nameCtrl;
-  late TextEditingController _codeCtrl;
   late TextEditingController _primaryColorCtrl;
   late TextEditingController _secondaryColorCtrl;
   late TextEditingController _logoUrlCtrl;
@@ -45,7 +43,6 @@ class CreateServiceWidgetState extends State<CreateServiceWidget> {
     _loadCategories();
     final s = widget.service;
     _nameCtrl = TextEditingController(text: s?.name ?? '');
-    _codeCtrl = TextEditingController(text: s?.code ?? '');
     _primaryColorCtrl =
         TextEditingController(text: s?.branding.primaryColor ?? '0xff2196f3');
     _secondaryColorCtrl =
@@ -93,7 +90,6 @@ class CreateServiceWidgetState extends State<CreateServiceWidget> {
   @override
   void dispose() {
     _nameCtrl.dispose();
-    _codeCtrl.dispose();
     _primaryColorCtrl.dispose();
     _secondaryColorCtrl.dispose();
     _logoUrlCtrl.dispose();
@@ -118,7 +114,6 @@ class CreateServiceWidgetState extends State<CreateServiceWidget> {
 
     final data = {
       'name': _nameCtrl.text.trim(),
-      'code': _codeCtrl.text.trim(),
       'categoryId': _selectedCategoryId,
       'isActive': _isActive,
       'branding': {
@@ -218,81 +213,75 @@ class CreateServiceWidgetState extends State<CreateServiceWidget> {
     return Scaffold(
       backgroundColor: bgColor,
       // No appbar property, handled in body
-      body: Stack(
-        children: [
-          // Background Gradient
-          Positioned(
-            top: -100,
-            left: -100,
-            child: Container(
-              width: 500,
-              height: 500,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: primaryColor.withValues(alpha: 0.05),
-              ),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
-                child:
-                    Container(color: FlutterFlowTheme.of(context).transparent),
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1600),
-              child: Form(
-                key: _formKey,
-                child: isDesktop
-                    ? SingleChildScrollView(
-                        padding: const EdgeInsets.all(40),
-                        physics: const BouncingScrollPhysics(),
-                        child: content,
-                      )
-                    : CustomScrollView(
-                        physics: const BouncingScrollPhysics(),
-                        slivers: [
-                          SliverAppBar(
-                            backgroundColor:
-                                FlutterFlowTheme.of(context).transparent,
-                            elevation: 0,
-                            floating: true,
-                            pinned: true,
-                            leading: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: SmartBackButton(
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText),
-                            ),
-                            centerTitle: true,
-                            title: Text(
-                              widget.service != null
-                                  ? 'Editar Servicio'
-                                  : 'Nuevo Servicio',
-                              style: GoogleFonts.outfit(
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          SliverPadding(
-                            padding: const EdgeInsets.fromLTRB(20, 10, 20, 40),
-                            sliver: SliverToBoxAdapter(child: content),
-                          ),
-                        ],
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1600),
+          child: Form(
+            key: _formKey,
+            child: isDesktop
+                ? SingleChildScrollView(
+                    padding: const EdgeInsets.all(40),
+                    physics: const BouncingScrollPhysics(),
+                    child: content,
+                  )
+                : CustomScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    slivers: [
+                      SliverAppBar(
+                        backgroundColor:
+                            FlutterFlowTheme.of(context).transparent,
+                        elevation: 0,
+                        floating: true,
+                        pinned: true,
+                        leading: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SmartBackButton(
+                              color: FlutterFlowTheme.of(context).primaryText),
+                        ),
+                        centerTitle: true,
+                        title: Text(
+                          widget.service != null
+                              ? 'Editar Servicio'
+                              : 'Nuevo Servicio',
+                          style: GoogleFonts.outfit(
+                              color: FlutterFlowTheme.of(context).primaryText,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
-              ),
-            ),
+                      SliverPadding(
+                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 40),
+                        sliver: SliverToBoxAdapter(child: content),
+                      ),
+                    ],
+                  ),
           ),
-        ],
+        ),
       ),
     );
   }
 
   Widget _buildSaveButton(Color color) {
-    return SizedBox(
+    return Container(
       height: 48,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            FlutterFlowTheme.of(context).primary,
+            FlutterFlowTheme.of(context).secondary
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: FlutterFlowTheme.of(context).primary.withValues(alpha: 0.4),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
       child: ElevatedButton.icon(
         onPressed: _isSaving ? null : _save,
         icon: _isSaving
@@ -308,7 +297,8 @@ class CreateServiceWidgetState extends State<CreateServiceWidget> {
             : const Icon(Icons.check),
         label: Text(_isSaving ? 'Guardando...' : 'Guardar Servicio'),
         style: ElevatedButton.styleFrom(
-          backgroundColor: color,
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
           foregroundColor: FlutterFlowTheme.of(context).primaryText,
           padding: const EdgeInsets.symmetric(horizontal: 24),
           shape:
@@ -340,8 +330,6 @@ class CreateServiceWidgetState extends State<CreateServiceWidget> {
                       fontWeight: FontWeight.bold)),
               const SizedBox(height: 24),
               _buildInput(_nameCtrl, 'Nombre del Servicio', Icons.layers),
-              const SizedBox(height: 16),
-              _buildInput(_codeCtrl, 'Código (Slug)', Icons.code),
               const SizedBox(height: 16),
               if (_isLoadingCats)
                 Center(
@@ -521,7 +509,7 @@ class CreateServiceWidgetState extends State<CreateServiceWidget> {
   }
 
   Widget _buildInput(TextEditingController ctrl, String label, IconData icon,
-      {bool isNumber = false}) {
+      {bool isNumber = false, bool required = true}) {
     Color bgColor = FlutterFlowTheme.of(context).primaryBackground;
     Color primaryColor = FlutterFlowTheme.of(context).primary;
     Color errorColor = FlutterFlowTheme.of(context).error;
@@ -557,7 +545,7 @@ class CreateServiceWidgetState extends State<CreateServiceWidget> {
             const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
       validator: (v) {
-        if (!isNumber && (v == null || v.isEmpty)) {
+        if (required && !isNumber && (v == null || v.isEmpty)) {
           return 'Requerido'; // Basic validation
         }
         return null;

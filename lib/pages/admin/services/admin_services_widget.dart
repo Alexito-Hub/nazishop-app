@@ -1,10 +1,10 @@
 import '/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nazi_shop/backend/admin_service.dart';
-import 'package:nazi_shop/models/service_model.dart';
+import '/backend/admin_service.dart';
+import '/models/service_model.dart';
 import 'package:go_router/go_router.dart';
-import '../../../components/smart_back_button.dart';
+import '/components/design_system.dart';
 
 class AdminServicesWidget extends StatefulWidget {
   const AdminServicesWidget({super.key});
@@ -51,36 +51,10 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
   }
 
   Future<void> _deleteService(String id) async {
-    final confirm = await showDialog<bool>(
-            context: context,
-            builder: (c) => AlertDialog(
-                  backgroundColor:
-                      FlutterFlowTheme.of(context).secondaryBackground,
-                  title: Text('Confirmar Eliminación',
-                      style: GoogleFonts.outfit(
-                          color: FlutterFlowTheme.of(context).primaryText,
-                          fontWeight: FontWeight.bold)),
-                  content: Text('¿Estás seguro? Esta acción es irreversible.',
-                      style: GoogleFonts.outfit(
-                          color: FlutterFlowTheme.of(context).secondaryText)),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(c, false),
-                      child: Text('Cancelar',
-                          style: GoogleFonts.outfit(
-                              color:
-                                  FlutterFlowTheme.of(context).secondaryText)),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.pop(c, true),
-                      child: Text('Eliminar',
-                          style: GoogleFonts.outfit(
-                              color: FlutterFlowTheme.of(context).error,
-                              fontWeight: FontWeight.bold)),
-                    ),
-                  ],
-                )) ??
-        false;
+    final confirm = await DSDeleteConfirmDialog.show(
+      context,
+      message: '¿Estás seguro? Esta acción es irreversible.',
+    );
 
     if (!confirm) return;
 
@@ -114,47 +88,13 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
       body: isDesktop ? _buildDesktopLayout(context) : _buildMobileLayout(),
       floatingActionButton: isDesktop
           ? null
-          : Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    FlutterFlowTheme.of(context).primary,
-                    FlutterFlowTheme.of(context).secondary,
-                  ], // Red Gradient
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: FlutterFlowTheme.of(context)
-                        .primary
-                        .withValues(alpha: 0.4),
-                    blurRadius: 12,
-                    offset: const Offset(0, 6),
-                  ),
-                ],
-              ),
-              child: FloatingActionButton.extended(
-                onPressed: () async {
-                  await context.pushNamed('create_service');
-                  _loadServices();
-                },
-                backgroundColor: FlutterFlowTheme.of(context).transparent,
-                elevation: 0,
-                highlightElevation: 0,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16)),
-                icon: Icon(Icons.design_services,
-                    color: FlutterFlowTheme.of(context).primaryText),
-                label: Text(
-                  'Nuevo Servicio',
-                  style: GoogleFonts.outfit(
-                      color: FlutterFlowTheme.of(context).primaryText,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1),
-                ),
-              ),
+          : DSGradientFab(
+              label: 'Nuevo Servicio',
+              icon: Icons.design_services,
+              onPressed: () async {
+                await context.pushNamed('create_service');
+                _loadServices();
+              },
             ),
     );
   }
@@ -164,36 +104,7 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
-        SliverAppBar(
-          backgroundColor: FlutterFlowTheme.of(context).transparent,
-          surfaceTintColor: FlutterFlowTheme.of(context).transparent,
-          pinned: true,
-          floating: true,
-          elevation: 0,
-          leadingWidth: 70,
-          leading: Container(
-            margin: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: FlutterFlowTheme.of(context)
-                  .secondaryBackground
-                  .withValues(alpha: 0.05),
-              shape: BoxShape.circle,
-            ),
-            child:
-                SmartBackButton(color: FlutterFlowTheme.of(context).tertiary),
-          ),
-          centerTitle: true,
-          title: Text(
-            'Servicios',
-            style: GoogleFonts.outfit(
-              color: FlutterFlowTheme.of(context).tertiary,
-              fontWeight: FontWeight.bold,
-              fontSize: 24,
-              letterSpacing: 1.0,
-            ),
-          ),
-          actions: [],
-        ),
+        const DSMobileAppBar(title: 'Servicios'),
         SliverPadding(
           padding: const EdgeInsets.all(24),
           sliver: _isLoading
@@ -218,76 +129,15 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(40, 40, 40, 20),
               sliver: SliverToBoxAdapter(
-                child: Row(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Servicios',
-                          style: GoogleFonts.outfit(
-                            color: FlutterFlowTheme.of(context).primaryText,
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Administra el catálogo de servicios ofrecidos',
-                          style: GoogleFonts.outfit(
-                            color: FlutterFlowTheme.of(context).secondaryText,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-                    Container(
-                      height: 44,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            FlutterFlowTheme.of(context).primary,
-                            FlutterFlowTheme.of(context).secondary
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: FlutterFlowTheme.of(context)
-                                .primary
-                                .withValues(alpha: 0.4),
-                            blurRadius: 8,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: ElevatedButton.icon(
-                        onPressed: () async {
-                          await context.pushNamed('create_service');
-                          _loadServices();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          shadowColor: Colors.transparent,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                        ),
-                        icon: Icon(Icons.add_circle_outline,
-                            color: FlutterFlowTheme.of(context).tertiary,
-                            size: 20),
-                        label: Text(
-                          'Nuevo Servicio',
-                          style: GoogleFonts.outfit(
-                              color: FlutterFlowTheme.of(context).tertiary,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                  ],
+                child: DSAdminPageHeader(
+                  title: 'Servicios',
+                  subtitle: 'Administra el catálogo de servicios ofrecidos',
+                  actionLabel: 'Nuevo Servicio',
+                  actionIcon: Icons.add_circle_outline,
+                  onAction: () async {
+                    await context.pushNamed('create_service');
+                    _loadServices();
+                  },
                 ),
               ),
             ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'nazishop_auth_provider.dart';
+import '../../backend/auth_service.dart';
 
 NaziShopUser? get currentUser => _currentUser;
 NaziShopUser? _currentUser;
@@ -75,7 +76,7 @@ class NaziShopAuthManager {
   }
 
   Future resetPassword({required String email}) async {
-    return Future.value();
+    return AuthService.sendPasswordResetEmail(email);
   }
 
   Future<Map<String, dynamic>> signInWithGoogle(BuildContext context) async {

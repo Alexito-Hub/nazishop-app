@@ -3,11 +3,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
-import '/flutter_flow/safe_image.dart';
-import 'package:nazi_shop/backend/wallet_service.dart';
+import '/components/safe_image.dart';
+import '/components/app_dialog.dart';
+import '/backend/wallet_service.dart';
 import '/auth/nazishop_auth/auth_util.dart';
 import '/backend/order_service.dart';
 import '/backend/favorites_service.dart';
+import '/components/app_responsive_layout.dart';
 
 // No usamos FlutterFlowTheme para mantener consistencia con HomePageModern
 // import '/flutter_flow/flutter_flow_theme.dart';
@@ -31,7 +33,6 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   Color get _primaryColor => FlutterFlowTheme.of(context).primary;
 
   // --- RESPONSIVE ---
-  bool get _isDesktop => MediaQuery.of(context).size.width >= 900;
 
   @override
   void initState() {
@@ -64,31 +65,13 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   }
 
   Future<void> _handleLogout() async {
-    final shouldLogout = await showDialog<bool>(
-      context: context,
-      builder: (dialogContext) {
-        final theme = FlutterFlowTheme.of(dialogContext);
-        return AlertDialog(
-          backgroundColor: theme.secondaryBackground,
-          title: Text('Cerrar Sesión',
-              style: GoogleFonts.outfit(color: theme.primaryText)),
-          content: Text('¿Estás seguro de que quieres salir?',
-              style: GoogleFonts.outfit(color: theme.secondaryText)),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext, false),
-              child: Text('Cancelar',
-                  style: GoogleFonts.outfit(color: theme.secondaryText)),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext, true),
-              child: Text('Salir',
-                  style: GoogleFonts.outfit(
-                      color: theme.primary, fontWeight: FontWeight.bold)),
-            ),
-          ],
-        );
-      },
+    final shouldLogout = await AppDialog.confirm(
+      context,
+      title: 'Cerrar Sesión',
+      message: '¿Estás seguro de que quieres salir?',
+      confirmLabel: 'Salir',
+      isDanger: true,
+      icon: Icons.logout_rounded,
     );
 
     if (shouldLogout == true) {
@@ -112,9 +95,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-      body: _isDesktop ? _buildDesktopLayout() : _buildMobileLayout(),
+    return AppResponsiveLayout(
+      mobileBody: _buildMobileLayout(),
+      desktopBody: _buildDesktopLayout(),
     );
   }
 
@@ -270,7 +253,10 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                 children: [
                                   Text('Saldo Disponible',
                                       style: GoogleFonts.outfit(
-                                          color: Colors.white70, fontSize: 13)),
+                                          color: FlutterFlowTheme.of(context)
+                                              .tertiary
+                                              .withValues(alpha: 0.7),
+                                          fontSize: 13)),
                                   const SizedBox(height: 4),
                                   Text(
                                     '\$${_balance.toStringAsFixed(2)} $_currency',

@@ -2,7 +2,7 @@ import '/flutter_flow/flutter_flow_animations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
+import '/components/app_button.dart';
 import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -223,51 +223,20 @@ class _OnboardingWidgetState extends State<OnboardingWidget>
                       // Action Buttons
                       Column(
                         children: [
-                          FFButtonWidget(
+                          AppButton(
+                            text: 'Empezar ahora',
                             onPressed: () =>
                                 _completeOnboarding(AuthCreateWidget.routeName),
-                            text: 'Empezar ahora',
-                            options: FFButtonOptions(
-                              width: double.infinity,
-                              height: 54.0,
-                              color: FlutterFlowTheme.of(context).primary,
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .override(
-                                    fontFamily: 'Inter Tight',
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                              elevation: 2.0,
-                              borderSide: const BorderSide(
-                                  color: Colors.transparent, width: 1.0),
-                              borderRadius: BorderRadius.circular(16.0),
-                            ),
+                            type: AppButtonType.primary,
+                            width: double.infinity,
                           ),
                           const SizedBox(height: 16),
-                          FFButtonWidget(
+                          AppButton(
+                            text: 'Ya tengo cuenta',
                             onPressed: () =>
                                 _completeOnboarding(AuthLoginWidget.routeName),
-                            text: 'Ya tengo cuenta',
-                            options: FFButtonOptions(
-                              width: double.infinity,
-                              height: 54.0,
-                              color: Colors.transparent,
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .bodyLarge
-                                  .override(
-                                    fontFamily: 'Inter',
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryText,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                              elevation: 0.0,
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).alternate,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(16.0),
-                            ),
+                            type: AppButtonType.outline,
+                            width: double.infinity,
                           ),
                         ],
                       ),
@@ -420,23 +389,13 @@ class _OnboardingWidgetState extends State<OnboardingWidget>
                 const Spacer(),
 
                 // Desktop Actions
-                FFButtonWidget(
+                AppButton(
+                  text: 'Crear cuenta gratuita',
                   onPressed: () =>
                       _completeOnboarding(AuthCreateWidget.routeName),
-                  text: 'Crear cuenta gratuita',
-                  options: FFButtonOptions(
-                    width: double.infinity,
-                    height: 60.0,
-                    color: FlutterFlowTheme.of(context).primary,
-                    textStyle:
-                        FlutterFlowTheme.of(context).titleMedium.override(
-                              fontFamily: 'Inter Tight',
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                    elevation: 3.0,
-                    borderRadius: BorderRadius.circular(16.0),
-                  ),
+                  type: AppButtonType.primary,
+                  height: 60.0,
+                  width: double.infinity,
                 ),
                 const SizedBox(height: 20),
                 Wrap(

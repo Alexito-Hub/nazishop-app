@@ -18,12 +18,24 @@ abstract class FlutterFlowTheme {
 
   static Future initialize() async {
     _prefs = await SharedPreferences.getInstance();
-    final darkMode = _prefs?.getBool(kThemeModeKey);
-    _themeMode = darkMode == null
-        ? ThemeMode.system
-        : darkMode
-            ? ThemeMode.dark
-            : ThemeMode.light;
+    String? themeModeStr;
+    try {
+      themeModeStr = _prefs?.getString(kThemeModeKey);
+    } catch (_) {
+      // Handle legacy bool value
+      final darkMode = _prefs?.getBool(kThemeModeKey);
+      if (darkMode != null) {
+        themeModeStr = darkMode ? 'ThemeMode.dark' : 'ThemeMode.light';
+        // Migrate to string for future launches
+        _prefs?.setString(kThemeModeKey, themeModeStr);
+      }
+    }
+
+    _themeMode = themeModeStr == 'ThemeMode.dark'
+        ? ThemeMode.dark
+        : themeModeStr == 'ThemeMode.light'
+            ? ThemeMode.light
+            : ThemeMode.system;
     fontSizeFactor = _prefs?.getDouble(kFontSizeFactorKey) ?? 1.0;
     animationsEnabled = _prefs?.getBool(kAnimationsEnabledKey) ?? true;
   }
@@ -42,7 +54,7 @@ abstract class FlutterFlowTheme {
 
   static void saveThemeMode(ThemeMode mode) {
     _themeMode = mode;
-    _prefs?.setBool(kThemeModeKey, mode == ThemeMode.dark);
+    _prefs?.setString(kThemeModeKey, mode.toString());
   }
 
   static FlutterFlowTheme of(BuildContext context) {
@@ -58,6 +70,64 @@ abstract class FlutterFlowTheme {
             : LightModeTheme();
     }
   }
+
+  static ThemeData get lightThemeData => ThemeData(
+        brightness: Brightness.light,
+        scaffoldBackgroundColor: LightModeTheme().primaryBackground,
+        primaryColor: LightModeTheme().primary,
+        dividerColor: LightModeTheme().alternate,
+        cardColor: LightModeTheme().secondaryBackground,
+        colorScheme: ColorScheme.light(
+          primary: LightModeTheme().primary,
+          secondary: LightModeTheme().secondary,
+          surface: LightModeTheme().secondaryBackground,
+          error: LightModeTheme().error,
+          onPrimary: Colors.white,
+          onSecondary: Colors.white,
+          onSurface: LightModeTheme().primaryText,
+          onError: Colors.white,
+        ),
+        textTheme: TextTheme(
+          bodyLarge: LightModeTheme().typography.bodyLarge,
+          bodyMedium: LightModeTheme().typography.bodyMedium,
+          bodySmall: LightModeTheme().typography.bodySmall,
+          headlineLarge: LightModeTheme().typography.headlineLarge,
+          headlineMedium: LightModeTheme().typography.headlineMedium,
+          headlineSmall: LightModeTheme().typography.headlineSmall,
+        ),
+        iconTheme: IconThemeData(
+          color: LightModeTheme().primaryText,
+        ),
+      );
+
+  static ThemeData get darkThemeData => ThemeData(
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: DarkModeTheme().primaryBackground,
+        primaryColor: DarkModeTheme().primary,
+        dividerColor: DarkModeTheme().alternate,
+        cardColor: DarkModeTheme().secondaryBackground,
+        colorScheme: ColorScheme.dark(
+          primary: DarkModeTheme().primary,
+          secondary: DarkModeTheme().secondary,
+          surface: DarkModeTheme().secondaryBackground,
+          error: DarkModeTheme().error,
+          onPrimary: Colors.white,
+          onSecondary: Colors.white,
+          onSurface: DarkModeTheme().primaryText,
+          onError: Colors.white,
+        ),
+        textTheme: TextTheme(
+          bodyLarge: DarkModeTheme().typography.bodyLarge,
+          bodyMedium: DarkModeTheme().typography.bodyMedium,
+          bodySmall: DarkModeTheme().typography.bodySmall,
+          headlineLarge: DarkModeTheme().typography.headlineLarge,
+          headlineMedium: DarkModeTheme().typography.headlineMedium,
+          headlineSmall: DarkModeTheme().typography.headlineSmall,
+        ),
+        iconTheme: IconThemeData(
+          color: DarkModeTheme().primaryText,
+        ),
+      );
 
   @Deprecated('Use primary instead')
   Color get primaryColor => primary;
