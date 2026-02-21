@@ -177,9 +177,9 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
     return SliverGrid(
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 350,
-        mainAxisExtent: 280,
-        mainAxisSpacing: 16,
-        crossAxisSpacing: 16,
+        childAspectRatio: 0.72,
+        mainAxisSpacing: 20,
+        crossAxisSpacing: 20,
       ),
       delegate: SliverChildBuilderDelegate(
         (context, index) {
@@ -200,14 +200,14 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
         color: theme.secondaryBackground,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: theme.alternate,
-          width: 1.5,
+          color: theme.alternate.withValues(alpha: 0.6),
+          width: 1.0,
         ),
         boxShadow: [
           BoxShadow(
-            color: theme.primary.withValues(alpha: 0.1),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
           ),
         ],
       ),
@@ -223,65 +223,83 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
             _loadServices();
           },
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Service Image/Banner
+              // 1. Image Header (60%)
               Expanded(
-                flex: 4,
+                flex: 6,
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    // SafeImage handles loading/error states properly
                     SafeImage(
                       service.imageUrl,
                       fit: BoxFit.cover,
                       fallbackIcon: Icons.design_services_outlined,
-                      fallbackIconSize: 40,
+                      fallbackIconSize: 36,
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            theme.transparent,
-                            theme.primaryText.withValues(alpha: 0.5),
-                          ],
+                    // Gradient overlay
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      height: 40,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              theme.transparent,
+                              Colors.black.withValues(alpha: 0.4),
+                            ],
+                          ),
                         ),
                       ),
                     ),
+                    // Status Badge
                     Positioned(
                       top: 12,
                       right: 12,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
+                            horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: service.isActive
-                              ? theme.success.withValues(alpha: 0.9)
-                              : theme.primaryText.withValues(alpha: 0.54),
-                          borderRadius: BorderRadius.circular(12),
+                              ? theme.success
+                              : theme.secondaryText,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: (service.isActive
+                                      ? theme.success
+                                      : theme.secondaryText)
+                                  .withValues(alpha: 0.3),
+                              blurRadius: 6,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
                         child: Text(
                           service.isActive ? 'ACTIVO' : 'INACTIVO',
                           style: GoogleFonts.outfit(
-                            color: theme.primaryText,
-                            fontSize: 10,
+                            color: Colors.white,
+                            fontSize: 9,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 0.5,
                           ),
                         ),
                       ),
                     ),
+                    // Action Buttons (Edit/Delete)
                     Positioned(
-                      bottom: 12,
-                      right: 12,
+                      bottom: 10,
+                      right: 10,
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          DSIconButton(
-                            icon: Icons.edit_outlined,
-                            color: theme.primaryText,
+                          _buildAdminActionButton(
+                            icon: Icons.edit_rounded,
+                            color: Colors.white,
                             onTap: () async {
                               await context.pushNamed(
                                 'create_service',
@@ -291,7 +309,7 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
                             },
                           ),
                           const SizedBox(width: 8),
-                          DSIconButton(
+                          _buildAdminActionButton(
                             icon: Icons.delete_outline_rounded,
                             color: theme.error,
                             onTap: () => _deleteService(service.id),
@@ -303,47 +321,58 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
                 ),
               ),
 
-              // Info
+              // 2. Info Content (40%)
               Expanded(
-                flex: 3,
+                flex: 4,
                 child: Padding(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(12),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        service.name,
-                        style: GoogleFonts.outfit(
-                          color: theme.primaryText,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                      Expanded(
+                        child: SingleChildScrollView(
+                          physics: const ClampingScrollPhysics(),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                service.name,
+                                style: GoogleFonts.outfit(
+                                  color: theme.primaryText,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                service.description,
+                                style: GoogleFonts.outfit(
+                                  color: theme.secondaryText,
+                                  fontSize: 11,
+                                  height: 1.3,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        service.description,
-                        style: GoogleFonts.outfit(
-                          color: theme.secondaryText,
-                          fontSize: 12,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const Spacer(),
+                      const SizedBox(height: 8),
+                      // Footer: Category
                       Row(
                         children: [
                           Icon(Icons.category_rounded,
-                              color: primaryColor, size: 14),
-                          const SizedBox(width: 6),
+                              color: primaryColor, size: 12),
+                          const SizedBox(width: 4),
                           Expanded(
                             child: Text(
                               service.categoryName ?? 'Sin categoría',
                               style: GoogleFonts.outfit(
                                 color: theme.secondaryText,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -358,6 +387,32 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildAdminActionButton({
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        width: 32,
+        height: 32,
+        decoration: BoxDecoration(
+          color: color == Colors.white
+              ? Colors.white.withValues(alpha: 0.2)
+              : color.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: color.withValues(alpha: 0.3),
+            width: 1,
+          ),
+        ),
+        child: Icon(icon, color: color, size: 18),
       ),
     );
   }

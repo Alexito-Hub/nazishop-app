@@ -184,7 +184,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        childAspectRatio: 0.75,
+                        childAspectRatio: 0.72,
                         crossAxisSpacing: 16,
                         mainAxisSpacing: 16,
                       ),
@@ -286,7 +286,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           gridDelegate:
                               const SliverGridDelegateWithMaxCrossAxisExtent(
                             maxCrossAxisExtent: 280,
-                            childAspectRatio: 0.75,
+                            childAspectRatio: 0.72,
                             crossAxisSpacing: 24,
                             mainAxisSpacing: 24,
                           ),

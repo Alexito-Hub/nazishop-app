@@ -62,7 +62,7 @@ class AppProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppCard(
       hoverEffect: isHoverEffect,
-      hoverOffset: -8.0,
+      hoverOffset: -6.0,
       backgroundColor: isSelected ? primaryColor.withValues(alpha: 0.04) : null,
       hoverBorderColor: primaryColor.withValues(alpha: 0.5),
       hoverShadowColor: primaryColor.withValues(alpha: 0.25),
@@ -77,7 +77,7 @@ class AppProductCard extends StatelessWidget {
 
         return DecoratedBox(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(24),
             border: Border.all(
               color: primaryColor.withValues(alpha: 0.25),
               width: 1,
@@ -95,56 +95,96 @@ class AppProductCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // 1. IMAGE HEADER (約 55%)
+        // 1. IMAGE HEADER (60% of card height)
         Expanded(
-          flex: 11,
+          flex: 6,
           child: Stack(
+            fit: StackFit.expand,
             children: [
-              Container(
-                width: double.infinity,
-                height: double.infinity,
-                color: theme.secondaryBackground,
+              // Image / Placeholder
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(24),
+                ),
                 child: imageUrl != null && imageUrl!.isNotEmpty
                     ? SafeImage(
                         imageUrl!,
                         fit: BoxFit.cover,
                       )
-                    : _buildPlaceholder(context),
+                    : Container(
+                        color: primaryColor.withValues(alpha: 0.12),
+                        child: Center(
+                          child: Icon(
+                            variant == AppProductCardVariant.purchase
+                                ? Icons.shopping_bag_outlined
+                                : Icons.rocket_launch_rounded,
+                            size: 36,
+                            color: primaryColor.withValues(alpha: 0.5),
+                          ),
+                        ),
+                      ),
               ),
 
-              // Status Badge
+              // Gradient overlay at bottom of image for smooth transition
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: 32,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        theme.secondaryBackground.withValues(alpha: 0.6),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              // Status Badge (top-left for purchase, top-right for standard)
               if (statusText != null || !isInStock)
                 Positioned(
-                  top: 12,
-                  left: variant == AppProductCardVariant.purchase ? 12 : null,
-                  right: variant == AppProductCardVariant.standard ? 12 : null,
+                  top: 10,
+                  left: variant == AppProductCardVariant.purchase ? 10 : null,
+                  right: variant == AppProductCardVariant.standard ? 10 : null,
                   child: _buildStatusBadge(context),
                 ),
 
-              // Date Badge (Purchase only)
+              // Date Badge (Purchase only, top-right)
               if (dateText != null)
                 Positioned(
-                  top: 12,
-                  right: 12,
+                  top: 10,
+                  right: 10,
                   child: _buildDateBadge(context),
                 ),
             ],
           ),
         ),
 
-        // 2. INFO CONTENT (約 45%)
+        // 2. INFO CONTENT (40% of card height)
         Expanded(
-          flex: 9,
+          flex: 4,
           child: Container(
-            padding: const EdgeInsets.all(14),
-            color: theme.secondaryBackground,
+            padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+            decoration: BoxDecoration(
+              color: theme.secondaryBackground,
+              borderRadius: const BorderRadius.vertical(
+                bottom: Radius.circular(24),
+              ),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // Top section: title + favorite icon
                 Expanded(
                   child: SingleChildScrollView(
-                    physics: const ClampingScrollPhysics(),
+                    physics:
+                        const NeverScrollableScrollPhysics(), // Card is too small to scroll comfortably, but this prevents overflow crash
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -159,16 +199,16 @@ class AppProductCard extends StatelessWidget {
                                 style: GoogleFonts.outfit(
                                   color: theme.primaryText,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   height: 1.2,
                                 ),
                               ),
                             ),
                             if (onFavoriteToggle != null)
-                              Padding(
-                                padding: const EdgeInsets.only(left: 4.0),
-                                child: GestureDetector(
-                                  onTap: onFavoriteToggle,
+                              GestureDetector(
+                                onTap: onFavoriteToggle,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 4),
                                   child: Icon(
                                     isFavorite
                                         ? Icons.favorite_rounded
@@ -176,17 +216,17 @@ class AppProductCard extends StatelessWidget {
                                     color: isFavorite
                                         ? theme.error
                                         : theme.secondaryText,
-                                    size: 20,
+                                    size: 18,
                                   ),
                                 ),
                               ),
                           ],
                         ),
                         if (description != null && description!.isNotEmpty) ...[
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 2),
                           Text(
                             description!,
-                            maxLines: 2,
+                            maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.outfit(
                               color: theme.secondaryText,
@@ -203,13 +243,13 @@ class AppProductCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.outfit(
                               color: theme.secondaryText,
-                              fontSize: 11,
+                              fontSize: 10,
                               height: 1.2,
                             ),
                           ),
                         ],
                         if (rating != null) ...[
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 3),
                           _buildRating(context),
                         ],
                       ],
@@ -217,32 +257,28 @@ class AppProductCard extends StatelessWidget {
                   ),
                 ),
 
-                // Footer
-                Padding(
-                  padding: const EdgeInsets.only(top: 4.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Flexible(
-                        child: Text(
-                          _formatPrice(price),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.outfit(
-                            color:
-                                isInStock ? primaryColor : theme.secondaryText,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 18,
-                            decoration:
-                                isInStock ? null : TextDecoration.lineThrough,
-                          ),
+                // Bottom: price + action button
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        _formatPrice(price),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.outfit(
+                          color: isInStock ? primaryColor : theme.secondaryText,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 16,
+                          decoration:
+                              isInStock ? null : TextDecoration.lineThrough,
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      _buildActionButton(context, isHovered),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(width: 6),
+                    _buildActionButton(context, isHovered),
+                  ],
                 ),
               ],
             ),
@@ -345,19 +381,26 @@ class AppProductCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.4),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (statusIcon != null) ...[
             Icon(statusIcon, color: Colors.white, size: 10),
-            const SizedBox(width: 4),
+            const SizedBox(width: 3),
           ],
           Text(
             statusText?.toUpperCase() ?? (isInStock ? 'DISPONIBLE' : 'AGOTADO'),
             style: GoogleFonts.outfit(
               color: Colors.white,
-              fontSize: 10,
+              fontSize: 9,
               fontWeight: FontWeight.bold,
               letterSpacing: 0.5,
             ),
@@ -371,9 +414,9 @@ class AppProductCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
       decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.3),
+        color: Colors.black.withValues(alpha: 0.45),
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
       ),
       child: Text(
         dateText!,
@@ -393,16 +436,16 @@ class AppProductCard extends StatelessWidget {
         Icon(
           Icons.star_rounded,
           color: (rating ?? 0) > 0 ? theme.warning : theme.alternate,
-          size: 16,
+          size: 13,
         ),
-        const SizedBox(width: 4),
+        const SizedBox(width: 3),
         Text(
           (rating ?? 0) > 0
               ? '${rating!.toStringAsFixed(1)}${totalReviews != null ? ' ($totalReviews)' : ''}'
               : 'Sin calificaciones',
           style: GoogleFonts.outfit(
             color: theme.secondaryText,
-            fontSize: 12,
+            fontSize: 11,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -418,22 +461,26 @@ class AppProductCard extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return Container(
-      width: 40,
-      height: 40,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      width: 34,
+      height: 34,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: isHovered
-              ? [primaryColor, primaryColor.withValues(alpha: 0.8)]
-              : [theme.alternate, theme.alternate],
+              ? [primaryColor, primaryColor.withValues(alpha: 0.75)]
+              : [
+                  theme.alternate.withValues(alpha: 0.8),
+                  theme.alternate.withValues(alpha: 0.8)
+                ],
         ),
         shape: BoxShape.circle,
         boxShadow: isHovered
             ? [
                 BoxShadow(
                   color: primaryColor.withValues(alpha: 0.4),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
                 )
               ]
             : [],
@@ -441,19 +488,7 @@ class AppProductCard extends StatelessWidget {
       child: Icon(
         Icons.arrow_forward_rounded,
         color: isHovered ? Colors.white : theme.secondaryText,
-        size: 20,
-      ),
-    );
-  }
-
-  Widget _buildPlaceholder(BuildContext context) {
-    return Center(
-      child: Icon(
-        variant == AppProductCardVariant.purchase
-            ? Icons.shopping_bag_outlined
-            : Icons.rocket_launch,
-        size: 32,
-        color: primaryColor.withValues(alpha: 0.3),
+        size: 17,
       ),
     );
   }

@@ -211,12 +211,19 @@ class _ServiceDetailWidgetState extends State<ServiceDetailWidget> {
                                 color:
                                     FlutterFlowTheme.of(context).secondaryText),
                             const SizedBox(width: 8),
-                            Text("Volver al catálogo",
+                            Flexible(
+                              child: Text(
+                                "Volver al catálogo",
                                 style: GoogleFonts.outfit(
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                    fontSize:
-                                        16 * FlutterFlowTheme.fontSizeFactor)),
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryText,
+                                  fontSize:
+                                      16 * FlutterFlowTheme.fontSizeFactor,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
                           ],
                         ),
                       ),

@@ -132,7 +132,7 @@ class _MyPurchasesWidgetState extends State<MyPurchasesWidget> {
   // 🔄 ORDERS SLIVER (shared between mobile & desktop)
   // ===========================================================================
   Widget _buildOrdersSliver({required bool isMobile}) {
-    if (_isLoading) return _buildShimmerGrid(isMobile: isMobile);
+    if (_isLoading) return _buildShimmerList(isMobile: isMobile);
 
     if (_error != null) return _buildErrorState();
 
@@ -142,58 +142,53 @@ class _MyPurchasesWidgetState extends State<MyPurchasesWidget> {
           : SliverToBoxAdapter(child: _buildEmptyState());
     }
 
-    final delegate = isMobile
-        ? const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 0.75,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
-          )
-        : const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 280,
-            childAspectRatio: 0.75,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-          );
+    if (isMobile) {
+      return SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) => Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: PurchaseCard(order: _orders[index])
+                .animate()
+                .fadeIn(delay: (50 * index).ms)
+                .slideY(begin: 0.1),
+          ),
+          childCount: _orders.length,
+        ),
+      );
+    }
 
     return SliverGrid(
-      gridDelegate: delegate,
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 800,
+        childAspectRatio: 3.8, // Horizontal proportion for desktop
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+      ),
       delegate: SliverChildBuilderDelegate(
         (context, index) => PurchaseCard(order: _orders[index])
             .animate()
-            .fadeIn(delay: ((isMobile ? 50 : 30) * index).ms)
-            .slideY(begin: 0.1),
+            .fadeIn(delay: (30 * index).ms)
+            .slideY(begin: 0.05),
         childCount: _orders.length,
       ),
     );
   }
 
-  Widget _buildShimmerGrid({required bool isMobile}) {
+  Widget _buildShimmerList({required bool isMobile}) {
     final theme = FlutterFlowTheme.of(context);
-    return SliverGrid(
-      gridDelegate: isMobile
-          ? const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 0.75,
-              crossAxisSpacing: 24,
-              mainAxisSpacing: 12)
-          : const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 280,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              childAspectRatio: 0.75,
-            ),
+    return SliverList(
       delegate: SliverChildBuilderDelegate(
         (_, __) => Container(
+          height: 120,
+          margin: const EdgeInsets.only(bottom: 12),
           decoration: BoxDecoration(
-              color: theme.secondaryBackground,
-              borderRadius: BorderRadius.circular(24),
-              border:
-                  Border.all(color: theme.alternate.withValues(alpha: 0.2))),
-        )
-            .animate(onPlay: (c) => c.repeat())
-            .shimmer(duration: 2.seconds, color: theme.accent1),
-        childCount: 6,
+            color: theme.secondaryBackground,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: theme.alternate.withValues(alpha: 0.15)),
+          ),
+        ).animate(onPlay: (c) => c.repeat()).shimmer(
+            duration: 2.seconds, color: theme.accent1.withValues(alpha: 0.3)),
+        childCount: 4,
       ),
     );
   }

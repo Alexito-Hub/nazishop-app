@@ -132,7 +132,8 @@ class _HoverableCardState extends State<_HoverableCard> {
           margin: widget.margin,
           padding: widget.padding ?? const EdgeInsets.all(24),
           transform: Matrix4.identity()
-            ..translate(0.0, _isHovered ? widget.hoverOffset : 0.0, 0.0),
+            ..setTranslationRaw(
+                0.0, _isHovered ? widget.hoverOffset : 0.0, 0.0),
           decoration: BoxDecoration(
             color: widget.backgroundColor ?? theme.secondaryBackground,
             borderRadius: BorderRadius.circular(widget.borderRadius),

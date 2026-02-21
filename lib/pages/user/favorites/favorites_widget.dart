@@ -101,7 +101,7 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        childAspectRatio: 0.75,
+                        childAspectRatio: 0.72,
                         crossAxisSpacing: 12,
                         mainAxisSpacing: 12,
                       ),
@@ -172,8 +172,8 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
                         : SliverGrid(
                             gridDelegate:
                                 const SliverGridDelegateWithMaxCrossAxisExtent(
-                              maxCrossAxisExtent: 280,
-                              childAspectRatio: 0.75,
+                              maxCrossAxisExtent: 300,
+                              childAspectRatio: 0.72,
                               crossAxisSpacing: 24,
                               mainAxisSpacing: 24,
                             ),
