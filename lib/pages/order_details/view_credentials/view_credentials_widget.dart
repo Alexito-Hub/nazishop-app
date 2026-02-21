@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../../backend/order_service.dart';
 import '../../../components/smart_back_button.dart';
+import '../../../components/loading_indicator.dart';
 
 import 'view_credentials_model.dart';
 export 'view_credentials_model.dart';
@@ -92,7 +93,7 @@ class _ViewCredentialsWidgetState extends State<ViewCredentialsWidget> {
     if (_isLoading) {
       return Scaffold(
         backgroundColor: theme.primaryBackground,
-        body: Center(child: CircularProgressIndicator(color: theme.primary)),
+        body: const LoadingIndicator(isFullScreen: true),
       );
     }
 

@@ -5,6 +5,8 @@ import '/backend/admin_service.dart';
 import 'package:go_router/go_router.dart';
 import '/models/promotion_model.dart';
 import '/components/design_system.dart';
+import '/components/loading_indicator.dart';
+import '/components/app_empty_state.dart';
 import 'components/promotion_card.dart';
 
 class AdminPromotionsWidget extends StatefulWidget {
@@ -121,7 +123,7 @@ class _AdminPromotionsWidgetState extends State<AdminPromotionsWidget> {
         if (_isLoading)
           SliverFillRemaining(
             child: Center(
-              child: CircularProgressIndicator(color: theme.primary),
+              child: LoadingIndicator(color: theme.primary),
             ),
           )
         else if (_filteredPromotions.isEmpty)
@@ -249,7 +251,7 @@ class _AdminPromotionsWidgetState extends State<AdminPromotionsWidget> {
             if (_isLoading)
               SliverFillRemaining(
                 child: Center(
-                  child: CircularProgressIndicator(color: theme.primary),
+                  child: LoadingIndicator(color: theme.primary),
                 ),
               )
             else if (_filteredPromotions.isEmpty)
@@ -279,30 +281,9 @@ class _AdminPromotionsWidgetState extends State<AdminPromotionsWidget> {
   }
 
   Widget _buildEmptyState(FlutterFlowTheme theme) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: theme.secondaryBackground,
-              shape: BoxShape.circle,
-              border: Border.all(color: theme.alternate),
-            ),
-            child: Icon(
-              Icons.campaign_outlined,
-              size: 40,
-              color: theme.secondaryText,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'No hay promociones activas',
-            style: GoogleFonts.outfit(color: theme.secondaryText),
-          ),
-        ],
-      ),
+    return const AppEmptyState(
+      icon: Icons.campaign_outlined,
+      message: 'No hay promociones activas',
     );
   }
 

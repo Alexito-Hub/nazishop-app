@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/models/promotion_model.dart';
+import '/components/app_empty_state.dart';
 import 'promotion_card.dart';
 
 class PromotionList extends StatelessWidget {
@@ -20,31 +19,10 @@ class PromotionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (promotions.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: FlutterFlowTheme.of(context).secondaryBackground,
-                shape: BoxShape.circle,
-                border:
-                    Border.all(color: FlutterFlowTheme.of(context).alternate),
-              ),
-              child: Icon(
-                Icons.campaign_outlined,
-                size: 40,
-                color: FlutterFlowTheme.of(context).secondaryText,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'No hay promociones activas',
-              style: GoogleFonts.outfit(
-                  color: FlutterFlowTheme.of(context).secondaryText),
-            ),
-          ],
+      return const Center(
+        child: AppEmptyState(
+          icon: Icons.campaign_outlined,
+          message: 'No hay promociones activas',
         ),
       );
     }

@@ -5,6 +5,7 @@ import '/pages/error_page/error_page_widget.dart';
 import '/auth/nazishop_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/components/loading_indicator.dart';
 
 class AdminAuthGuard extends StatelessWidget {
   final Widget child;
@@ -24,11 +25,7 @@ class AdminAuthGuard extends StatelessWidget {
     if (authProvider.isLoading) {
       return Scaffold(
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-        body: Center(
-          child: CircularProgressIndicator(
-            color: FlutterFlowTheme.of(context).primary,
-          ),
-        ),
+        body: const Center(child: LoadingIndicator()),
       );
     }
 
@@ -41,7 +38,7 @@ class AdminAuthGuard extends StatelessWidget {
       return Scaffold(
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         body: Center(
-          child: CircularProgressIndicator(
+          child: LoadingIndicator(
             color: FlutterFlowTheme.of(context).primary,
           ),
         ),

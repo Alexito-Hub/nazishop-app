@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/components/design_system.dart';
+import '/components/app_empty_state.dart';
 import '../../../components/purchase_card.dart';
 
 class MyPurchasesWidget extends StatefulWidget {
@@ -246,50 +247,28 @@ class _MyPurchasesWidgetState extends State<MyPurchasesWidget> {
   }
 
   Widget _buildEmptyState() {
-    final theme = FlutterFlowTheme.of(context);
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: theme.secondaryBackground,
-              shape: BoxShape.circle,
-              border: Border.all(color: theme.alternate),
-            ),
-            child: Icon(Icons.receipt_long_rounded,
-                size: 40, color: theme.secondaryText),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const AppEmptyState(
+          icon: Icons.receipt_long_rounded,
+          message: 'Aún no has realizado compras',
+          subtitle: 'Tus pedidos aparecerán aquí',
+        ),
+        const SizedBox(height: 32),
+        ElevatedButton(
+          onPressed: () => context.goNamed('home'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: FlutterFlowTheme.of(context).primary,
+            foregroundColor: FlutterFlowTheme.of(context).tertiary,
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
-          const SizedBox(height: 24),
-          Text(
-            'Aún no has realizado compras',
-            style: GoogleFonts.outfit(
-              color: theme.primaryText,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Tus pedidos aparecerán aquí',
-            style: GoogleFonts.outfit(color: theme.secondaryText, fontSize: 16),
-          ),
-          const SizedBox(height: 32),
-          ElevatedButton(
-            onPressed: () => context.goNamed('home'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: theme.primary,
-              foregroundColor: theme.tertiary,
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-            ),
-            child: Text('Explorar Servicios',
-                style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
-          ),
-        ],
-      ),
+          child: Text('Explorar Servicios',
+              style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
+        ),
+      ],
     );
   }
 }

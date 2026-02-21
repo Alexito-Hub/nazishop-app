@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/components/design_system.dart';
+import '/components/app_empty_state.dart';
 
 import '/backend/favorites_service.dart';
 import '/models/service_model.dart';
@@ -196,27 +197,9 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
   }
 
   Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.favorite_border_rounded,
-              size: 64, color: FlutterFlowTheme.of(context).secondaryText),
-          const SizedBox(height: 16),
-          Text(
-            'No tienes favoritos aún',
-            style: GoogleFonts.outfit(
-                color: FlutterFlowTheme.of(context).primaryText, fontSize: 20),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Explora el catálogo y guarda lo que te guste',
-            style: GoogleFonts.outfit(
-                color: FlutterFlowTheme.of(context).secondaryText,
-                fontSize: 16),
-          ),
-        ],
-      ),
+    return const AppEmptyState(
+      icon: Icons.favorite_border_rounded,
+      message: 'No tienes favoritos aún',
     );
   }
 

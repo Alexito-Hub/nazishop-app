@@ -1,4 +1,5 @@
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/components/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '/backend/admin_service.dart';
@@ -107,7 +108,7 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
           sliver: _isLoading
               ? SliverToBoxAdapter(
                   child: Center(
-                      child: CircularProgressIndicator(
+                      child: LoadingIndicator(
                           color: FlutterFlowTheme.of(context).primary)))
               : _buildListingsGrid(isDesktop: false),
         ),
@@ -143,7 +144,7 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
               sliver: _isLoading
                   ? SliverToBoxAdapter(
                       child: Center(
-                          child: CircularProgressIndicator(
+                          child: LoadingIndicator(
                               color: FlutterFlowTheme.of(context).primary)))
                   : _buildListingsGrid(isDesktop: true),
             ),

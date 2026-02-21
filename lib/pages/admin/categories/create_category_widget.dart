@@ -4,6 +4,7 @@ import '../../../components/smart_back_button.dart';
 import '/backend/admin_service.dart';
 import '/models/category_model.dart' as model;
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/components/loading_indicator.dart';
 import '../../../components/interactive_color_picker.dart';
 import '../../../components/smart_image_input.dart';
 
@@ -355,8 +356,7 @@ class CreateCategoryWidgetState extends State<CreateCategoryWidget> {
             ? const SizedBox(
                 width: 20,
                 height: 20,
-                child: CircularProgressIndicator(
-                    color: Colors.white, strokeWidth: 2))
+                child: LoadingIndicator(size: 20, color: Colors.white))
             : Text(
                 widget.category != null ? 'Guardar Cambios' : 'Crear Categoría',
                 style: GoogleFonts.outfit(

@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '/backend/admin_service.dart';
 import '/models/offer_model.dart';
 import '/models/service_model.dart';
+import '/components/loading_indicator.dart';
 import '../../../components/smart_back_button.dart';
 
 class CreateListingWidget extends StatefulWidget {
@@ -383,9 +384,8 @@ class _CreateListingWidgetState extends State<CreateListingWidget> {
             ? SizedBox(
                 width: 20,
                 height: 20,
-                child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: FlutterFlowTheme.of(context).primaryText))
+                child: LoadingIndicator(
+                    color: FlutterFlowTheme.of(context).primaryText, size: 20))
             : const Icon(Icons.check),
         label: Text(_isSaving ? 'Guardando...' : 'Publicar Oferta'),
         style: ElevatedButton.styleFrom(
@@ -677,8 +677,8 @@ class _CreateListingWidgetState extends State<CreateListingWidget> {
                         height: 20,
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
-                          child: CircularProgressIndicator(
-                              strokeWidth: 2, color: theme.primary),
+                          child:
+                              LoadingIndicator(size: 20, color: theme.primary),
                         ))
                     : null,
                 filled: true,

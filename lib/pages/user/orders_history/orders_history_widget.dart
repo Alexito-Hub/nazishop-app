@@ -8,6 +8,8 @@ import '/models/order.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/auth/nazishop_auth/auth_util.dart';
 import '../../../components/smart_back_button.dart';
+import '/components/loading_indicator.dart';
+import '/components/app_empty_state.dart';
 
 class OrdersHistoryWidget extends StatefulWidget {
   const OrdersHistoryWidget({super.key});
@@ -200,8 +202,9 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(_primaryColor),
+              LoadingIndicator(
+                color: _primaryColor,
+                size: 40,
               ),
               const SizedBox(height: 16),
               Text(
@@ -274,67 +277,37 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
     if (_orders.isEmpty) {
       return SliverFillRemaining(
         child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(32),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: FlutterFlowTheme.of(context).secondaryBackground,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                        color: FlutterFlowTheme.of(context).alternate),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const AppEmptyState(
+                icon: Icons.shopping_cart_outlined,
+                message: 'No tienes compras aún',
+                subtitle:
+                    'Explora nuestro catálogo y realiza\ntu primera compra',
+              ),
+              const SizedBox(height: 32),
+              ElevatedButton.icon(
+                onPressed: () => Navigator.pushNamedAndRemoveUntil(
+                    context, '/homePage', (route) => false),
+                icon: const Icon(Icons.explore_rounded),
+                label: Text(
+                  'Explorar Catálogo',
+                  style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: _primaryColor,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 28,
+                    vertical: 16,
                   ),
-                  child: Icon(
-                    Icons.shopping_cart_outlined,
-                    size: 72,
-                    color: FlutterFlowTheme.of(context).secondaryText,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                const SizedBox(height: 28),
-                Text(
-                  'No tienes compras aún',
-                  style: GoogleFonts.outfit(
-                    color: FlutterFlowTheme.of(context).primaryText,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  'Explora nuestro catálogo y realiza\\ntu primera compra',
-                  style: GoogleFonts.outfit(
-                    color: FlutterFlowTheme.of(context).secondaryText,
-                    fontSize: 14,
-                    height: 1.5,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 32),
-                ElevatedButton.icon(
-                  onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                      context, '/homePage', (route) => false),
-                  icon: const Icon(Icons.explore_rounded),
-                  label: Text(
-                    'Explorar Catálogo',
-                    style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _primaryColor,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 28,
-                      vertical: 16,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       );
@@ -466,10 +439,7 @@ class _OrdersHistoryWidgetState extends State<OrdersHistoryWidget> {
         padding: const EdgeInsets.all(80),
         child: Column(
           children: [
-            CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(_primaryColor),
-              strokeWidth: 3,
-            ),
+            LoadingIndicator(color: _primaryColor),
             const SizedBox(height: 24),
             Text(
               'Cargando tus compras...',

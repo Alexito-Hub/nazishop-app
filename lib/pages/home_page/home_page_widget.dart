@@ -13,6 +13,7 @@ import '../../components/modern_search_bar.dart';
 import '../../components/category_selector.dart';
 import '../../components/desktop_banner.dart';
 import '/components/app_responsive_layout.dart';
+import '/components/app_empty_state.dart';
 
 class HomePageWidget extends StatefulWidget {
   const HomePageWidget({super.key});
@@ -316,29 +317,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   // --- HELPERS Y UI GENÉRICA ---
 
   Widget _buildEmptyState() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 80),
-      alignment: Alignment.center,
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: FlutterFlowTheme.of(context).secondaryBackground,
-            ),
-            child: Icon(Icons.search_off_rounded,
-                size: 40, color: FlutterFlowTheme.of(context).secondaryText),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'No encontramos servicios aquí',
-            style: GoogleFonts.outfit(
-                color: FlutterFlowTheme.of(context).secondaryText,
-                fontSize: 16 * FlutterFlowTheme.fontSizeFactor),
-          ),
-        ],
-      ),
+    return const AppEmptyState(
+      icon: Icons.search_off_rounded,
+      message: 'No encontramos servicios aquí',
     );
   }
 

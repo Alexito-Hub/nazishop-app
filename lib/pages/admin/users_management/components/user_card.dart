@@ -4,6 +4,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/custom_snackbar.dart';
 import '/backend/admin_service.dart';
 import '/models/user_model.dart';
+import '/components/safe_image.dart';
 import 'add_balance_dialog.dart';
 
 class UserCard extends StatelessWidget {
@@ -50,14 +51,18 @@ class UserCard extends StatelessWidget {
                   child: CircleAvatar(
                     radius: 24.0,
                     backgroundColor: FlutterFlowTheme.of(context).alternate,
-                    backgroundImage: user.photoUrl.isNotEmpty
-                        ? NetworkImage(user.photoUrl)
-                        : null,
-                    child: user.photoUrl.isEmpty
-                        ? Icon(Icons.person_outline_rounded,
+                    child: user.photoUrl.isNotEmpty
+                        ? ClipOval(
+                            child: SafeImage(
+                              user.photoUrl,
+                              width: 48,
+                              height: 48,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : Icon(Icons.person_outline_rounded,
                             size: 24.0,
-                            color: FlutterFlowTheme.of(context).secondaryText)
-                        : null,
+                            color: FlutterFlowTheme.of(context).secondaryText),
                   ),
                 ),
                 const SizedBox(width: 12.0),

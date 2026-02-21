@@ -4,6 +4,7 @@ import '../../../../flutter_flow/flutter_flow_theme.dart';
 import '../../../../backend/icon_helper.dart';
 import '../../../../backend/currency_service.dart';
 import 'package:go_router/go_router.dart';
+import '/components/loading_indicator.dart';
 
 class PurchaseCard extends StatelessWidget {
   final Map<String, dynamic> order;
@@ -285,8 +286,8 @@ class PurchaseCard extends StatelessWidget {
                           const SizedBox(
                             width: 14,
                             height: 14,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
+                            child: LoadingIndicator(
+                              size: 14,
                               color: Colors.orangeAccent,
                             ),
                           ),

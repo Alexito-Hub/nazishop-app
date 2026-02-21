@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/components/loading_indicator.dart';
+import '/components/app_empty_state.dart';
+import '/components/safe_image.dart';
+import '/components/app_snackbar.dart';
 import '/models/review_model.dart';
 import '/components/app_dialog.dart';
 import '/backend/review_service.dart';
@@ -152,21 +156,13 @@ class _ServiceReviewsState extends State<ServiceReviews> {
                   if (res['status'] == true) {
                     _loadData(); // Reload
                     if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content: Text('Reseña publicada!',
-                                style: GoogleFonts.outfit(color: Colors.white)),
-                            backgroundColor: widget.primaryColor),
-                      );
+                      AppSnackbar.show(context, 'Reseña publicada!',
+                          backgroundColor: widget.primaryColor);
                     }
                   } else {
                     if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content: Text(res['msg'] ?? 'Error',
-                                style: GoogleFonts.outfit(color: Colors.white)),
-                            backgroundColor: theme.error),
-                      );
+                      AppSnackbar.show(context, res['msg'] ?? 'Error',
+                          backgroundColor: theme.error);
                     }
                   }
                 },
@@ -208,7 +204,7 @@ class _ServiceReviewsState extends State<ServiceReviews> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: LoadingIndicator());
     }
 
     return Column(
@@ -236,14 +232,11 @@ class _ServiceReviewsState extends State<ServiceReviews> {
         ),
         const SizedBox(height: 16),
         if (_reviews.isEmpty)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: Text(
-              'No hay reseñas todavía. ¡Sé el primero!',
-              style: GoogleFonts.outfit(
-                color: FlutterFlowTheme.of(context).secondaryText,
-                fontStyle: FontStyle.italic,
-              ),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 20),
+            child: AppEmptyState(
+              icon: Icons.rate_review,
+              message: 'No hay reseñas todavía. ¡Sé el primero!',
             ),
           )
         else
@@ -272,18 +265,22 @@ class _ServiceReviewsState extends State<ServiceReviews> {
                               radius: 16,
                               backgroundColor:
                                   widget.primaryColor.withOpacity(0.2),
-                              backgroundImage: review.user?.photoURL != null
-                                  ? NetworkImage(review.user!.photoURL!)
-                                  : null,
-                              child: review.user?.photoURL == null
-                                  ? Text(
+                              child: review.user?.photoURL != null
+                                  ? ClipOval(
+                                      child: SafeImage(
+                                        review.user!.photoURL!,
+                                        width: 32,
+                                        height: 32,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )
+                                  : Text(
                                       (review.user?.displayName ?? 'U')[0]
                                           .toUpperCase(),
                                       style: GoogleFonts.outfit(
                                           color: widget.primaryColor,
                                           fontWeight: FontWeight.bold),
-                                    )
-                                  : null,
+                                    ),
                             ),
                             const SizedBox(width: 8),
                             Text(

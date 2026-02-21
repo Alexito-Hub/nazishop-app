@@ -1,6 +1,7 @@
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/components/loading_indicator.dart';
+import '/components/app_empty_state.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 import '/components/safe_image.dart';
 import '/pages/admin/admin_auth_guard.dart';
 import 'package:flutter/material.dart';
@@ -218,8 +219,8 @@ class _OrdersManagementWidgetState extends State<OrdersManagementWidget> {
     if (_model.isLoadingOrders && _model.orders.isEmpty) {
       return SliverFillRemaining(
         child: Center(
-            child: CircularProgressIndicator(
-                color: FlutterFlowTheme.of(context).primary)),
+            child:
+                LoadingIndicator(color: FlutterFlowTheme.of(context).primary)),
       );
     } else if (_model.errorMessage != null && _model.orders.isEmpty) {
       return SliverFillRemaining(
@@ -246,18 +247,10 @@ class _OrdersManagementWidgetState extends State<OrdersManagementWidget> {
       );
     } else if (_model.orders.isEmpty) {
       return SliverFillRemaining(
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.receipt_outlined,
-                  size: 64, color: FlutterFlowTheme.of(context).secondaryText),
-              const SizedBox(height: 16),
-              Text('No hay pedidos',
-                  style: GoogleFonts.outfit(
-                      color: FlutterFlowTheme.of(context).secondaryText,
-                      fontSize: 18)),
-            ],
+        child: const Center(
+          child: AppEmptyState(
+            icon: Icons.receipt_outlined,
+            message: 'No hay pedidos',
           ),
         ),
       );
@@ -283,8 +276,8 @@ class _OrdersManagementWidgetState extends State<OrdersManagementWidget> {
                         ? SizedBox(
                             width: 20,
                             height: 20,
-                            child: CircularProgressIndicator(
-                                strokeWidth: 2, color: Colors.white))
+                            child:
+                                LoadingIndicator(size: 20, color: Colors.white))
                         : const Text('Cargar más'),
                   ),
                 );
@@ -317,7 +310,7 @@ class _OrdersManagementWidgetState extends State<OrdersManagementWidget> {
                 padding: const EdgeInsets.symmetric(vertical: 24),
                 child: _model.isLoadingOrders
                     ? Center(
-                        child: CircularProgressIndicator(
+                        child: LoadingIndicator(
                             color: FlutterFlowTheme.of(context).primary))
                     : Center(
                         child: ElevatedButton(

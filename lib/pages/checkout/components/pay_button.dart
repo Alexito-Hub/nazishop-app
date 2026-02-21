@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/components/loading_indicator.dart';
 
 class PayButton extends StatelessWidget {
   final bool isProcessing;
@@ -33,8 +34,10 @@ class PayButton extends StatelessWidget {
             ? const SizedBox(
                 width: 24,
                 height: 24,
-                child: CircularProgressIndicator(
-                    color: Colors.white, strokeWidth: 2))
+                child: LoadingIndicator(
+                  color: Colors.white,
+                  size: 24,
+                ))
             : Text('Confirmar y Pagar',
                 style: GoogleFonts.outfit(
                     color: Colors.white,

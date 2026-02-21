@@ -10,7 +10,10 @@ import '../../../../backend/security_manager.dart';
 import '../components/security_check_dialog.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/components/design_system.dart';
+import '/components/loading_indicator.dart';
+import '/components/app_empty_state.dart';
 import '/components/app_dialog.dart';
+import '/components/safe_image.dart';
 
 class AdminInventoryWidget extends StatefulWidget {
   final String? listingId;
@@ -147,7 +150,7 @@ class _AdminInventoryWidgetState extends State<AdminInventoryWidget> {
         if (_isLoading)
           SliverFillRemaining(
               child: Center(
-                  child: CircularProgressIndicator(
+                  child: LoadingIndicator(
                       color: FlutterFlowTheme.of(context).primary)))
         else if (_filteredInventory.isEmpty)
           SliverFillRemaining(
@@ -285,7 +288,7 @@ class _AdminInventoryWidgetState extends State<AdminInventoryWidget> {
             // Content
             if (_isLoading)
               const SliverFillRemaining(
-                  child: Center(child: CircularProgressIndicator()))
+                  child: Center(child: LoadingIndicator()))
             else if (_filteredInventory.isEmpty)
               SliverFillRemaining(child: _buildEmptyState())
             else
@@ -311,26 +314,9 @@ class _AdminInventoryWidgetState extends State<AdminInventoryWidget> {
   }
 
   Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: FlutterFlowTheme.of(context).secondaryBackground,
-              shape: BoxShape.circle,
-              border: Border.all(color: FlutterFlowTheme.of(context).alternate),
-            ),
-            child: Icon(Icons.inbox_outlined,
-                size: 40, color: FlutterFlowTheme.of(context).secondaryText),
-          ),
-          const SizedBox(height: 16),
-          Text('No hay ítems en esta sección',
-              style: GoogleFonts.outfit(
-                  color: FlutterFlowTheme.of(context).secondaryText)),
-        ],
-      ),
+    return const AppEmptyState(
+      icon: Icons.inbox_outlined,
+      message: 'No hay ítems en esta sección',
     );
   }
 
@@ -550,9 +536,16 @@ class _InventoryRowItemState extends State<InventoryRowItem> {
         CircleAvatar(
           radius: 16,
           backgroundColor: color.withValues(alpha: 0.2),
-          backgroundImage: photo != null ? NetworkImage(photo) : null,
-          child:
-              photo == null ? Icon(Icons.person, size: 16, color: color) : null,
+          child: photo != null
+              ? ClipOval(
+                  child: SafeImage(
+                    photo,
+                    width: 32,
+                    height: 32,
+                    fit: BoxFit.cover,
+                  ),
+                )
+              : Icon(Icons.person, size: 16, color: color),
         ),
         const SizedBox(width: 12),
         Column(
@@ -745,13 +738,17 @@ class _InventoryRowItemState extends State<InventoryRowItem> {
                                 CircleAvatar(
                                   radius: 10,
                                   backgroundColor: theme.alternate,
-                                  backgroundImage: photoUrl != null
-                                      ? NetworkImage(photoUrl)
-                                      : null,
-                                  child: photoUrl == null
-                                      ? Icon(Icons.person,
-                                          size: 12, color: theme.secondaryText)
-                                      : null,
+                                  child: photoUrl != null
+                                      ? ClipOval(
+                                          child: SafeImage(
+                                            photoUrl,
+                                            width: 20,
+                                            height: 20,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        )
+                                      : Icon(Icons.person,
+                                          size: 12, color: theme.secondaryText),
                                 ),
                                 const SizedBox(width: 8),
                                 Expanded(
@@ -794,13 +791,17 @@ class _InventoryRowItemState extends State<InventoryRowItem> {
                                       radius: 10,
                                       backgroundColor:
                                           theme.warning.withValues(alpha: 0.2),
-                                      backgroundImage: photoUrl != null
-                                          ? NetworkImage(photoUrl)
-                                          : null,
-                                      child: photoUrl == null
-                                          ? Icon(Icons.person,
-                                              size: 12, color: theme.warning)
-                                          : null,
+                                      child: photoUrl != null
+                                          ? ClipOval(
+                                              child: SafeImage(
+                                                photoUrl,
+                                                width: 20,
+                                                height: 20,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            )
+                                          : Icon(Icons.person,
+                                              size: 12, color: theme.warning),
                                     ),
                                     const SizedBox(width: 8),
                                     Expanded(

@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '/backend/notification_service.dart';
+import '/components/loading_indicator.dart';
+import '/components/app_snackbar.dart';
+import '/components/safe_image.dart';
 import 'package:go_router/go_router.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/components/design_system.dart';
+import '/components/app_empty_state.dart';
 
 class NotificationsUserWidget extends StatefulWidget {
   const NotificationsUserWidget({super.key});
@@ -66,6 +70,7 @@ class _NotificationsUserWidgetState extends State<NotificationsUserWidget> {
   }
 
   Future<void> _deleteNotification(String id, int index) async {
+    final theme = FlutterFlowTheme.of(context);
     final removed = _notifications[index];
     setState(() {
       _notifications.removeAt(index);
@@ -77,9 +82,8 @@ class _NotificationsUserWidgetState extends State<NotificationsUserWidget> {
       setState(() {
         _notifications.insert(index, removed);
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error eliminando notificación')),
-      );
+      AppSnackbar.show(context, 'Error eliminando notificación',
+          backgroundColor: theme.error);
     }
   }
 
@@ -103,23 +107,9 @@ class _NotificationsUserWidgetState extends State<NotificationsUserWidget> {
   }
 
   Widget _buildEmptyState() {
-    final theme = FlutterFlowTheme.of(context);
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.notifications_off_outlined,
-              size: 64, color: theme.secondaryText),
-          const SizedBox(height: 16),
-          Text(
-            'No tienes notificaciones',
-            style: GoogleFonts.outfit(
-              color: theme.secondaryText,
-              fontSize: 18,
-            ),
-          ),
-        ],
-      ),
+    return const AppEmptyState(
+      icon: Icons.notifications_off_outlined,
+      message: 'No tienes notificaciones',
     );
   }
 
@@ -183,8 +173,9 @@ class _NotificationsUserWidgetState extends State<NotificationsUserWidget> {
               sliver: _isLoading
                   ? SliverFillRemaining(
                       child: Center(
-                          child:
-                              CircularProgressIndicator(color: _primaryColor)))
+                          child: LoadingIndicator(
+                      color: _primaryColor,
+                    )))
                   : _notifications.isEmpty
                       ? SliverToBoxAdapter(child: _buildEmptyState())
                       : SliverGrid(
@@ -237,8 +228,7 @@ class _NotificationsUserWidgetState extends State<NotificationsUserWidget> {
         // 2. Contenido
         if (_isLoading)
           SliverFillRemaining(
-            child:
-                Center(child: CircularProgressIndicator(color: _primaryColor)),
+            child: Center(child: LoadingIndicator(color: _primaryColor)),
           )
         else if (_notifications.isEmpty)
           SliverFillRemaining(child: _buildEmptyState())
@@ -342,10 +332,15 @@ class _NotificationsUserWidgetState extends State<NotificationsUserWidget> {
                   width: 50,
                   height: 50,
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      image: DecorationImage(
-                          image: NetworkImage(notif['imageUrl']),
-                          fit: BoxFit.cover)),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: SafeImage(
+                      notif['imageUrl'],
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 )
               else
                 Container(

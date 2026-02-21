@@ -7,6 +7,8 @@ import 'package:go_router/go_router.dart';
 import '/models/coupon_model.dart';
 import 'package:intl/intl.dart';
 import '/components/design_system.dart';
+import '/components/loading_indicator.dart';
+import '/components/app_empty_state.dart';
 
 class AdminCouponsWidget extends StatefulWidget {
   const AdminCouponsWidget({super.key});
@@ -132,8 +134,7 @@ class _AdminCouponsWidgetState extends State<AdminCouponsWidget> {
         ),
         if (_isLoading)
           SliverFillRemaining(
-              child: Center(
-                  child: CircularProgressIndicator(color: theme.primary)))
+              child: Center(child: LoadingIndicator(color: theme.primary)))
         else if (_filteredCoupons.isEmpty)
           SliverFillRemaining(child: _buildEmptyState(theme))
         else
@@ -260,8 +261,7 @@ class _AdminCouponsWidgetState extends State<AdminCouponsWidget> {
             ),
             if (_isLoading)
               SliverFillRemaining(
-                  child: Center(
-                      child: CircularProgressIndicator(color: theme.primary)))
+                  child: Center(child: LoadingIndicator(color: theme.primary)))
             else if (_filteredCoupons.isEmpty)
               SliverFillRemaining(child: _buildEmptyState(theme))
             else
@@ -326,19 +326,9 @@ class _AdminCouponsWidgetState extends State<AdminCouponsWidget> {
   }
 
   Widget _buildEmptyState(FlutterFlowTheme theme) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.confirmation_number_outlined,
-              size: 64, color: theme.secondaryText),
-          const SizedBox(height: 16),
-          Text(
-            'No hay cupones',
-            style: GoogleFonts.outfit(color: theme.secondaryText, fontSize: 18),
-          ),
-        ],
-      ),
+    return const AppEmptyState(
+      icon: Icons.confirmation_number_outlined,
+      message: 'No hay cupones',
     );
   }
 }

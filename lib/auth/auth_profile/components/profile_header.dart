@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/auth/nazishop_auth/auth_util.dart';
+import '/components/safe_image.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({super.key});
@@ -27,18 +28,12 @@ class ProfileHeader extends StatelessWidget {
                     padding: const EdgeInsets.all(4.0),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(50.0),
-                      child: Image.network(
+                      child: SafeImage(
                         currentUserPhoto,
                         width: 100.0,
                         height: 100.0,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) =>
-                            Image.asset(
-                          'assets/images/error_image.png',
-                          width: 100.0,
-                          height: 100.0,
-                          fit: BoxFit.cover,
-                        ),
+                        fallbackIcon: Icons.person,
                       ),
                     ),
                   ),

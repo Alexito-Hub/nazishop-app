@@ -4,6 +4,8 @@ import '/flutter_flow/flutter_flow_model.dart';
 import '/backend/admin_service.dart';
 import '../../../../backend/security_manager.dart';
 import '/components/design_system.dart';
+import '/components/loading_indicator.dart';
+import '/components/app_empty_state.dart';
 import '../components/security_check_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -116,7 +118,7 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
     if (!_isAuthorized) {
       return Scaffold(
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-        body: const Center(child: CircularProgressIndicator()),
+        body: const Center(child: LoadingIndicator()),
       );
     }
 
@@ -168,7 +170,7 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
         if (_isLoading)
           SliverFillRemaining(
             child: Center(
-              child: CircularProgressIndicator(color: theme.primary),
+              child: LoadingIndicator(color: theme.primary),
             ),
           )
         else if (_filteredUsers.isEmpty)
@@ -266,7 +268,7 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
             if (_isLoading)
               SliverFillRemaining(
                 child: Center(
-                  child: CircularProgressIndicator(color: theme.primary),
+                  child: LoadingIndicator(color: theme.primary),
                 ),
               )
             else if (_filteredUsers.isEmpty)
@@ -296,30 +298,9 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
   }
 
   Widget _buildEmptyState(FlutterFlowTheme theme) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: theme.secondaryBackground,
-              shape: BoxShape.circle,
-              border: Border.all(color: theme.alternate),
-            ),
-            child: Icon(
-              Icons.people_outline,
-              size: 40,
-              color: theme.secondaryText,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'No se encontraron usuarios',
-            style: GoogleFonts.outfit(color: theme.secondaryText),
-          ),
-        ],
-      ),
+    return const AppEmptyState(
+      icon: Icons.people_outline,
+      message: 'No se encontraron usuarios',
     );
   }
 

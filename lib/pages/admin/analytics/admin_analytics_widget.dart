@@ -1,4 +1,5 @@
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/components/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '/backend/admin_service.dart';
@@ -146,7 +147,7 @@ class _AdminAnalyticsWidgetState extends State<AdminAnalyticsWidget> {
   Widget _buildContent(bool isDesktop, FlutterFlowTheme theme, Color cardColor,
       Color borderColor) {
     if (_isLoading) {
-      return Center(child: CircularProgressIndicator(color: theme.primary));
+      return Center(child: LoadingIndicator(color: theme.primary));
     }
 
     return Column(

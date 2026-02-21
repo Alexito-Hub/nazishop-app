@@ -7,6 +7,7 @@ import '/models/category_model.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '../../../components/interactive_color_picker.dart';
 import '../../../components/smart_image_input.dart';
+import '/components/loading_indicator.dart';
 
 class CreateServiceWidget extends StatefulWidget {
   final Service? service;
@@ -430,8 +431,8 @@ class CreateServiceWidgetState extends State<CreateServiceWidget> {
                       child: SizedBox(
                           width: 16,
                           height: 16,
-                          child: CircularProgressIndicator(
-                              strokeWidth: 2, color: theme.primary)))
+                          child:
+                              LoadingIndicator(size: 16, color: theme.primary)))
                   : null,
               filled: true,
               fillColor: theme.primaryBackground,
@@ -556,11 +557,10 @@ class CreateServiceWidgetState extends State<CreateServiceWidget> {
         ),
         onPressed: _isSubmitting ? null : _submit,
         child: _isSubmitting
-            ? const SizedBox(
+            ? SizedBox(
                 width: 20,
                 height: 20,
-                child: CircularProgressIndicator(
-                    color: Colors.white, strokeWidth: 2))
+                child: LoadingIndicator(color: Colors.white, size: 20))
             : Text(
                 widget.service != null ? 'Guardar Cambios' : 'Crear Servicio',
                 style: GoogleFonts.outfit(

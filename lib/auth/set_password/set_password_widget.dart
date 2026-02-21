@@ -1,4 +1,3 @@
-import '/auth/nazishop_auth/auth_util.dart';
 import '/auth/nazishop_auth/nazishop_auth_provider.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';

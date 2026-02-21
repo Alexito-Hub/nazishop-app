@@ -1,6 +1,7 @@
 // Servicio para manejar detección de país y monedas
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import '/components/loading_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/currency_model.dart';
 import 'api_client.dart';
@@ -281,7 +282,7 @@ class _CurrencySelectorState extends State<CurrencySelector> {
   @override
   Widget build(BuildContext context) {
     if (_selectedCurrency == null) {
-      return const CircularProgressIndicator();
+      return const LoadingIndicator();
     }
 
     final currencies = CurrencyService.getSupportedCurrencies();

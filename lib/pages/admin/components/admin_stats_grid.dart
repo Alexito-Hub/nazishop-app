@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/components/loading_indicator.dart';
 import 'admin_stat_card.dart';
 
 class AdminStatsGrid extends StatelessWidget {
@@ -20,8 +21,7 @@ class AdminStatsGrid extends StatelessWidget {
       return Container(
         height: 200,
         alignment: Alignment.center,
-        child: CircularProgressIndicator(
-            color: FlutterFlowTheme.of(context).primary),
+        child: LoadingIndicator(color: FlutterFlowTheme.of(context).primary),
       );
     }
 

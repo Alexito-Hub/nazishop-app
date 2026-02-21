@@ -7,6 +7,9 @@ import 'package:intl/intl.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import '/components/design_system.dart';
+import '/components/async_data_builder.dart';
+import '/components/app_empty_state.dart';
+import '/components/safe_image.dart';
 
 class AdminNotificationsWidget extends StatefulWidget {
   const AdminNotificationsWidget({super.key});
@@ -17,28 +20,12 @@ class AdminNotificationsWidget extends StatefulWidget {
 }
 
 class _AdminNotificationsWidgetState extends State<AdminNotificationsWidget> {
-  List<NotificationModel> _notifications = [];
-  bool _isLoading = false;
+  late Future<List<NotificationModel>> _notificationsFuture;
 
   @override
   void initState() {
     super.initState();
-    _loadData();
-  }
-
-  Future<void> _loadData() async {
-    setState(() => _isLoading = true);
-    try {
-      final res = await AdminService.getNotifications();
-      if (mounted) {
-        setState(() {
-          _notifications = res;
-          _isLoading = false;
-        });
-      }
-    } catch (e) {
-      if (mounted) setState(() => _isLoading = false);
-    }
+    _notificationsFuture = AdminService.getNotifications();
   }
 
   @override
@@ -47,11 +34,19 @@ class _AdminNotificationsWidgetState extends State<AdminNotificationsWidget> {
 
     return Scaffold(
       backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-      body: Stack(
-        children: [
-          // Removed background blur bubbles for cleaner look
-          if (isDesktop) _buildDesktopLayout() else _buildMobileLayout(),
-        ],
+      body: AsyncDataBuilder<List<NotificationModel>>(
+        future: _notificationsFuture,
+        builder: (context, notifs) {
+          // rebuild layout with loaded notifications
+          return Stack(
+            children: [
+              if (isDesktop)
+                _buildDesktopLayout(notifs)
+              else
+                _buildMobileLayout(notifs),
+            ],
+          );
+        },
       ),
       floatingActionButton: isDesktop
           ? null
@@ -63,7 +58,7 @@ class _AdminNotificationsWidgetState extends State<AdminNotificationsWidget> {
     );
   }
 
-  Widget _buildDesktopLayout() {
+  Widget _buildDesktopLayout(List<NotificationModel> notifs) {
     return Align(
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
@@ -81,7 +76,7 @@ class _AdminNotificationsWidgetState extends State<AdminNotificationsWidget> {
                 onAction: _goToCreatePage,
               ),
               const SizedBox(height: 40),
-              Expanded(child: _buildList()),
+              Expanded(child: _buildList(notifs)),
             ],
           ),
         ),
@@ -89,33 +84,28 @@ class _AdminNotificationsWidgetState extends State<AdminNotificationsWidget> {
     );
   }
 
-  Widget _buildMobileLayout() {
+  Widget _buildMobileLayout(List<NotificationModel> notifs) {
     return CustomScrollView(
       slivers: [
         const DSMobileAppBar(title: 'Notificaciones'),
-        SliverFillRemaining(child: _buildList()),
+        SliverFillRemaining(child: _buildList(notifs)),
       ],
     );
   }
 
-  Widget _buildList() {
-    if (_isLoading) {
-      return Center(
-          child: CircularProgressIndicator(
-              color: FlutterFlowTheme.of(context).primary));
-    }
-    if (_notifications.isEmpty) {
-      return Center(
-          child: Text('No hay historial',
-              style: TextStyle(
-                  color: FlutterFlowTheme.of(context).secondaryText)));
+  Widget _buildList(List<NotificationModel> notifs) {
+    if (notifs.isEmpty) {
+      return const AppEmptyState(
+        icon: Icons.notifications_none,
+        message: 'No hay historial',
+      );
     }
 
     return ListView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: _notifications.length,
+      itemCount: notifs.length,
       itemBuilder: (context, index) {
-        final n = _notifications[index];
+        final n = notifs[index];
         return Container(
           margin: const EdgeInsets.only(bottom: 12),
           padding: const EdgeInsets.all(16),
@@ -139,7 +129,11 @@ class _AdminNotificationsWidgetState extends State<AdminNotificationsWidget> {
                 child: n.imageUrl != null
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: Image.network(n.imageUrl!, fit: BoxFit.cover))
+                        child: SafeImage(
+                          n.imageUrl!,
+                          fit: BoxFit.cover,
+                        ),
+                      )
                     : Icon(
                         n.type == 'offer'
                             ? Icons.local_offer
@@ -229,7 +223,9 @@ class _AdminNotificationsWidgetState extends State<AdminNotificationsWidget> {
   void _goToCreatePage() async {
     final res = await context.pushNamed('create_notification');
     if (res == true) {
-      _loadData();
+      setState(() {
+        _notificationsFuture = AdminService.getNotifications();
+      });
     }
   }
 }

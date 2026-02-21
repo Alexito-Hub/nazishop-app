@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/components/loading_indicator.dart';
 
 /// Widget that safely loads network images with robust error handling and loading states.
 /// Handles:
@@ -77,11 +78,9 @@ class SafeImage extends StatelessWidget {
         child: SizedBox(
           width: 20,
           height: 20,
-          child: CircularProgressIndicator(
-            strokeWidth: 2,
-            valueColor: AlwaysStoppedAnimation<Color>(
-              FlutterFlowTheme.of(context).primary,
-            ),
+          child: LoadingIndicator(
+            size: 20,
+            color: FlutterFlowTheme.of(context).primary,
           ),
         ),
       ),

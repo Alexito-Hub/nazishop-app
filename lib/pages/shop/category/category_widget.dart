@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 import '/models/category_model.dart';
 import '/models/service_model.dart';
+import '/components/async_data_builder.dart';
 import '../../../components/smart_back_button.dart';
 import '/components/service_card.dart';
 import '/utils/icon_utils.dart';
@@ -162,19 +163,15 @@ class _CategoryPageState extends State<CategoryPage> {
                 horizontal: isDesktop ? 48 : 24,
                 vertical: 16,
               ),
-              sliver: FutureBuilder<List<Service>>(
+              sliver: AsyncDataBuilder<List<Service>>(
                 future: _servicesFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return SliverFillRemaining(
-                      child: Center(
-                        child: CircularProgressIndicator(
-                            color: FlutterFlowTheme.of(context).primary),
-                      ),
-                    );
-                  }
-
-                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                fullScreenLoading: false,
+                padding: EdgeInsets.symmetric(
+                  horizontal: isDesktop ? 48 : 24,
+                  vertical: 16,
+                ),
+                builder: (context, services) {
+                  if (services.isEmpty) {
                     return SliverFillRemaining(
                       child: Center(
                         child: Column(
@@ -200,7 +197,6 @@ class _CategoryPageState extends State<CategoryPage> {
                     );
                   }
 
-                  final services = snapshot.data!;
                   final crossAxisCount = isDesktop
                       ? 5
                       : isTablet

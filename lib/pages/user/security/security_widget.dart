@@ -10,6 +10,10 @@ import '/services/biometric_service.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import '/backend/user_service.dart';
 import '/components/design_system.dart';
+import '/components/loading_indicator.dart';
+import '/components/app_empty_state.dart';
+import '/components/app_snackbar.dart';
+import '/pages/error_page/error_page_widget.dart';
 import 'components/device_session_card.dart';
 
 class SecurityWidget extends StatefulWidget {
@@ -23,6 +27,8 @@ class _SecurityWidgetState extends State<SecurityWidget> {
   bool _is2FAEnabled = false;
   bool _isBiometricEnabled = false;
   bool _isLoadingSecurity = true;
+  bool _hasSecurityError = false;
+  String? _securityErrorMsg;
   List<Map<String, dynamic>> _sessions = [];
   bool _loadingSessions = true;
 
@@ -57,7 +63,13 @@ class _SecurityWidgetState extends State<SecurityWidget> {
         });
       }
     } catch (e) {
-      if (mounted) setState(() => _isLoadingSecurity = false);
+      if (mounted) {
+        setState(() {
+          _isLoadingSecurity = false;
+          _hasSecurityError = true;
+          _securityErrorMsg = e.toString();
+        });
+      }
     }
   }
 
@@ -107,15 +119,13 @@ class _SecurityWidgetState extends State<SecurityWidget> {
   Future<void> _revokeSession(String sessionId) async {
     final success = await UserService.revokeSession(sessionId);
     if (mounted) {
+      final theme = FlutterFlowTheme.of(context);
       if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Sesión cerrada')),
-        );
+        AppSnackbar.show(context, 'Sesión cerrada');
         _fetchSessions();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error al cerrar la sesión')),
-        );
+        AppSnackbar.show(context, 'Error al cerrar la sesión',
+            backgroundColor: theme.error);
       }
     }
   }
@@ -123,15 +133,13 @@ class _SecurityWidgetState extends State<SecurityWidget> {
   Future<void> _revokeAllOthers() async {
     final success = await UserService.revokeAllOtherSessions();
     if (mounted) {
+      final theme = FlutterFlowTheme.of(context);
       if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Otras sesiones cerradas')),
-        );
+        AppSnackbar.show(context, 'Otras sesiones cerradas');
         _fetchSessions();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error al cerrar otras sesiones')),
-        );
+        AppSnackbar.show(context, 'Error al cerrar otras sesiones',
+            backgroundColor: theme.error);
       }
     }
   }
@@ -144,7 +152,15 @@ class _SecurityWidgetState extends State<SecurityWidget> {
     if (_isLoadingSecurity) {
       return Scaffold(
         backgroundColor: theme.primaryBackground,
-        body: Center(child: CircularProgressIndicator(color: theme.primary)),
+        body: const LoadingIndicator(isFullScreen: true),
+      );
+    }
+
+    if (_hasSecurityError) {
+      return ErrorPageWidget(
+        type: ErrorType.generalError,
+        customMessage:
+            'Error al cargar las opciones de seguridad. ${_securityErrorMsg ?? ''}',
       );
     }
 
@@ -430,9 +446,11 @@ class _SecurityWidgetState extends State<SecurityWidget> {
         _buildSectionTitle('Dispositivos Conectados'),
         if (_loadingSessions)
           const Center(
-              child: Padding(
-                  padding: EdgeInsets.all(20),
-                  child: CircularProgressIndicator()))
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: LoadingIndicator(),
+            ),
+          )
         else if (_sessions.isEmpty)
           _buildEmptySessions(theme)
         else ...[
@@ -460,9 +478,11 @@ class _SecurityWidgetState extends State<SecurityWidget> {
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: _cardDecoration(theme),
-      child: Center(
-          child: Text('No hay otras sesiones activas',
-              style: GoogleFonts.outfit(color: theme.secondaryText))),
+      child: const Center(
+          child: AppEmptyState(
+        icon: Icons.devices_other_rounded,
+        message: 'No hay otras sesiones activas',
+      )),
     );
   }
 

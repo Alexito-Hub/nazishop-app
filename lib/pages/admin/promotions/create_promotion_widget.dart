@@ -4,6 +4,7 @@ import '../../../components/smart_back_button.dart';
 import '/backend/admin_service.dart';
 import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
+import '/components/loading_indicator.dart';
 import '/models/listing_model.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 
@@ -308,7 +309,7 @@ class _CreatePromotionWidgetState extends State<CreatePromotionWidget> {
           ),
           const SizedBox(height: 20),
           if (_isLoadingListings)
-            Center(child: CircularProgressIndicator(color: theme.primary))
+            Center(child: LoadingIndicator(color: theme.primary))
           else
             Container(
               constraints: BoxConstraints(maxHeight: maxHeight),
@@ -516,8 +517,8 @@ class _CreatePromotionWidgetState extends State<CreatePromotionWidget> {
             ? SizedBox(
                 width: 20,
                 height: 20,
-                child: CircularProgressIndicator(
-                    color: FlutterFlowTheme.of(context).info, strokeWidth: 2))
+                child: LoadingIndicator(
+                    color: FlutterFlowTheme.of(context).info, size: 20))
             : Text(
                 widget.promotion != null
                     ? 'Guardar Cambios'

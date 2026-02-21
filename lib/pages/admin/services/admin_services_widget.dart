@@ -7,6 +7,8 @@ import 'package:go_router/go_router.dart';
 import '/components/design_system.dart';
 import '/components/app_responsive_layout.dart';
 import '/components/safe_image.dart';
+import '/components/loading_indicator.dart';
+import '/components/app_empty_state.dart';
 
 class AdminServicesWidget extends StatefulWidget {
   const AdminServicesWidget({super.key});
@@ -106,8 +108,9 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
           sliver: _isLoading
               ? SliverToBoxAdapter(
                   child: Center(
-                      child: CircularProgressIndicator(
-                          color: FlutterFlowTheme.of(context).primary)))
+                      child: LoadingIndicator(
+                  color: FlutterFlowTheme.of(context).primary,
+                )))
               : _buildServicesGrid(isDesktop: false),
         ),
       ],
@@ -142,8 +145,9 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
               sliver: _isLoading
                   ? SliverToBoxAdapter(
                       child: Center(
-                          child: CircularProgressIndicator(
-                              color: FlutterFlowTheme.of(context).primary)))
+                          child: LoadingIndicator(
+                      color: FlutterFlowTheme.of(context).primary,
+                    )))
                   : _buildServicesGrid(isDesktop: true),
             ),
           ],
@@ -155,21 +159,9 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
   Widget _buildServicesGrid({required bool isDesktop}) {
     if (_services.isEmpty) {
       return SliverToBoxAdapter(
-        child: Center(
-          child: Column(
-            children: [
-              const SizedBox(height: 50),
-              Icon(Icons.inventory_2_outlined,
-                  size: 64, color: FlutterFlowTheme.of(context).secondaryText),
-              const SizedBox(height: 16),
-              Text(
-                'No hay servicios creados',
-                style: GoogleFonts.outfit(
-                    color: FlutterFlowTheme.of(context).secondaryText,
-                    fontSize: 18),
-              ),
-            ],
-          ),
+        child: const AppEmptyState(
+          icon: Icons.inventory_2_outlined,
+          message: 'No hay servicios creados',
         ),
       );
     }
@@ -297,7 +289,7 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          _buildAdminActionButton(
+                          DSIconButton(
                             icon: Icons.edit_rounded,
                             color: Colors.white,
                             onTap: () async {
@@ -309,7 +301,7 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
                             },
                           ),
                           const SizedBox(width: 8),
-                          _buildAdminActionButton(
+                          DSIconButton(
                             icon: Icons.delete_outline_rounded,
                             color: theme.error,
                             onTap: () => _deleteService(service.id),
@@ -387,32 +379,6 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildAdminActionButton({
-    required IconData icon,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(10),
-      child: Container(
-        width: 32,
-        height: 32,
-        decoration: BoxDecoration(
-          color: color == Colors.white
-              ? Colors.white.withValues(alpha: 0.2)
-              : color.withValues(alpha: 0.15),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: color.withValues(alpha: 0.3),
-            width: 1,
-          ),
-        ),
-        child: Icon(icon, color: color, size: 18),
       ),
     );
   }

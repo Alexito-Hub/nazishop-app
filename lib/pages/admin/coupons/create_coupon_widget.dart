@@ -5,6 +5,7 @@ import '/backend/admin_service.dart';
 import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/components/loading_indicator.dart';
 
 class CreateCouponWidget extends StatefulWidget {
   final Map<String, dynamic>? coupon;
@@ -489,8 +490,7 @@ class _CreateCouponWidgetState extends State<CreateCouponWidget> {
             ? const SizedBox(
                 width: 20,
                 height: 20,
-                child: CircularProgressIndicator(
-                    color: Colors.white, strokeWidth: 2))
+                child: LoadingIndicator(size: 20, color: Colors.white))
             : Text(
                 widget.coupon != null ? 'Guardar Cambios' : 'Crear Cupón',
                 style: GoogleFonts.outfit(

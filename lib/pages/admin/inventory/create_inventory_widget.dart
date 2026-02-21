@@ -4,6 +4,7 @@ import '/backend/admin_service.dart';
 import '/models/listing_model.dart';
 import '../../../components/smart_back_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/components/loading_indicator.dart';
 
 class CreateInventoryWidget extends StatefulWidget {
   final String? listingId;
@@ -309,8 +310,7 @@ class _CreateInventoryWidgetState extends State<CreateInventoryWidget> {
             ? SizedBox(
                 width: 24,
                 height: 24,
-                child: CircularProgressIndicator(
-                    color: Colors.white, strokeWidth: 2))
+                child: LoadingIndicator(size: 24, color: Colors.white))
             : Text(
                 _selectedListingTitle != null
                     ? 'AÑADIR A "${_selectedListingTitle!.toUpperCase()}"'
@@ -425,8 +425,7 @@ class _CreateInventoryWidgetState extends State<CreateInventoryWidget> {
   Widget _buildListingSelector() {
     if (_isLoadingListings) {
       return Center(
-          child: CircularProgressIndicator(
-              color: FlutterFlowTheme.of(context).primary));
+          child: LoadingIndicator(color: FlutterFlowTheme.of(context).primary));
     }
 
     return Container(

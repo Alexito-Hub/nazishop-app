@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui'; // Add for ImageFilter
 import '/flutter_flow/flutter_flow_theme.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '/components/loading_indicator.dart';
 import '/backend/admin_service.dart';
 import '../../../components/smart_back_button.dart';
 
@@ -390,8 +391,8 @@ class _CreateNotificationWidgetState extends State<CreateNotificationWidget> {
           ? SizedBox(
               width: 24,
               height: 24,
-              child: CircularProgressIndicator(
-                  color: FlutterFlowTheme.of(context).info, strokeWidth: 2))
+              child: LoadingIndicator(
+                  color: FlutterFlowTheme.of(context).info, size: 24))
           : Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

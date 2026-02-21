@@ -4,7 +4,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/backend/catalog_service.dart';
 import '/models/service_model.dart';
-import '/components/smart_back_button.dart';
+import '/components/async_data_builder.dart';
 
 import 'offers_model.dart';
 import 'components/offers_banner.dart';
@@ -54,23 +54,15 @@ class _OffersWidgetState extends State<OffersWidget> {
         appBar: isDesktop
             ? null
             : AppBar(
-                backgroundColor: FlutterFlowTheme.of(context).primary,
-                automaticallyImplyLeading: false,
-                leading: SmartBackButton(
-                  color: FlutterFlowTheme.of(context).primaryText,
-                ),
-                title: Text(
-                  'Ofertas Especiales',
-                  style: FlutterFlowTheme.of(context).headlineMedium.override(
-                        font: GoogleFonts.inter(),
-                        color: FlutterFlowTheme.of(context).primaryText,
-                        fontSize: 22.0,
-                        letterSpacing: 0.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
+                backgroundColor: FlutterFlowTheme.of(context).transparent,
+                elevation: 0,
                 centerTitle: true,
-                elevation: 2.0,
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back_rounded),
+                  color: FlutterFlowTheme.of(context).primaryText,
+                  onPressed: () => context.pop(),
+                ),
+                title: const Text('Ofertas Especiales'),
               ),
         body: SafeArea(
           top: true,
@@ -80,21 +72,9 @@ class _OffersWidgetState extends State<OffersWidget> {
                   BoxConstraints(maxWidth: isDesktop ? 1200 : double.infinity),
               child: SingleChildScrollView(
                 padding: EdgeInsets.all(isDesktop ? 32.0 : 16.0),
-                child: FutureBuilder<List<Service>>(
+                child: AsyncDataBuilder<List<Service>>(
                   future: CatalogService.getAllServices(limit: 5),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-
-                    if (snapshot.hasError) {
-                      return Center(
-                          child: Text(
-                              'Error cargando ofertas: ${snapshot.error}'));
-                    }
-
-                    final products = snapshot.data ?? [];
-
+                  builder: (context, products) {
                     return Column(
                       children: [
                         if (isDesktop)

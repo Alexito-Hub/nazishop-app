@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '/backend/order_service.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/components/loading_indicator.dart';
 import '/components/design_system.dart';
 
 class CustomerInfoPage extends StatefulWidget {
@@ -332,10 +333,9 @@ class _CustomerInfoPageState extends State<CustomerInfoPage> {
                   ? SizedBox(
                       height: 24,
                       width: 24,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(theme.tertiary),
+                      child: LoadingIndicator(
+                        color: theme.tertiary,
+                        size: 24,
                       ),
                     )
                   : Text(

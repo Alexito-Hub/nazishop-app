@@ -1,6 +1,7 @@
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/components/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -92,9 +93,7 @@ class _PurchaseSuccessWidgetState extends State<PurchaseSuccessWidget> {
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         body: _isLoading
-            ? Center(
-                child: CircularProgressIndicator(
-                    color: FlutterFlowTheme.of(context).primary))
+            ? const Center(child: LoadingIndicator(isFullScreen: false))
             : (_isDesktop ? _buildDesktopLayout() : _buildMobileLayout()),
       ),
     );

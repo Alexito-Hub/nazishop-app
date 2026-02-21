@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '/backend/admin_service.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/components/loading_indicator.dart';
 import '/components/app_dialog.dart';
 
 class SecurityCheckDialog extends StatefulWidget {
@@ -147,9 +148,9 @@ class _SecurityCheckDialogState extends State<SecurityCheckDialog> {
             SizedBox(
               height: 60,
               child: Center(
-                child: CircularProgressIndicator(
+                child: LoadingIndicator(
                   color: theme.primary,
-                  strokeWidth: 3,
+                  size: 40,
                 ),
               ),
             )

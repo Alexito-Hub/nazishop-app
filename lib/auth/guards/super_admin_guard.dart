@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '/auth/nazishop_auth/nazishop_auth_provider.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/components/loading_indicator.dart';
 
 class SuperAdminAuthGuard extends StatefulWidget {
   final Widget child;
@@ -43,8 +44,7 @@ class _SuperAdminAuthGuardState extends State<SuperAdminAuthGuard> {
       return Scaffold(
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         body: Center(
-          child: CircularProgressIndicator(
-              color: FlutterFlowTheme.of(context).primary),
+          child: LoadingIndicator(color: FlutterFlowTheme.of(context).primary),
         ),
       );
     }

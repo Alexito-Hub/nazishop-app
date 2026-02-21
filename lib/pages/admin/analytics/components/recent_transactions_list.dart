@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/components/app_empty_state.dart';
 
 class RecentTransactionsList extends StatelessWidget {
   final List<dynamic> transactions;
@@ -66,11 +67,13 @@ class RecentTransactionsList extends StatelessWidget {
                       );
                     }),
                   )
-                : Center(
+                : const Center(
                     child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Text('No hay movimientos recientes',
-                        style: GoogleFonts.outfit(color: theme.secondaryText)),
+                    padding: EdgeInsets.all(20.0),
+                    child: AppEmptyState(
+                      icon: Icons.history,
+                      message: 'No hay movimientos recientes',
+                    ),
                   ))),
       ],
     );

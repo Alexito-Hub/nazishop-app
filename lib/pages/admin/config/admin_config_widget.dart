@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '/backend/admin_service.dart';
 import '/models/app_config_model.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/components/loading_indicator.dart';
 import '/components/design_system.dart';
 import 'components/config_section_card.dart';
 import 'components/config_inputs.dart';
@@ -114,7 +115,13 @@ class _AdminConfigWidgetState extends State<AdminConfigWidget> {
               onPressed: _isSaving ? null : _saveSettings,
               backgroundColor: theme.primary,
               child: _isSaving
-                  ? CircularProgressIndicator(color: theme.tertiary)
+                  ? SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: LoadingIndicator(
+                        color: theme.tertiary,
+                        size: 24,
+                      ))
                   : Icon(Icons.save, color: theme.tertiary),
             ),
     );
@@ -168,8 +175,7 @@ class _AdminConfigWidgetState extends State<AdminConfigWidget> {
   Widget _buildDesktopContent(FlutterFlowTheme theme) {
     if (_isLoading || _config == null) {
       return Center(
-          child: CircularProgressIndicator(
-              color: FlutterFlowTheme.of(context).primary));
+          child: LoadingIndicator(color: FlutterFlowTheme.of(context).primary));
     }
 
     return Wrap(
@@ -254,7 +260,7 @@ class _AdminConfigWidgetState extends State<AdminConfigWidget> {
 
   Widget _buildMobileContent(FlutterFlowTheme theme) {
     if (_isLoading || _config == null) {
-      return Center(child: CircularProgressIndicator(color: theme.primary));
+      return Center(child: LoadingIndicator(color: theme.primary));
     }
 
     return Column(

@@ -3,7 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/components/app_snackbar.dart';
 import '/models/service_model.dart';
+import '/components/loading_indicator.dart';
 import '/models/listing_model.dart';
 import '/utils/color_utils.dart';
 import '../../components/safe_image.dart';
@@ -151,13 +153,10 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
   }
 
   void _showErrorSnackbar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message, style: GoogleFonts.outfit()),
-        backgroundColor: FlutterFlowTheme.of(context).error,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
+    AppSnackbar.show(
+      context,
+      message,
+      backgroundColor: FlutterFlowTheme.of(context).error,
     );
   }
 
@@ -165,14 +164,20 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          if (_isDesktop) {
-            return _buildDesktopLayout();
-          } else {
-            return _buildMobileLayout();
-          }
-        },
+      body: Stack(
+        children: [
+          LayoutBuilder(
+            builder: (context, constraints) {
+              if (_isDesktop) {
+                return _buildDesktopLayout();
+              } else {
+                return _buildMobileLayout();
+              }
+            },
+          ),
+          if (_isProcessing || _isLoadingBalance)
+            const LoadingIndicator(isFullScreen: true),
+        ],
       ),
     );
   }

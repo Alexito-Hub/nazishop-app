@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/components/loading_indicator.dart';
 import '/components/smart_back_button.dart';
 import '/components/app_dialog.dart';
 
@@ -87,8 +88,8 @@ class DSButton extends StatelessWidget {
             ? SizedBox(
                 width: 20,
                 height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
+                child: LoadingIndicator(
+                  size: 20,
                   color: foregroundColor,
                 ),
               )
@@ -535,26 +536,33 @@ class DSMobileAppBar extends StatelessWidget {
 /// Small square icon button used in admin entity cards (edit / delete / inventory).
 /// Extracted from identical local `_buildIconButton` methods in CategoryCard,
 /// AdminServicesWidget and AdminListingsWidget.
+/// Small square icon button used in various admin screens and cards.
+///
+/// The styling (background alpha, border color) is designed to exactly match the
+/// "circle with border" buttons that appear on service cards, listing cards,
+/// etc. An optional loading state disables interaction and shows a spinner.
 class DSIconButton extends StatelessWidget {
   final IconData icon;
   final Color color;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final double size;
   final double padding;
+  final bool isLoading;
 
   const DSIconButton({
     super.key,
     required this.icon,
     required this.color,
-    required this.onTap,
+    this.onTap,
     this.size = 18,
     this.padding = 8,
+    this.isLoading = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: (isLoading ? null : onTap),
       borderRadius: BorderRadius.circular(10),
       child: Container(
         padding: EdgeInsets.all(padding),
@@ -563,7 +571,16 @@ class DSIconButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: color.withValues(alpha: 0.2)),
         ),
-        child: Icon(icon, color: color, size: size),
+        child: isLoading
+            ? SizedBox(
+                width: size,
+                height: size,
+                child: LoadingIndicator(
+                  size: size,
+                  color: color,
+                ),
+              )
+            : Icon(icon, color: color, size: size),
       ),
     );
   }

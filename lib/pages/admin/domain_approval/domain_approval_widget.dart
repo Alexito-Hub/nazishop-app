@@ -5,6 +5,7 @@ import '/backend/admin_service.dart';
 import '/models/domain.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/components/loading_indicator.dart';
 import '../../../components/smart_back_button.dart';
 import 'components/domain_card.dart';
 import 'components/domain_details_sheet.dart';
@@ -168,7 +169,7 @@ class _DomainApprovalWidgetState extends State<DomainApprovalWidget> {
             if (_isLoading)
               SliverFillRemaining(
                 child: Center(
-                  child: CircularProgressIndicator(
+                  child: LoadingIndicator(
                     color: FlutterFlowTheme.of(context).primary,
                   ),
                 ),
@@ -240,7 +241,7 @@ class _DomainApprovalWidgetState extends State<DomainApprovalWidget> {
         if (_isLoading)
           SliverFillRemaining(
             child: Center(
-              child: CircularProgressIndicator(
+              child: LoadingIndicator(
                 color: FlutterFlowTheme.of(context).primary,
               ),
             ),
