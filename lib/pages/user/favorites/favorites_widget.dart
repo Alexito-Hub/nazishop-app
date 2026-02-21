@@ -5,10 +5,10 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/components/design_system.dart';
 
-// Imports del proyecto
 import '/backend/favorites_service.dart';
 import '/models/service_model.dart';
 import '/components/service_card.dart';
+import '/utils/color_utils.dart';
 
 class FavoritesWidget extends StatefulWidget {
   const FavoritesWidget({super.key});
@@ -22,9 +22,6 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
   List<Service> _favoriteServices = [];
   bool _isLoading = true;
   final ScrollController _scrollController = ScrollController();
-
-  // --- COLORES (Coherentes con HomePage) ---
-  Color get _primaryColor => FlutterFlowTheme.of(context).primary;
 
   // --- RESPONSIVE ---
   bool get _isDesktop => MediaQuery.of(context).size.width >= 900;
@@ -56,18 +53,6 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
       }
     } catch (e) {
       if (mounted) setState(() => _isLoading = false);
-    }
-  }
-
-  // --- HELPERS ---
-  Color? _parseColor(String? colorString) {
-    if (colorString == null) return null;
-    try {
-      String hex = colorString.replaceAll('#', '');
-      if (hex.length == 6) hex = 'FF$hex';
-      return Color(int.parse(hex, radix: 16));
-    } catch (_) {
-      return null;
     }
   }
 
@@ -123,9 +108,8 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
                       delegate: SliverChildBuilderDelegate(
                         (context, i) => ServiceCard(
                           service: _favoriteServices[i],
-                          primaryColor: _parseColor(
-                                  _favoriteServices[i].branding.primaryColor) ??
-                              _primaryColor,
+                          primaryColor: ColorUtils.parseColor(context,
+                              _favoriteServices[i].branding.primaryColor),
                         )
                             .animate()
                             .fadeIn(delay: (50 * i).ms)
@@ -196,10 +180,8 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
                             delegate: SliverChildBuilderDelegate(
                               (context, i) => ServiceCard(
                                 service: _favoriteServices[i],
-                                primaryColor: _parseColor(_favoriteServices[i]
-                                        .branding
-                                        .primaryColor) ??
-                                    _primaryColor,
+                                primaryColor: ColorUtils.parseColor(context,
+                                    _favoriteServices[i].branding.primaryColor),
                               )
                                   .animate()
                                   .fadeIn(delay: (50 * i).ms)

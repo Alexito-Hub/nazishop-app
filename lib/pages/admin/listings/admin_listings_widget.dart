@@ -6,6 +6,7 @@ import '/models/listing_model.dart';
 import 'package:go_router/go_router.dart';
 import '/pages/admin/inventory/admin_inventory_widget.dart';
 import '/components/design_system.dart';
+import '/components/app_responsive_layout.dart';
 
 class AdminListingsWidget extends StatefulWidget {
   const AdminListingsWidget({super.key});
@@ -70,10 +71,11 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text('Error al eliminar: $e',
-                  style: GoogleFonts.outfit(
-                      color: FlutterFlowTheme.of(context).info)),
-              backgroundColor: FlutterFlowTheme.of(context).primary),
+            content: Text('Error al eliminar: $e',
+                style: GoogleFonts.outfit(
+                    color: FlutterFlowTheme.of(context).primaryText)),
+            backgroundColor: FlutterFlowTheme.of(context).error,
+          ),
         );
       }
     }
@@ -81,25 +83,17 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = MediaQuery.of(context).size.width >= 900;
-
-    return Scaffold(
-      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-      body: Stack(
-        children: [
-          isDesktop ? _buildDesktopLayout() : _buildMobileLayout(),
-        ],
+    return AppResponsiveLayout(
+      mobileBody: _buildMobileLayout(),
+      desktopBody: _buildDesktopLayout(),
+      mobileFab: DSGradientFab(
+        label: 'Nuevo Listing',
+        icon: Icons.local_offer,
+        onPressed: () async {
+          await context.pushNamed('create_listing');
+          _loadOffers();
+        },
       ),
-      floatingActionButton: isDesktop
-          ? null
-          : DSGradientFab(
-              label: 'Nuevo Listing',
-              icon: Icons.local_offer,
-              onPressed: () async {
-                await context.pushNamed('create_listing');
-                _loadOffers();
-              },
-            ),
     );
   }
 
@@ -182,7 +176,7 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
     }
 
     return SliverGrid(
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 350,
         mainAxisExtent: 280,
         mainAxisSpacing: 16,
@@ -199,14 +193,14 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
   }
 
   Widget _buildListingCard(Listing listing) {
-    final primaryColor = FlutterFlowTheme.of(context).primary;
+    final theme = FlutterFlowTheme.of(context);
 
     return Container(
       decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).secondaryBackground,
+        color: theme.secondaryBackground,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: primaryColor.withValues(alpha: 0.1),
+          color: theme.primary.withValues(alpha: 0.1),
           width: 1.5,
         ),
       ),
@@ -236,20 +230,16 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
                               horizontal: 10, vertical: 5),
                           decoration: BoxDecoration(
                             color: listing.isActive
-                                ? FlutterFlowTheme.of(context)
-                                    .success
-                                    .withValues(alpha: 0.1)
-                                : FlutterFlowTheme.of(context)
-                                    .secondaryText
-                                    .withValues(alpha: 0.1),
+                                ? theme.success.withValues(alpha: 0.1)
+                                : theme.secondaryText.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
                             listing.isActive ? 'ACTIVO' : 'INACTIVO',
                             style: GoogleFonts.outfit(
                               color: listing.isActive
-                                  ? FlutterFlowTheme.of(context).success
-                                  : FlutterFlowTheme.of(context).secondaryText,
+                                  ? theme.success
+                                  : theme.secondaryText,
                               fontSize: 9,
                               fontWeight: FontWeight.bold,
                             ),
@@ -257,15 +247,14 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
                         ),
                         if (listing.isFeatured)
                           Icon(Icons.star_rounded,
-                              color: FlutterFlowTheme.of(context).warning,
-                              size: 18),
+                              color: theme.warning, size: 18),
                       ],
                     ),
                     const SizedBox(height: 16),
                     Text(
                       listing.title,
                       style: GoogleFonts.outfit(
-                        color: FlutterFlowTheme.of(context).primaryText,
+                        color: theme.primaryText,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
@@ -276,7 +265,7 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
                     Text(
                       '\$${listing.price} ${listing.currency}',
                       style: GoogleFonts.outfit(
-                        color: FlutterFlowTheme.of(context).primaryText,
+                        color: theme.primaryText,
                         fontSize: 22,
                         fontWeight: FontWeight.w900,
                       ),
@@ -285,10 +274,11 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        _buildIconButton(
-                          Icons.inventory_2_rounded,
-                          FlutterFlowTheme.of(context).info,
-                          () => Navigator.push(
+                        DSIconButton(
+                          icon: Icons.inventory_2_rounded,
+                          color: theme.info,
+                          size: 20,
+                          onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => AdminInventoryWidget(
@@ -299,10 +289,11 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        _buildIconButton(
-                          Icons.delete_outline_rounded,
-                          FlutterFlowTheme.of(context).error,
-                          () => _deleteOffer(listing.id),
+                        DSIconButton(
+                          icon: Icons.delete_outline_rounded,
+                          color: theme.error,
+                          size: 20,
+                          onTap: () => _deleteOffer(listing.id),
                         ),
                       ],
                     ),
@@ -312,22 +303,6 @@ class _AdminListingsWidgetState extends State<AdminListingsWidget> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildIconButton(IconData icon, Color color, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(10),
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: color.withValues(alpha: 0.1)),
-        ),
-        child: Icon(icon, color: color, size: 20),
       ),
     );
   }

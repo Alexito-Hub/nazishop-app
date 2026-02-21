@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/models/category_model.dart';
 import '/utils/icon_utils.dart';
+import '/components/design_system.dart';
 
 class CategoryCard extends StatelessWidget {
   final Category category;
@@ -150,11 +151,10 @@ class CategoryCard extends StatelessWidget {
                           ),
                         ),
                         const Spacer(),
-                        _buildIconButton(
-                          context,
-                          Icons.edit_outlined,
-                          FlutterFlowTheme.of(context).secondaryText,
-                          () async {
+                        DSIconButton(
+                          icon: Icons.edit_outlined,
+                          color: FlutterFlowTheme.of(context).secondaryText,
+                          onTap: () async {
                             await context.pushNamed(
                               'create_category',
                               extra: category,
@@ -163,11 +163,10 @@ class CategoryCard extends StatelessWidget {
                           },
                         ),
                         const SizedBox(width: 8),
-                        _buildIconButton(
-                          context,
-                          Icons.delete_outline_rounded,
-                          primaryColor,
-                          onDelete,
+                        DSIconButton(
+                          icon: Icons.delete_outline_rounded,
+                          color: primaryColor,
+                          onTap: onDelete,
                         ),
                       ],
                     ),
@@ -177,22 +176,6 @@ class CategoryCard extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildIconButton(
-      BuildContext context, IconData icon, Color color, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(icon, color: color, size: 18),
       ),
     );
   }

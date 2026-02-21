@@ -41,6 +41,7 @@ class _CreateListingWidgetState extends State<CreateListingWidget> {
   late TextEditingController _domainStockCtrl;
 
   String? _selectedServiceId;
+  String? _selectedServiceName;
   String? _selectedDeliveryType;
 
   List<Service> _services = [];
@@ -99,6 +100,7 @@ class _CreateListingWidgetState extends State<CreateListingWidget> {
     final sId = o?.serviceId;
     _selectedServiceId = (sId != null && sId.isNotEmpty) ? sId : null;
     _selectedDeliveryType = o?.dataDeliveryType ?? 'full_account';
+    // _selectedServiceName is resolved after _loadServices() completes
 
     // Domain fields
     _domainType = o?.domainType;
@@ -116,6 +118,14 @@ class _CreateListingWidgetState extends State<CreateListingWidget> {
         setState(() {
           _services = data;
           _isLoadingServices = false;
+          // Resolve name for pre-selected service (edit mode)
+          if (_selectedServiceId != null) {
+            try {
+              final match =
+                  _services.firstWhere((s) => s.id == _selectedServiceId);
+              _selectedServiceName = match.name;
+            } catch (_) {}
+          }
         });
       }
     } catch (e) {
@@ -411,26 +421,7 @@ class _CreateListingWidgetState extends State<CreateListingWidget> {
               const SizedBox(height: 24),
               _buildInput(_titleCtrl, 'Título de la Oferta', Icons.title),
               const SizedBox(height: 16),
-              if (_isLoadingServices)
-                Center(
-                    child: CircularProgressIndicator(
-                        color: FlutterFlowTheme.of(context).primary))
-              else
-                DropdownButtonFormField<String>(
-                  initialValue: _selectedServiceId,
-                  dropdownColor:
-                      FlutterFlowTheme.of(context).secondaryBackground,
-                  style: GoogleFonts.outfit(
-                      color: FlutterFlowTheme.of(context).primaryText),
-                  decoration: _inputDeco('Servicio / Plataforma', Icons.layers),
-                  items: _services
-                      .map((s) => DropdownMenuItem(
-                            value: s.id,
-                            child: Text(s.name),
-                          ))
-                      .toList(),
-                  onChanged: (v) => setState(() => _selectedServiceId = v),
-                ),
+              _buildServiceAutocomplete(),
               const SizedBox(height: 16),
               _buildInput(_descCtrl, 'Descripción detallada', Icons.description,
                   maxLines: 4),
@@ -620,16 +611,141 @@ class _CreateListingWidgetState extends State<CreateListingWidget> {
   }
 
   InputDecoration _inputDeco(String label, IconData? icon) {
+    final theme = FlutterFlowTheme.of(context);
     return InputDecoration(
       labelText: label,
-      labelStyle: TextStyle(color: FlutterFlowTheme.of(context).secondaryText),
-      prefixIcon: icon != null
-          ? Icon(icon, color: FlutterFlowTheme.of(context).secondaryText)
-          : null,
+      labelStyle: TextStyle(color: theme.secondaryText),
+      prefixIcon: icon != null ? Icon(icon, color: theme.secondaryText) : null,
       filled: true,
-      fillColor: FlutterFlowTheme.of(context).secondaryBackground,
+      fillColor: theme.secondaryBackground,
+      enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: theme.alternate)),
+      focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: theme.primary)),
       border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: theme.alternate)),
+    );
+  }
+
+  /// Searchable autocomplete for the service selector.
+  Widget _buildServiceAutocomplete() {
+    final theme = FlutterFlowTheme.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('SERVICIO / PLATAFORMA',
+            style: GoogleFonts.outfit(
+                color: theme.secondaryText,
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.5)),
+        const SizedBox(height: 8),
+        Autocomplete<Service>(
+          initialValue: TextEditingValue(text: _selectedServiceName ?? ''),
+          optionsBuilder: (TextEditingValue tv) {
+            if (tv.text.isEmpty) return _services;
+            return _services.where(
+                (s) => s.name.toLowerCase().contains(tv.text.toLowerCase()));
+          },
+          displayStringForOption: (s) => s.name,
+          onSelected: (s) {
+            setState(() {
+              _selectedServiceId = s.id;
+              _selectedServiceName = s.name;
+            });
+          },
+          fieldViewBuilder:
+              (context, textEditingController, focusNode, onFieldSubmitted) {
+            return TextFormField(
+              controller: textEditingController,
+              focusNode: focusNode,
+              style: GoogleFonts.outfit(color: theme.primaryText),
+              cursorColor: theme.primary,
+              decoration: InputDecoration(
+                hintText: _isLoadingServices
+                    ? 'Cargando servicios...'
+                    : 'Buscar servicio...',
+                hintStyle: GoogleFonts.outfit(color: theme.secondaryText),
+                prefixIcon: Icon(Icons.layers, color: theme.secondaryText),
+                suffixIcon: _isLoadingServices
+                    ? SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: CircularProgressIndicator(
+                              strokeWidth: 2, color: theme.primary),
+                        ))
+                    : null,
+                filled: true,
+                fillColor: theme.primaryBackground,
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: theme.alternate)),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: theme.primary)),
+                errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: theme.error)),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              ),
+              validator: (_) {
+                if (_selectedServiceId == null) return 'Requerido';
+                return null;
+              },
+            );
+          },
+          optionsViewBuilder: (context, onSelected, options) {
+            final theme = FlutterFlowTheme.of(context);
+            return Align(
+              alignment: Alignment.topLeft,
+              child: Material(
+                color: Colors.transparent,
+                child: Container(
+                  constraints: const BoxConstraints(maxHeight: 220),
+                  margin: const EdgeInsets.only(top: 4),
+                  decoration: BoxDecoration(
+                    color: theme.secondaryBackground,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: theme.alternate),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.15),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      )
+                    ],
+                  ),
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    shrinkWrap: true,
+                    itemCount: options.length,
+                    itemBuilder: (ctx, index) {
+                      final svc = options.elementAt(index);
+                      return InkWell(
+                        onTap: () => onSelected(svc),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 12),
+                          child: Text(svc.name,
+                              style:
+                                  GoogleFonts.outfit(color: theme.primaryText)),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ],
     );
   }
 

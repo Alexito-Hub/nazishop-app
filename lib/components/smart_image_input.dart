@@ -1,24 +1,23 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/components/safe_image.dart';
 
-// Note: Actual file picking implementation might require additional packages like image_picker
-// or file_picker. For now we structure the UI to support URL input and prepare for file picking hooks.
-
+/// Handles image input: URL text field + file/gallery picker.
+/// Shows a live preview once a URL or file is selected.
 class SmartImageInput extends StatefulWidget {
   final String? initialUrl;
   final ValueChanged<String> onUrlChanged;
-  final VoidCallback?
-      onFilePick; // Callback for parent to handle file picking logic
   final String label;
 
   const SmartImageInput({
     super.key,
     this.initialUrl,
     required this.onUrlChanged,
-    this.onFilePick,
-    this.label = 'Imagen',
+    this.label = 'IMAGEN',
   });
 
   @override
@@ -28,7 +27,8 @@ class SmartImageInput extends StatefulWidget {
 class _SmartImageInputState extends State<SmartImageInput> {
   late TextEditingController _urlController;
   late String _currentUrl;
-  bool _showPreview = true;
+  XFile? _pickedFile; // local file (non-web)
+  final _picker = ImagePicker();
 
   @override
   void initState() {
@@ -40,12 +40,14 @@ class _SmartImageInputState extends State<SmartImageInput> {
   @override
   void didUpdateWidget(SmartImageInput oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.initialUrl != oldWidget.initialUrl &&
-        widget.initialUrl != null) {
-      if (_urlController.text != widget.initialUrl) {
-        _urlController.text = widget.initialUrl!;
-        setState(() => _currentUrl = widget.initialUrl!);
-      }
+    if (widget.initialUrl != null &&
+        widget.initialUrl != oldWidget.initialUrl &&
+        _urlController.text != widget.initialUrl) {
+      _urlController.text = widget.initialUrl!;
+      setState(() {
+        _currentUrl = widget.initialUrl!;
+        _pickedFile = null;
+      });
     }
   }
 
@@ -55,122 +57,191 @@ class _SmartImageInputState extends State<SmartImageInput> {
     super.dispose();
   }
 
+  Future<void> _pickFromGallery() async {
+    try {
+      final file = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 85,
+      );
+      if (file != null) {
+        setState(() {
+          _pickedFile = file;
+          _currentUrl = file.path; // local path for preview
+          _urlController.text = file.path;
+        });
+        // Pass the path/name to the caller so it can upload to its backend.
+        widget.onUrlChanged(file.path);
+      }
+    } catch (_) {
+      // Swallow: user cancelled or permission denied.
+    }
+  }
+
+  void _clearImage() {
+    setState(() {
+      _pickedFile = null;
+      _currentUrl = '';
+      _urlController.clear();
+    });
+    widget.onUrlChanged('');
+  }
+
+  bool get _hasContent => _currentUrl.isNotEmpty;
+  bool get _isLocalFile =>
+      _pickedFile != null && !_currentUrl.startsWith('http');
+
   @override
   Widget build(BuildContext context) {
     final theme = FlutterFlowTheme.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
         if (widget.label.isNotEmpty) ...[
           Text(
             widget.label,
             style: GoogleFonts.outfit(
-              color: theme.primaryText,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
+              color: theme.secondaryText,
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.5,
             ),
           ),
           const SizedBox(height: 8),
         ],
-        Container(
-          decoration: BoxDecoration(
-            color: theme.secondaryBackground,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: theme.alternate),
-          ),
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            children: [
-              // Input Row
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: _urlController,
-                      style: GoogleFonts.outfit(color: theme.primaryText),
-                      decoration: InputDecoration(
-                        hintText: 'https://ejemplo.com/imagen.png',
-                        hintStyle:
-                            GoogleFonts.outfit(color: theme.secondaryText),
-                        border: InputBorder.none,
-                        isDense: true,
-                        prefixIcon:
-                            Icon(Icons.link, color: theme.secondaryText),
-                      ),
-                      onChanged: (val) {
-                        setState(() => _currentUrl = val);
-                        widget.onUrlChanged(val);
-                      },
-                    ),
-                  ),
-                  if (widget.onFilePick != null) ...[
-                    Container(
-                      height: 24,
-                      width: 1,
-                      color: theme.alternate,
-                      margin: const EdgeInsets.symmetric(horizontal: 8),
-                    ),
-                    IconButton(
-                        onPressed: widget.onFilePick,
-                        tooltip: 'Subir archivo',
-                        icon: Icon(Icons.upload_file_rounded,
-                            color: theme.primary)),
-                  ]
-                ],
-              ),
 
-              if (_currentUrl.isNotEmpty && _showPreview) ...[
-                const Divider(height: 24),
-                // Preview Area
-                Container(
-                  height: 200,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: theme.primaryBackground,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                        color: theme.alternate.withValues(alpha: 0.5)),
+        // Image preview / empty state
+        AnimatedSize(
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeOut,
+          child: _hasContent ? _buildPreview(theme) : _buildDropZone(theme),
+        ),
+
+        const SizedBox(height: 10),
+
+        // URL TextField
+        TextFormField(
+          controller: _urlController,
+          style: GoogleFonts.outfit(color: theme.primaryText, fontSize: 14),
+          cursorColor: theme.primary,
+          decoration: InputDecoration(
+            hintText: 'https://…',
+            hintStyle: GoogleFonts.outfit(color: theme.secondaryText),
+            prefixIcon: Icon(Icons.link, color: theme.secondaryText, size: 18),
+            filled: true,
+            fillColor: theme.primaryBackground,
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: theme.alternate),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: theme.primary),
+            ),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            isDense: true,
+          ),
+          onChanged: (val) {
+            setState(() {
+              _currentUrl = val;
+              _pickedFile = null;
+            });
+            widget.onUrlChanged(val);
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDropZone(FlutterFlowTheme theme) {
+    return GestureDetector(
+      onTap: _pickFromGallery,
+      child: Container(
+        height: 120,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: theme.primaryBackground,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: theme.alternate,
+            style: BorderStyle.solid,
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.add_photo_alternate_outlined,
+                color: theme.secondaryText, size: 32),
+            const SizedBox(height: 8),
+            Text(
+              kIsWeb ? 'Pegar URL o subir imagen' : 'Subir desde galería',
+              style:
+                  GoogleFonts.outfit(color: theme.secondaryText, fontSize: 13),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPreview(FlutterFlowTheme theme) {
+    return Stack(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            height: 160,
+            width: double.infinity,
+            color: theme.primaryBackground,
+            child: _isLocalFile && !kIsWeb
+                ? Image.file(
+                    File(_pickedFile!.path),
+                    fit: BoxFit.cover,
+                  )
+                : SafeImage(
+                    _currentUrl,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: 160,
                   ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Stack(
-                      children: [
-                        Positioned.fill(
-                            child: SafeImage(
-                          _currentUrl,
-                          fit: BoxFit.contain,
-                        )),
-                        // Clear button
-                        Positioned(
-                          top: 8,
-                          right: 8,
-                          child: InkWell(
-                            onTap: () {
-                              _urlController.clear();
-                              setState(() => _currentUrl = '');
-                              widget.onUrlChanged('');
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withValues(alpha: 0.5),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(Icons.close,
-                                  color: Colors.white, size: 16),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+          ),
+        ),
+        // Top-right action row
+        Positioned(
+          top: 8,
+          right: 8,
+          child: Row(
+            children: [
+              if (!kIsWeb)
+                _iconChip(
+                  icon: Icons.photo_library_outlined,
+                  onTap: _pickFromGallery,
                 ),
-              ]
+              const SizedBox(width: 6),
+              _iconChip(
+                icon: Icons.close,
+                onTap: _clearImage,
+              ),
             ],
           ),
         ),
       ],
+    );
+  }
+
+  Widget _iconChip({required IconData icon, required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+          color: Colors.black.withValues(alpha: 0.55),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(icon, color: Colors.white, size: 16),
+      ),
     );
   }
 }

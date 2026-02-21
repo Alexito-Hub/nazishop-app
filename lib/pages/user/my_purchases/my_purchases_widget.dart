@@ -16,33 +16,51 @@ class MyPurchasesWidget extends StatefulWidget {
 }
 
 class _MyPurchasesWidgetState extends State<MyPurchasesWidget> {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-
-  // --- PALETA DE COLORES (COHERENCIA CON HOME) ---
-  Color get _primaryColor => FlutterFlowTheme.of(context).primary;
+  List<dynamic> _orders = [];
+  bool _isLoading = true;
+  String? _error;
 
   bool get _isDesktop => MediaQuery.of(context).size.width >= 900;
 
   @override
+  void initState() {
+    super.initState();
+    _loadOrders();
+  }
+
+  Future<void> _loadOrders() async {
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+    try {
+      final data = await OrderService.getMyOrders();
+      if (mounted) {
+        setState(() {
+          _orders = data;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _error = e.toString();
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final theme = FlutterFlowTheme.of(context);
     return Scaffold(
-      key: scaffoldKey,
-      backgroundColor: theme.primaryBackground,
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          if (_isDesktop) {
-            return _buildDesktopLayout();
-          } else {
-            return _buildMobileLayout();
-          }
-        },
-      ),
+      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+      body: _isDesktop ? _buildDesktopLayout() : _buildMobileLayout(),
     );
   }
 
   // ===========================================================================
-  // 💻 DESKTOP LAYOUT (ESTILO HOME DASHBOARD)
+  // 💻 DESKTOP LAYOUT
   // ===========================================================================
   Widget _buildDesktopLayout() {
     final theme = FlutterFlowTheme.of(context);
@@ -53,7 +71,6 @@ class _MyPurchasesWidgetState extends State<MyPurchasesWidget> {
         child: CustomScrollView(
           physics: const BouncingScrollPhysics(),
           slivers: [
-            // 1. Header Dashboard (Sin botón de atrás, alineado a la izquierda)
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(40, 40, 40, 20),
               sliver: SliverList(
@@ -80,42 +97,9 @@ class _MyPurchasesWidgetState extends State<MyPurchasesWidget> {
                 ]),
               ),
             ),
-
-            // 2. Grid de Compras
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(40, 20, 40, 80),
-              sliver: FutureBuilder<List<dynamic>>(
-                future: OrderService.getMyOrders(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return _buildShimmerGrid(isMobile: false);
-                  }
-
-                  final orders = snapshot.data ?? [];
-                  if (orders.isEmpty) {
-                    return SliverToBoxAdapter(child: _buildEmptyState());
-                  }
-
-                  return SliverGrid(
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 280,
-                      childAspectRatio: 0.75,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                    ),
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        return PurchaseCard(order: orders[index])
-                            .animate()
-                            .fadeIn(delay: (30 * index).ms)
-                            .slideY(begin: 0.1);
-                      },
-                      childCount: orders.length,
-                    ),
-                  );
-                },
-              ),
+              sliver: _buildOrdersSliver(isMobile: false),
             ),
           ],
         ),
@@ -124,48 +108,63 @@ class _MyPurchasesWidgetState extends State<MyPurchasesWidget> {
   }
 
   // ===========================================================================
-  // 📱 MOBILE LAYOUT (ESTILO HOME/SERVICE DETAIL)
+  // 📱 MOBILE LAYOUT
   // ===========================================================================
   Widget _buildMobileLayout() {
-    return CustomScrollView(
-      physics: const BouncingScrollPhysics(),
-      slivers: [
-        const DSMobileAppBar(title: 'Mis Compras'),
-        SliverPadding(
-          padding: const EdgeInsets.all(12),
-          sliver: FutureBuilder<List<dynamic>>(
-            future: OrderService.getMyOrders(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return _buildShimmerGrid(isMobile: true);
-              }
-
-              final orders = snapshot.data ?? [];
-              if (orders.isEmpty) {
-                return SliverFillRemaining(child: _buildEmptyState());
-              }
-
-              return SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.75,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                ),
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    return PurchaseCard(order: orders[index])
-                        .animate()
-                        .fadeIn(delay: (50 * index).ms);
-                  },
-                  childCount: orders.length,
-                ),
-              );
-            },
+    return RefreshIndicator(
+      onRefresh: _loadOrders,
+      color: FlutterFlowTheme.of(context).primary,
+      child: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          const DSMobileAppBar(title: 'Mis Compras'),
+          SliverPadding(
+            padding: const EdgeInsets.all(12),
+            sliver: _buildOrdersSliver(isMobile: true),
           ),
-        ),
-        const SliverToBoxAdapter(child: SizedBox(height: 40)),
-      ],
+          const SliverToBoxAdapter(child: SizedBox(height: 40)),
+        ],
+      ),
+    );
+  }
+
+  // ===========================================================================
+  // 🔄 ORDERS SLIVER (shared between mobile & desktop)
+  // ===========================================================================
+  Widget _buildOrdersSliver({required bool isMobile}) {
+    if (_isLoading) return _buildShimmerGrid(isMobile: isMobile);
+
+    if (_error != null) return _buildErrorState();
+
+    if (_orders.isEmpty) {
+      return isMobile
+          ? SliverFillRemaining(child: _buildEmptyState())
+          : SliverToBoxAdapter(child: _buildEmptyState());
+    }
+
+    final delegate = isMobile
+        ? const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 0.75,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+          )
+        : const SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 280,
+            childAspectRatio: 0.75,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+          );
+
+    return SliverGrid(
+      gridDelegate: delegate,
+      delegate: SliverChildBuilderDelegate(
+        (context, index) => PurchaseCard(order: _orders[index])
+            .animate()
+            .fadeIn(delay: ((isMobile ? 50 : 30) * index).ms)
+            .slideY(begin: 0.1),
+        childCount: _orders.length,
+      ),
     );
   }
 
@@ -195,6 +194,58 @@ class _MyPurchasesWidgetState extends State<MyPurchasesWidget> {
             .animate(onPlay: (c) => c.repeat())
             .shimmer(duration: 2.seconds, color: theme.accent1),
         childCount: 6,
+      ),
+    );
+  }
+
+  Widget _buildErrorState() {
+    final theme = FlutterFlowTheme.of(context);
+    return SliverFillRemaining(
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: theme.error.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+                border: Border.all(color: theme.error.withValues(alpha: 0.3)),
+              ),
+              child: Icon(Icons.wifi_off_rounded, size: 40, color: theme.error),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'Error al cargar compras',
+              style: GoogleFonts.outfit(
+                color: theme.primaryText,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Verifica tu conexión e intenta de nuevo',
+              style:
+                  GoogleFonts.outfit(color: theme.secondaryText, fontSize: 14),
+            ),
+            const SizedBox(height: 32),
+            ElevatedButton.icon(
+              onPressed: _loadOrders,
+              icon: const Icon(Icons.refresh_rounded),
+              label: Text('Reintentar',
+                  style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: theme.primary,
+                foregroundColor: theme.info,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -233,7 +284,7 @@ class _MyPurchasesWidgetState extends State<MyPurchasesWidget> {
           ElevatedButton(
             onPressed: () => context.goNamed('home'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: _primaryColor,
+              backgroundColor: theme.primary,
               foregroundColor: theme.tertiary,
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               shape: RoundedRectangleBorder(

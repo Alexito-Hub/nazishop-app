@@ -5,6 +5,8 @@ import '/backend/admin_service.dart';
 import '/models/service_model.dart';
 import 'package:go_router/go_router.dart';
 import '/components/design_system.dart';
+import '/components/app_responsive_layout.dart';
+import '/components/safe_image.dart';
 
 class AdminServicesWidget extends StatefulWidget {
   const AdminServicesWidget({super.key});
@@ -80,27 +82,21 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = MediaQuery.of(context).size.width >= 900;
-    // final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return Scaffold(
-      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-      body: isDesktop ? _buildDesktopLayout(context) : _buildMobileLayout(),
-      floatingActionButton: isDesktop
-          ? null
-          : DSGradientFab(
-              label: 'Nuevo Servicio',
-              icon: Icons.design_services,
-              onPressed: () async {
-                await context.pushNamed('create_service');
-                _loadServices();
-              },
-            ),
+    return AppResponsiveLayout(
+      mobileBody: _buildMobileLayout(),
+      desktopBody: _buildDesktopLayout(context),
+      mobileFab: DSGradientFab(
+        label: 'Nuevo Servicio',
+        icon: Icons.design_services,
+        onPressed: () async {
+          await context.pushNamed('create_service');
+          _loadServices();
+        },
+      ),
     );
   }
 
   Widget _buildMobileLayout() {
-    // final isDark = Theme.of(context).brightness == Brightness.dark;
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
@@ -179,7 +175,7 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
     }
 
     return SliverGrid(
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 350,
         mainAxisExtent: 280,
         mainAxisSpacing: 16,
@@ -196,20 +192,20 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
   }
 
   Widget _buildServiceCard(Service service) {
-    Color primaryColor = FlutterFlowTheme.of(context).primary;
-    // final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = FlutterFlowTheme.of(context);
+    final Color primaryColor = theme.primary;
 
     return Container(
       decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).secondaryBackground,
+        color: theme.secondaryBackground,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: FlutterFlowTheme.of(context).alternate,
+          color: theme.alternate,
           width: 1.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: FlutterFlowTheme.of(context).primary.withValues(alpha: 0.1),
+            color: theme.primary.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -217,7 +213,7 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
       ),
       clipBehavior: Clip.antiAlias,
       child: Material(
-        color: FlutterFlowTheme.of(context).transparent,
+        color: theme.transparent,
         child: InkWell(
           onTap: () async {
             await context.pushNamed(
@@ -235,15 +231,12 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    Image.network(
-                      service.imageUrl ?? '',
+                    // SafeImage handles loading/error states properly
+                    SafeImage(
+                      service.imageUrl,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(
-                        color: FlutterFlowTheme.of(context).alternate,
-                        child: Icon(Icons.image_not_supported_rounded,
-                            color: FlutterFlowTheme.of(context).secondaryText,
-                            size: 40),
-                      ),
+                      fallbackIcon: Icons.design_services_outlined,
+                      fallbackIconSize: 40,
                     ),
                     Container(
                       decoration: BoxDecoration(
@@ -251,10 +244,8 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           colors: [
-                            FlutterFlowTheme.of(context).transparent,
-                            FlutterFlowTheme.of(context)
-                                .primaryText
-                                .withValues(alpha: 0.5),
+                            theme.transparent,
+                            theme.primaryText.withValues(alpha: 0.5),
                           ],
                         ),
                       ),
@@ -267,18 +258,14 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
                             horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(
                           color: service.isActive
-                              ? FlutterFlowTheme.of(context)
-                                  .success
-                                  .withValues(alpha: 0.9)
-                              : FlutterFlowTheme.of(context)
-                                  .primaryText
-                                  .withValues(alpha: 0.54),
+                              ? theme.success.withValues(alpha: 0.9)
+                              : theme.primaryText.withValues(alpha: 0.54),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
                           service.isActive ? 'ACTIVO' : 'INACTIVO',
                           style: GoogleFonts.outfit(
-                            color: FlutterFlowTheme.of(context).primaryText,
+                            color: theme.primaryText,
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 0.5,
@@ -292,10 +279,10 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          _buildIconButton(
-                            Icons.edit_outlined,
-                            FlutterFlowTheme.of(context).primaryText,
-                            () async {
+                          DSIconButton(
+                            icon: Icons.edit_outlined,
+                            color: theme.primaryText,
+                            onTap: () async {
                               await context.pushNamed(
                                 'create_service',
                                 extra: service,
@@ -304,10 +291,10 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
                             },
                           ),
                           const SizedBox(width: 8),
-                          _buildIconButton(
-                            Icons.delete_outline_rounded,
-                            FlutterFlowTheme.of(context).error,
-                            () => _deleteService(service.id),
+                          DSIconButton(
+                            icon: Icons.delete_outline_rounded,
+                            color: theme.error,
+                            onTap: () => _deleteService(service.id),
                           ),
                         ],
                       ),
@@ -327,7 +314,7 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
                       Text(
                         service.name,
                         style: GoogleFonts.outfit(
-                          color: FlutterFlowTheme.of(context).primaryText,
+                          color: theme.primaryText,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
@@ -338,7 +325,7 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
                       Text(
                         service.description,
                         style: GoogleFonts.outfit(
-                          color: FlutterFlowTheme.of(context).secondaryText,
+                          color: theme.secondaryText,
                           fontSize: 12,
                         ),
                         maxLines: 2,
@@ -354,8 +341,7 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
                             child: Text(
                               service.categoryName ?? 'Sin categoría',
                               style: GoogleFonts.outfit(
-                                color:
-                                    FlutterFlowTheme.of(context).secondaryText,
+                                color: theme.secondaryText,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -372,23 +358,6 @@ class AdminServicesWidgetState extends State<AdminServicesWidget> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildIconButton(IconData icon, Color color, VoidCallback onTap) {
-    // final isDark = Theme.of(context).brightness == Brightness.dark;
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: FlutterFlowTheme.of(context).secondaryBackground,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: FlutterFlowTheme.of(context).alternate),
-        ),
-        child: Icon(icon, color: color, size: 16),
       ),
     );
   }

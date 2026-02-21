@@ -532,6 +532,43 @@ class DSMobileAppBar extends StatelessWidget {
   }
 }
 
+/// Small square icon button used in admin entity cards (edit / delete / inventory).
+/// Extracted from identical local `_buildIconButton` methods in CategoryCard,
+/// AdminServicesWidget and AdminListingsWidget.
+class DSIconButton extends StatelessWidget {
+  final IconData icon;
+  final Color color;
+  final VoidCallback onTap;
+  final double size;
+  final double padding;
+
+  const DSIconButton({
+    super.key,
+    required this.icon,
+    required this.color,
+    required this.onTap,
+    this.size = 18,
+    this.padding = 8,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        padding: EdgeInsets.all(padding),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: color.withValues(alpha: 0.2)),
+        ),
+        child: Icon(icon, color: color, size: size),
+      ),
+    );
+  }
+}
+
 /// Standard delete confirmation dialog used across admin pages.
 class DSDeleteConfirmDialog {
   static Future<bool> show(
